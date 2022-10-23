@@ -23,9 +23,9 @@ set(COMMON_LIBS #${PROJECT_SOURCE_DIR}/bin/lib/libTVk.a
                 ${Vulkan_LIBRARIES}
                 ${SDL2_LIBRARIES})
 
-enable_testing()
+#enable_testing()
 
-add_executable(test1 test1/Test.cpp)
-target_include_directories(test1 PUBLIC ${COMMON_INCLUDES})
-target_link_libraries(test1 PUBLIC ${COMMON_LIBS})
-add_test(Test1 test1)
+#add_executable(test1 test1/Test.cpp)
+#target_include_directories(test1 PUBLIC ${COMMON_INCLUDES})
+#target_link_libraries(test1 PUBLIC ${COMMON_LIBS})
+#add_test(Test1 test1)

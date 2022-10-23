@@ -3,9 +3,7 @@
 
 #include "sheriff-base.h"
 #include "vulkan/vulkan.h"
-#include "../sdl/sdl-base.h"
-#include "logger.h"
-
+//#include "../sdl/sdl-base.h"
 // Sheriff Setup & Config
 
 namespace Ths::Vk
