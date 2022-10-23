@@ -19,7 +19,7 @@ namespace Ths
 
     void VkApp::initVulkan()
     {
-        
+        Vk::createVulkanInstance(vContext, 0, 0, name, version);
     }
     
     void VkApp::cleanup()
@@ -38,6 +38,14 @@ namespace Ths
     {
         if (!Ths::SDL::sdl_initialized) Ths::SDL::initSDLVid();
         window = Ths::SDL::createSDLWindowVk(title, dx, dy, w, h);
+    }
+
+    void SDLApp::initVulkan()
+    {
+        uint32_t eCount;
+        const char** eNames;
+        SDL_Vulkan_GetInstanceExtensions(window, &eCount, eNames); // TODO: Fix this <--
+        Vk::createVulkanInstance(vContext, eCount, eNames, name, version);
     }
     
     void SDLApp::mainLoop(bool (*func)())

@@ -22,7 +22,8 @@ add_compile_options("-O2")
 
 set(SOURCE ${PROJECT_SOURCE_DIR}/src/main.cpp
             ${PROJECT_SOURCE_DIR}/src/sdl/sdl-base.cpp
-            ${PROJECT_SOURCE_DIR}/src/app/application.cpp)
+            ${PROJECT_SOURCE_DIR}/src/app/application.cpp
+            ${PROJECT_SOURCE_DIR}/src/vk/vulkan-instance.cpp)
 
 # Create Thesis as executable
 add_executable(thesis ${SOURCE})

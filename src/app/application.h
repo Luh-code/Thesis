@@ -41,7 +41,7 @@ namespace Ths
     class VkApp: public App
     {
     public:
-        Vk::VContext* vContext;
+        Vk::VContext* vContext = new Vk::VContext();
 
         virtual inline void run()
         {
@@ -68,7 +68,7 @@ namespace Ths
             cleanup();
         }
         virtual void initWindow(const char* title, uint32_t w, uint32_t h, uint32_t dx = SDL_WINDOWPOS_CENTERED, uint32_t dy = SDL_WINDOWPOS_CENTERED);
-        //virtual void initVulkan();
+        virtual void initVulkan() override;
         virtual void mainLoop(bool (*func)()) override;
         virtual void cleanup(bool dein_sdl);
         virtual void cleanup() override;
