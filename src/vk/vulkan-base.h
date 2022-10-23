@@ -4,6 +4,7 @@
 #include "sheriff-base.h"
 #include "vulkan/vulkan.h"
 #include "../sdl/sdl-base.h"
+#include "logger.h"
 
 // Sheriff Setup & Config
 
