@@ -6,54 +6,72 @@
 
 namespace Ths
 {
-    class App
+    class BaseApp
     {
     public:
-        virtual void mainLoop(bool (*func)());
-        virtual void cleanup();
+        const char*  name;
+        uint32_t version;
+
+        inline BaseApp()
+         : name("Application"), version(VK_MAKE_API_VERSION(1,0,0,0)) {}
+        inline BaseApp(std::string name, uint32_t version)
+         : name(name.c_str()), version(version) {}
+        inline BaseApp(const char* name, uint32_t version)
+         : name(name), version(version) {}
+    };
+
+    class App: public BaseApp
+    {
     public:
-        virtual void run()
+
+        /*inline App(std::string name, uint32_t version)
+         : BaseApp::name(name.c_str()), version(version) {}
+        App(const char* name, uint32_t version)
+         : BaseApp::name(name), version(version) {}*/
+
+        virtual inline void run()
         {
             mainLoop([]() -> bool {return true;});
             cleanup();
         }
+        virtual void mainLoop(bool (*func)());
+        virtual void cleanup();
     };
 
     class VkApp: public App
     {
     public:
-        virtual void initVulkan();
-        virtual void mainLoop(bool (*func)());
-        virtual void cleanup();
-    public:
-        Vk::VData* vData;
+        Vk::VContext* vContext;
 
-        virtual void run()
+        virtual inline void run()
         {
             initVulkan();
             mainLoop([]() -> bool {return true;});
             cleanup();
         }
+        virtual void initVulkan();
+        //virtual void mainLoop(bool (*func)());
+        virtual void cleanup() override;
+        void delVContext();
     };
 
     class SDLApp: public VkApp
     {
     public:
-        virtual void initWindow(const char* title, uint32_t w, uint32_t h, uint32_t dx = SDL_WINDOWPOS_CENTERED, uint32_t dy = SDL_WINDOWPOS_CENTERED);
-        virtual void initVulkan();
-        virtual void mainLoop(bool (*func)());
-        virtual void cleanup(bool dein_sdl);
-        virtual void cleanup();
-    public:
         SDL_Window* window;
 
-        virtual void run()
+        virtual inline void run()
         {
             initWindow("SDL App", 1240, 720);
             initVulkan();
             mainLoop([]() -> bool {return true;});
             cleanup();
         }
+        virtual void initWindow(const char* title, uint32_t w, uint32_t h, uint32_t dx = SDL_WINDOWPOS_CENTERED, uint32_t dy = SDL_WINDOWPOS_CENTERED);
+        //virtual void initVulkan();
+        virtual void mainLoop(bool (*func)()) override;
+        virtual void cleanup(bool dein_sdl);
+        virtual void cleanup() override;
     };
 }
 

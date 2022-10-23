@@ -1,33 +1,24 @@
 #ifndef __VULKAN_BASE_H__
 #define __VULKAN_BASE_H__
 
-#include "sheriff-base.h"
 #include "vulkan/vulkan.h"
+#include "../thesis.h"
 //#include "../sdl/sdl-base.h"
 // Sheriff Setup & Config
 
 namespace Ths::Vk
 {
-    enum VkShfErr : int32_t
-    {
-        ERR_VK_UNDEFINED = 1,
-        ERR_VK_NONE = 0,
-        CERR_VK_UNDEFINED = -1,
-    };
-
-    static shf::Territory vkTerr("Vulkan", ERR_VK_NONE);
-
     // Vulkan Creation
     // Data
 
-    typedef struct VulkanData
+    typedef struct VulkanContext
     {
         VkInstance* instance;
-    } VData;
+    } VContext;
 
     // Functions
 
-    shf::RetV createVulkanInstance();
+    bool createVulkanInstance(VContext& context, const char* appName = "Test App", uint32_t appVersion = VK_MAKE_API_VERSION(1,0,0,0));
 }
 
 #endif // __VULKAN_BASE_H__

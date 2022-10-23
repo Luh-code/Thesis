@@ -6,8 +6,10 @@
 
 int main()
 {
-    LOG_INFO("\\\\\\\\\\\\\\\\ Thesis ////////");
+    LOG_INFO("|------< Thesis >------|");
     Ths::SDLApp* app = new Ths::SDLApp();
+    //app->name = static_cast<const char*>("TestApp");
+    app->version = VK_MAKE_API_VERSION(1,0,0,0);
     app->run();
     //app->initWindow("Test App", 1240, 720);
     //app->mainLoop([]()->bool{return true;});

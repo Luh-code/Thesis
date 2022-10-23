@@ -22,14 +22,14 @@ namespace Ths
         
     }
     
-    void VkApp::mainLoop(bool (*func)())
-    {
-        while (func());
-    }
-    
     void VkApp::cleanup()
     {
-        if (this->vData) delete this->vData;
+        delVContext();
+    }
+    
+    void VkApp::delVContext()
+    {
+        if (this->vContext) delete this->vContext;
     }
     
 // SDLApp
@@ -38,11 +38,6 @@ namespace Ths
     {
         if (!Ths::SDL::sdl_initialized) Ths::SDL::initSDLVid();
         window = Ths::SDL::createSDLWindowVk(title, dx, dy, w, h);
-    }
-    
-    void SDLApp::initVulkan()
-    {
-        
     }
     
     void SDLApp::mainLoop(bool (*func)())
@@ -54,6 +49,7 @@ namespace Ths
     {
         Ths::SDL::destroySDLWindow(window);
         if(dein_sdl && Ths::SDL::sdl_initialized) Ths::SDL::quitSDL();
+        delVContext();
     }
 
     void SDLApp::cleanup()
