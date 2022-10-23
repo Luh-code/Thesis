@@ -11,7 +11,7 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 
-set(PREPROCESSOR_DEFINITIONS EZV_SUPPORT_SDL LHG_VERBOSE EZV_INFO_OUTPUT LHG_LINUX)
+set(PREPROCESSOR_DEFINITIONS EZV_SUPPORT_SDL LHG_VERBOSE EZV_INFO_OUTPUT LHG_LINUX LHG_PRINT_LVL)
 
 find_package(SDL2 REQUIRED)
 find_package(Vulkan REQUIRED)
@@ -26,6 +26,7 @@ add_executable(Thesis ${SOURCE})
 target_compile_definitions(Thesis PUBLIC ${PREPROCESSOR_DEFINITIONS})
 target_include_directories(Thesis PUBLIC ${PROJECT_SOURCE_DIR}/dependencies/FlagEx/include
                                 ${PROJECT_SOURCE_DIR}/dependencies/Sheriff/include
+                                ${PROJECT_SOURCE_DIR}/dependencies/lhg/include
                                 #${PROJECT_SOURCE_DIR}/dependencies/Vulkan/1.3.216.0/x86_64/include
                                 ${SDL2_INCLUDE_DIRS})
 target_link_libraries(Thesis PUBLIC #${PROJECT_SOURCE_DIR}/dependencies/Vulkan/1.3.216.0/x86_64/lib/libvulkan.so

@@ -14,6 +14,7 @@ find_package(Vulkan REQUIRED)
 set(COMMON_INCLUDES ${PROJECT_SOURCE_DIR}/src
                     ${PROJECT_SOURCE_DIR}/dependencies/FlagEx/include
                     ${PROJECT_SOURCE_DIR}/dependencies/Sheriff/include
+                    ${PROJECT_SOURCE_DIR}/dependencies/lhg/include
                     #${PROJECT_SOURCE_DIR}/dependencies/Vulkan/1.3.216.0/x86_64/include
                     ${Vulkan_INCLUDE_DIRS}
                     ${SDL2_INCLUDE_DIRS})
