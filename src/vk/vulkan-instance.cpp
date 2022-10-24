@@ -18,9 +18,11 @@ namespace Ths::Vk
         createInfo.ppEnabledExtensionNames = ppExtensions;
         createInfo.enabledLayerCount = 0;
 
-        VKF(vkCreateInstance(&createInfo, 0, context->instance))
+        context->instance = nullptr;
+
+        VKF(vkCreateInstance(&createInfo, nullptr, context->instance))
         {
-            LOG_ERROR("An error occured whilst creating Vulkan Instance!");
+            LOG_ERROR("An error occured whilst creating Vulkan Instance: "/*, res*/);
             LOG_INIT_AB("Vulkan Instance");
             return false;
         }

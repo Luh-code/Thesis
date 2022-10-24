@@ -5,11 +5,10 @@
 #include "../thesis.h"
 #include "logger.h"
 //#include "../sdl/sdl-base.h"
-// Sheriff Setup & Config
 
-#define VK_FAIL(val) if((val) != VK_SUCCESS)
+#define VK_FAIL(val) if(/*VkResult res = (val);res*/ (val) != VK_SUCCESS)
 #define VKF(val) VK_FAIL(val)
-#define ASSERT_VULKAN(val) VKF(val) { LOG_CRIT("An error occured in an attempted vulkan call"); assert(false); }
+#define ASSERT_VULKAN(val) VKF(val) { LOG_CRIT("An error occured in an attempted vulkan call: "/*, ret*/); assert(false); }
 #define VK(f) f
 #define VKA(f) ASSERT_VULKAN(VK(f))
 
