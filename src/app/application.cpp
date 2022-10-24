@@ -43,9 +43,9 @@ namespace Ths
     void SDLApp::initVulkan()
     {
         uint32_t eCount;
-        const char** eNames;
-        SDL_Vulkan_GetInstanceExtensions(window, &eCount, eNames); // TODO: Fix this <--
-        Vk::createVulkanInstance(vContext, eCount, eNames, name, version);
+        std::vector<const char*> extensions;
+        Ths::SDL::querySDLVkInstanceExtensions(window, &eCount, &extensions);
+        Vk::createVulkanInstance(vContext, eCount, extensions.data(), name, version);
     }
     
     void SDLApp::mainLoop(bool (*func)())

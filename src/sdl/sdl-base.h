@@ -2,8 +2,10 @@
 #define __SDL_BASE_H__
 
 #include "SDL2/SDL.h"
+#include "SDL2/SDL_vulkan.h"
 #include "logger.h"
 #include <string>
+#include <vector>
 
 namespace Ths::SDL
 {
@@ -16,6 +18,7 @@ namespace Ths::SDL
     bool destroySDLWindow(SDL_Window* wnd);
     bool quitSDL();
     bool maintainSDLWindow();
+    bool querySDLVkInstanceExtensions(SDL_Window* window, uint32_t* count, std::vector<const char*>* extensions);
 }
 
 #endif // __SDL_BASE_H__
