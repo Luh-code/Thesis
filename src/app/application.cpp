@@ -19,7 +19,7 @@ namespace Ths
 
     void VkApp::initVulkan()
     {
-        Vk::createVulkanInstance(vContext, 0, 0, name, version);
+        Vk::createVulkanInstance(vContext, 0, 0, 0, 0, name, version);
     }
     
     void VkApp::cleanup()
@@ -45,7 +45,11 @@ namespace Ths
         uint32_t eCount;
         std::vector<const char*> extensions;
         Ths::SDL::querySDLVkInstanceExtensions(window, &eCount, &extensions);
-        Vk::createVulkanInstance(vContext, eCount, extensions.data(), name, version);
+        uint32_t lCount = 1;
+        std::vector<const char*> layers;
+        layers.push_back("VK_LAYER_KHRONOS_validation");
+        Ths::Vk::checkLayerAvailability(layers.data(), &lCount);
+        Vk::createVulkanInstance(vContext, eCount, extensions.data(), 0, 0, name, version);
     }
     
     void SDLApp::mainLoop(bool (*func)())
