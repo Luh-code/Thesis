@@ -6,7 +6,7 @@ namespace Ths::Vk
     {
         LOG_QUER("for available Layers");
         uint32_t* pLayerPropertyCount;
-        if (pLayerCount = 0) pLayerPropertyCount = pLayerCount;
+        if (pLayerCount != 0) pLayerPropertyCount = pLayerCount;
         else pLayerPropertyCount = new uint32_t();
         VKF(vkEnumerateInstanceLayerProperties(pLayerPropertyCount, 0))
         {
@@ -15,32 +15,36 @@ namespace Ths::Vk
             return false;
         }
         VkLayerProperties* pLayerProperties = new VkLayerProperties[*pLayerPropertyCount];
-        //if (ppLayers) delete[] ppLayers;
         VKF(vkEnumerateInstanceLayerProperties(pLayerPropertyCount, pLayerProperties))
         {
             LOG_ERROR("An Error occured, whilst querying for available Layers: ", res);
             LOG_QUER_AB("for available Layers");
             return false;
         }
-        //ppLayers = new const char*[*pLayerPropertyCount];
         std::vector<const char*> layers;
-        LOG_INFO("-----AVAILABLE LAYERS-----");
+        LOG_INFO("AVAILABLE LAYERS:");
         for (uint32_t i = 0; i < *pLayerPropertyCount; i++)
         {
+            /*
+            TODO: Fix formatting
+            is:
+              alayer: description
+              anotherlayer: description
+            should be:
+              alayer:       description
+              anotherlayer: description
+            */
             LOG_INFO("  ", pLayerProperties[i].layerName, ": ", pLayerProperties[i].description);
             layers.push_back(pLayerProperties[i].layerName);
-            //ppLayers[i] = pLayerProperties[i].layerName;//std::move(pLayerProperties[i].layerName);
-            //ppLayers[i] = pLayerProperties[i].layerName;
         }
-        LOG_INFO("--------------------------");
         delete[] pLayerProperties;
         if (pLayerCount = 0) delete pLayerPropertyCount;
-        ppLayers = layers.data();
+        ppLayers = std::move(layers.data());
         LOG_QUER_OK("for available Layers");
         return true;
     }
 
-    bool checkLayerAvailability(const char** ppLayers, uint32_t* pLayerCount)
+    bool checkLayerAvailability(std::vector<const char*>* pLayers, uint32_t* pLayerCount)
     {
         LOG_ING("check", "layer availability");
         const char** ppAvailableLayers;
@@ -51,31 +55,35 @@ namespace Ths::Vk
             return false;
         }
 
-        std::vector<const char*> layers;
-
-        for (uint32_t i = 0; i < availableLayerCount; i++)
+        //std::vector<const char*> layers;
+        //for (uint32_t i = 0; i < *pLayerCount; i++)
+        for (std::vector<const char*>::iterator it = pLayers->begin(); it != pLayers->end(); it++)
         {
-            for (uint32_t j = 0; j < *pLayerCount; j++)
+            for (uint32_t j = 0; j < availableLayerCount; j++)
             {
-                if (ppLayers[j] == ppAvailableLayers[i])
+                if (*it == ppAvailableLayers[j])
                 {
-                    LOG_INFO("  ", ppLayers[j], " - available");
-                    layers.push_back(ppLayers[j]);
+                    LOG_INFO("  ", *it, " - available");
+                    //layers.push_back(ppLayers[i]);
                     break;
                 }
-                else if (j == *pLayerCount-1)
+                else if (!(j < availableLayerCount))
                 {
-                    LOG_WARN("\t", ppLayers[j], " - unavailable, continuing");
+                    LOG_WARN("  ", *it, " - unavailable, continuing");
+                    it = pLayers->erase(it);
+                    it--;
                 }
             }
         }
 
-        delete[] ppAvailableLayers;
-        delete[] ppLayers;
+        //ppLayers = std::copy(layers.data());
+        //std::copy(layers.begin(), layers.end(), ppLayers);
+        //LOG_DEBUG(pLayers->at(0));
+        //delete[] *ppAvailableLayers;
+        //LOG_DEBUG(pLayers->at(0));
 
-        layers.shrink_to_fit();
-        ppLayers = layers.data();
-        *pLayerCount = layers.size();
+        pLayers->shrink_to_fit();
+        *pLayerCount = pLayers->size();
         LOG_ING_OK("check", "layer availability");
         return true;
     }
@@ -95,6 +103,7 @@ namespace Ths::Vk
         createInfo.enabledExtensionCount = extensionCount;
         createInfo.ppEnabledExtensionNames = ppExtensions;
         createInfo.enabledLayerCount = layerCount;
+        LOG_DEBUG(ppLayers[0]);
         createInfo.ppEnabledLayerNames = ppLayers;
 
         VKF(vkCreateInstance(&createInfo, nullptr, &pContext->instance))

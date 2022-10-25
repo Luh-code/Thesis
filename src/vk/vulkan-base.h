@@ -13,6 +13,8 @@
 #define VK(f) f
 #define VKA(f) ASSERT_VULKAN(VK(f))
 
+#define ARRAY_SIZE(v) (sizeof(v)/sizeof(v[0]))
+
 namespace Ths::Vk
 {
     // Vulkan Creation
@@ -26,7 +28,7 @@ namespace Ths::Vk
     // Functions
 
     bool queryAvailableLayers(const char** ppLayers, uint32_t* pLayerCount);
-    bool checkLayerAvailability(const char** ppLayers, uint32_t* pLayerCount);
+    bool checkLayerAvailability(std::vector<const char*>* pLayers, uint32_t* pLayerCount);
     bool createVulkanInstance(VContext* pContext, uint32_t extensionCount, const char** ppExtensions, uint32_t layerCount, const char** ppLayers, const char* pAppName = "Test App", uint32_t appVersion = VK_MAKE_API_VERSION(1,0,0,0));
 }
 
