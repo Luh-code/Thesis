@@ -7,6 +7,7 @@
 #include <vector>
 #include <algorithm>
 #include <cstring>
+#include <map>
 //#include "../sdl/sdl-base.h"
 
 #define VK_FAIL(val) if(VkResult res = (val); res != VK_SUCCESS)
@@ -32,8 +33,9 @@ namespace Ths::Vk
     } VContext;
 
     // Functions
+    uint32_t rateDeviceSuitability(VkPhysicalDeviceProperties* pProps, VkPhysicalDeviceFeatures* pFeatures);
     bool isPhysicalDeviceSuitable(VkPhysicalDevice device, VkPhysicalDeviceProperties* pProps,
-        VkPhysicalDeviceFeatures* pRequiredFeatures, VkPhysicalDeviceType type);
+        VkPhysicalDeviceFeatures* pFeatures, VkPhysicalDeviceFeatures* pRequiredFeatures);
     bool selectPhysicalDevice(VContext* context, VkPhysicalDeviceFeatures* pRequiredFeatures);
 
     void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator);
