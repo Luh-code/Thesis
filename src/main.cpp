@@ -3,6 +3,12 @@
 //#include "vk/vulkan-base.h"
 //#include "sdl/sdl-base.h"
 #include "app/application.h"
+#include "memory_mger.h"
+
+/*inline void printMemoryUsage() override
+{
+    LOG_DEBUG("Current Heap Memory Usage: ", memoryMetrics.currentUsage()," Bytes");
+}*/
 
 int main()
 {

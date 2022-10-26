@@ -3,6 +3,7 @@
 
 #include "../sdl/sdl-base.h"
 #include "../vk/vulkan-base.h"
+#include "../memory_mger.h"
 
 namespace Ths
 {
@@ -62,10 +63,14 @@ namespace Ths
 
         virtual inline void run()
         {
-            initWindow("SDL App", 1240, 720);
+            LOG_INIT("SDL App ", name);
+            initWindow(name, 1240, 720);
             initVulkan();
+            LOG_INIT_OK("SDL App \"", name, "\"");
             mainLoop([]() -> bool {return true;});
+            LOG_DEST("SDL App \"", name, "\"");
             cleanup();
+            LOG_DEST_OK("SDL App \"", name, "\"");
         }
         virtual void initWindow(const char* title, uint32_t w, uint32_t h, uint32_t dx = SDL_WINDOWPOS_CENTERED, uint32_t dy = SDL_WINDOWPOS_CENTERED);
         virtual void initVulkan() override;

@@ -48,7 +48,9 @@ namespace Ths
         uint32_t lCount = 1;
         std::vector<const char*> layers;
         layers.push_back("VK_LAYER_KHRONOS_validation");
+        printMemoryUsage();
         Ths::Vk::checkLayerAvailability(&layers, &lCount);
+        printMemoryUsage();
         Vk::createVulkanInstance(vContext, eCount, extensions.data(), lCount, layers.data(), name, version);
     }
     
