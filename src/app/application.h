@@ -1,8 +1,8 @@
 #ifndef __APPLICATION_H__
 #define __APPLICATION_H__
 
-#include "../sdl/sdl-base.h"
-#include "../vk/vulkan-base.h"
+#include "../sdl/sdl_base.h"
+#include "../vk/vulkan_base.h"
 #include "../memory_mger.h"
 
 namespace Ths

@@ -49,6 +49,12 @@ namespace Ths
         Ths::Vk::checkLayerAvailability(&layers);
         Ths::Vk::createVulkanInstance(vContext, extensions.size(), extensions.data(), layers.size(), layers.data(), name, version, debug);
         Ths::Vk::setupDebugMessenger(vContext);
+        VkPhysicalDeviceFeatures gpuReqirements;
+        VkBool32* pBoolRequirements = reinterpret_cast<VkBool32*>(&gpuReqirements);
+        for (uint32_t i = 0; i < (sizeof(VkPhysicalDeviceFeatures)/sizeof(VkBool32)); i++)
+            pBoolRequirements[i] = false;
+        gpuReqirements.geometryShader = true;
+        Ths::Vk::selectPhysicalDevice(vContext, &gpuReqirements);
     }
     
     void SDLApp::mainLoop(bool (*func)())

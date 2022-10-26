@@ -14,7 +14,11 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 
-set(PREPROCESSOR_DEFINITIONS LHG_VERBOSE LHG_LINUX LHG_PRINT_LVL LHG_HIDE_PATH
+set(PREPROCESSOR_DEFINITIONS
+    LHG_LINUX
+    LHG_VERBOSE
+    LHG_PRINT_LVL
+    LHG_HIDE_PATH
     #THS_VK_OUTPUT_VERBOSE
     #THS_VK_OUTPUT_INFO
     )
@@ -68,9 +72,10 @@ add_compile_definitions(${PREPROCESSOR_DEFINITIONS})
 
 # Source files for Thesis
 set(SOURCE ${PROJECT_SOURCE_DIR}/src/main.cpp
-            ${PROJECT_SOURCE_DIR}/src/sdl/sdl-base.cpp
+            ${PROJECT_SOURCE_DIR}/src/sdl/sdl_base.cpp
             ${PROJECT_SOURCE_DIR}/src/app/application.cpp
-            ${PROJECT_SOURCE_DIR}/src/vk/vulkan-instance.cpp)
+            ${PROJECT_SOURCE_DIR}/src/vk/vulkan_instance.cpp
+            ${PROJECT_SOURCE_DIR}/src/vk/vulkan_device.cpp)
 
 # Create Thesis as executable
 add_executable(thesis ${SOURCE})

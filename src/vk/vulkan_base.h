@@ -26,9 +26,15 @@ namespace Ths::Vk
     {
         VkInstance instance;
         VkDebugUtilsMessengerEXT debugMessenger;
+
+        VkPhysicalDevice physicalDevice;
+        VkDevice device = VK_NULL_HANDLE;
     } VContext;
 
     // Functions
+    bool isPhysicalDeviceSuitable(VkPhysicalDevice device, VkPhysicalDeviceProperties* pProps,
+        VkPhysicalDeviceFeatures* pRequiredFeatures, VkPhysicalDeviceType type);
+    bool selectPhysicalDevice(VContext* context, VkPhysicalDeviceFeatures* pRequiredFeatures);
 
     void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator);
     VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo,
