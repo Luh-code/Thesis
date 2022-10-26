@@ -1,0 +1,15 @@
+"filename", "language", "C++", "Markdown", "comment", "blank", "total"
+"d:\Projects\Thesis\README.md", "Markdown", 0, 1, 0, 1, 2
+"d:\Projects\Thesis\src\app\application.cpp", "C++", 60, 0, 5, 17, 82
+"d:\Projects\Thesis\src\app\application.h", "C++", 72, 0, 5, 11, 88
+"d:\Projects\Thesis\src\main.cpp", "C++", 13, 0, 0, 0, 13
+"d:\Projects\Thesis\src\memory_mger.h", "C++", 27, 0, 5, 9, 41
+"d:\Projects\Thesis\src\pch.h", "C++", 3, 0, 0, 1, 4
+"d:\Projects\Thesis\src\sdl\sdl_base.cpp", "C++", 103, 0, 0, 14, 117
+"d:\Projects\Thesis\src\sdl\sdl_base.h", "C++", 20, 0, 0, 4, 24
+"d:\Projects\Thesis\src\thesis.h", "C++", 6, 0, 0, 3, 9
+"d:\Projects\Thesis\src\vk\vulkan_base.h", "C++", 40, 0, 4, 9, 53
+"d:\Projects\Thesis\src\vk\vulkan_device.cpp", "C++", 59, 0, 0, 4, 63
+"d:\Projects\Thesis\src\vk\vulkan_instance.cpp", "C++", 190, 0, 19, 17, 226
+"d:\Projects\Thesis\tests\test1\Test.cpp", "C++", 5, 0, 0, 1, 6
+"Total", "-", 598, 1, 38, 91, 728

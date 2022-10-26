@@ -46,7 +46,7 @@ namespace Ths::Vk
                 if (context->physicalDevice == VK_NULL_HANDLE)
                 {
                     context->physicalDevice = *i;
-                    LOG_DEBUG("physical device set");
+                    LOG_INFO_IV("Selected GPU: \"", props.deviceName, "\"");
                 }
             }
             else LOG_INFO("  \"", props.deviceName, "\" - not suitable");

@@ -119,7 +119,7 @@ namespace Ths::Vk
             LOG_QUER_AB("for available Layers");
             return false;
         }
-        LOG_INFO("AVAILABLE LAYERS:");
+        LOG_DEBUG("AVAILABLE LAYERS:");
         for (uint32_t i = 0; i < pLayerPropertyCount; i++)
         {
             /*
@@ -131,7 +131,7 @@ namespace Ths::Vk
               alayer:       description
               anotherlayer: description
             */
-            LOG_INFO("  ", pLayerProperties[i].layerName, ": ", pLayerProperties[i].description);
+            LOG_DEBUG("  ", pLayerProperties[i].layerName, ": ", pLayerProperties[i].description);
             if (pLayers)
             {
                 size_t len = strlen(pLayerProperties[i].layerName)+1;
