@@ -6,6 +6,7 @@
 #include "logger.h"
 #include <vector>
 #include <algorithm>
+#include <cstring>
 //#include "../sdl/sdl-base.h"
 
 #define VK_FAIL(val) if(VkResult res = (val); res != VK_SUCCESS)
@@ -29,8 +30,8 @@ namespace Ths::Vk
     // Functions
 
     bool addDebugging(std::vector<const char*>* pLayers, std::vector<const char*>* pExtensions, bool shrink = true);
-    bool queryAvailableLayers(const char** ppLayers, uint32_t* pLayerCount);
-    bool checkLayerAvailability(std::vector<const char*>* pLayers, uint32_t* pLayerCount);
+    bool queryAvailableLayers(std::vector<char*>* pLayers);
+    bool checkLayerAvailability(std::vector<const char*>* pLayers);
     bool createVulkanInstance(VContext* pContext, uint32_t extensionCount, const char** ppExtensions, uint32_t layerCount, const char** ppLayers, const char* pAppName = "Test App", uint32_t appVersion = VK_MAKE_API_VERSION(1,0,0,0));
 }
 

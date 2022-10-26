@@ -45,13 +45,9 @@ namespace Ths
         uint32_t eCount;
         std::vector<const char*> extensions;
         Ths::SDL::querySDLVkInstanceExtensions(window, &eCount, &extensions);
-        uint32_t lCount = 1;
         std::vector<const char*> layers;
         Ths::Vk::addDebugging(&layers, &extensions, false);
-        //layers.push_back("VK_LAYER_KHRONOS_validation");
-        //printMemoryUsage();
-        Ths::Vk::checkLayerAvailability(&layers, &lCount);
-        //printMemoryUsage();
+        Ths::Vk::checkLayerAvailability(&layers);
         Vk::createVulkanInstance(vContext, extensions.size(), extensions.data(), layers.size(), layers.data(), name, version);
     }
     
