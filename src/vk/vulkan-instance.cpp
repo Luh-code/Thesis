@@ -39,10 +39,11 @@ namespace Ths::Vk
         return VK_FALSE;
     }
 
-    bool setupDebugMessenger(VContext* context)
+    void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo)
     {
-        LOG_INIT("Debug Messenger");
-        VkDebugUtilsMessengerCreateInfoEXT createInfo {VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT};
+        createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
+        createInfo.flags = 0;
+        createInfo.pNext = nullptr;
         createInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT |
             VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT
 #ifdef THS_VK_OUTPUT_INFO
@@ -57,6 +58,13 @@ namespace Ths::Vk
             VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
         createInfo.pfnUserCallback = &debugCallback;
         createInfo.pUserData = nullptr;
+    }
+
+    bool setupDebugMessenger(VContext* context)
+    {
+        LOG_INIT("Debug Messenger");
+        VkDebugUtilsMessengerCreateInfoEXT createInfo;
+        populateDebugMessengerCreateInfo(createInfo);
 
         VKF(CreateDebugUtilsMessengerEXT(context->instance, &createInfo, nullptr, &context->debugMessenger))
         {
@@ -179,23 +187,31 @@ namespace Ths::Vk
         return true;
     }
 
-    bool createVulkanInstance(VContext* pContext, uint32_t extensionCount, const char** ppExtensions, uint32_t layerCount, const char** ppLayers, const char* pAppName, uint32_t appVersion)
+    bool createVulkanInstance(VContext* pContext, uint32_t extensionCount, const char** ppExtensions,
+        uint32_t layerCount, const char** ppLayers, const char* pAppName, uint32_t appVersion, bool debug)
     {
         LOG_INIT("Vulkan Instance");
-        VkApplicationInfo appInfo{VK_STRUCTURE_TYPE_APPLICATION_INFO};
+        VkApplicationInfo appInfo {VK_STRUCTURE_TYPE_APPLICATION_INFO};
         appInfo.pApplicationName = pAppName;
         appInfo.applicationVersion = appVersion;
         appInfo.pEngineName = ENGINE_NAME;
         appInfo.engineVersion = ENGINE_VERSION;
         appInfo.apiVersion = VK_API_VERSION_1_3;
 
-        VkInstanceCreateInfo createInfo{VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO};
+        VkInstanceCreateInfo createInfo {VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO};
         createInfo.pApplicationInfo = &appInfo;
         createInfo.enabledExtensionCount = extensionCount;
         createInfo.ppEnabledExtensionNames = ppExtensions;
         createInfo.enabledLayerCount = layerCount;
         //LOG_DEBUG(ppLayers[0]);
         createInfo.ppEnabledLayerNames = ppLayers;
+
+        if (debug)
+        {
+            VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo{};
+            populateDebugMessengerCreateInfo(debugCreateInfo);
+            createInfo.pNext = (VkDebugUtilsMessengerCreateInfoEXT*) &debugCreateInfo;
+        }
 
         VKF(vkCreateInstance(&createInfo, nullptr, &pContext->instance))
         {

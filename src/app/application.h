@@ -43,6 +43,7 @@ namespace Ths
     {
     public:
         Vk::VContext* vContext = new Vk::VContext();
+        bool debug = true;
 
         virtual inline void run()
         {

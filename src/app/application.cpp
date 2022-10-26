@@ -47,7 +47,7 @@ namespace Ths
         std::vector<const char*> layers;
         Ths::Vk::addDebugging(&layers, &extensions, false);
         Ths::Vk::checkLayerAvailability(&layers);
-        Ths::Vk::createVulkanInstance(vContext, extensions.size(), extensions.data(), layers.size(), layers.data(), name, version);
+        Ths::Vk::createVulkanInstance(vContext, extensions.size(), extensions.data(), layers.size(), layers.data(), name, version, debug);
         Ths::Vk::setupDebugMessenger(vContext);
     }
     
