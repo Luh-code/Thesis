@@ -46,9 +46,13 @@ namespace Ths
 
         virtual inline void run()
         {
+            LOG_INIT("Vk App \"", name, "\"");
             initVulkan();
+            LOG_INIT_OK("Vk App \"", name, "\"");
             mainLoop([]() -> bool {return true;});
+            LOG_DEST("Vk App \"", name, "\"");
             cleanup();
+            LOG_DEST_OK("Vk App \"", name, "\"");
         }
         virtual void initVulkan();
         //virtual void mainLoop(bool (*func)());

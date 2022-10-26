@@ -47,8 +47,8 @@ namespace Ths
         std::vector<const char*> layers;
         Ths::Vk::addDebugging(&layers, &extensions, false);
         Ths::Vk::checkLayerAvailability(&layers);
-        Vk::createVulkanInstance(vContext, extensions.size(), extensions.data(), layers.size(), layers.data(), name, version);
-        Vk::setupDebugMessenger(vContext);
+        Ths::Vk::createVulkanInstance(vContext, extensions.size(), extensions.data(), layers.size(), layers.data(), name, version);
+        Ths::Vk::setupDebugMessenger(vContext);
     }
     
     void SDLApp::mainLoop(bool (*func)())
@@ -58,9 +58,15 @@ namespace Ths
     
     void SDLApp::cleanup(bool dein_sdl)
     {
+        // Delete Vk stuff
+        Ths::Vk::DestroyDebugUtilsMessengerEXT(vContext->instance, vContext->debugMessenger, nullptr);
+        vkDestroyInstance(vContext->instance, nullptr);
+        
+        delVContext(); // * Do AFTER deleting all Vk related objs
+
+        // Delete SDL stuff
         Ths::SDL::destroySDLWindow(window);
         if(dein_sdl && Ths::SDL::sdl_initialized) Ths::SDL::quitSDL();
-        delVContext();
     }
 
     void SDLApp::cleanup()
