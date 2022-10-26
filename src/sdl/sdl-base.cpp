@@ -90,20 +90,21 @@ namespace Ths::SDL
         return true;
     }
     
-    bool querySDLVkInstanceExtensions(SDL_Window* window, uint32_t* count, std::vector<const char*>* extensions)
+    bool querySDLVkInstanceExtensions(SDL_Window* window, std::vector<const char*>* extensions)
     {
         LOG_QUER("SDL for VkInstance Extensions");
 
-        if (!SDL_Vulkan_GetInstanceExtensions(window, count, nullptr))
+        uint32_t count = 0;
+        if (!SDL_Vulkan_GetInstanceExtensions(window, &count, nullptr))
         {
             LOG_ERROR("An Error occured whilst querying SDL for VkInstance Extension count: ", SDL_GetError);
             LOG_QUER_AB("SDL for VkInstance Extensions");
             return false;
         }
 
-        extensions->resize(extensions->size()+*count);
+        extensions->resize(extensions->size()+count);
 
-        if (!SDL_Vulkan_GetInstanceExtensions(window, count, extensions->data()))
+        if (!SDL_Vulkan_GetInstanceExtensions(window, &count, extensions->data()))
         {
             LOG_ERROR("An Error occured whilst querying SDL for VkInstance Extensions: ", SDL_GetError);
             LOG_QUER_AB("SDL for VkInstance Extensions");

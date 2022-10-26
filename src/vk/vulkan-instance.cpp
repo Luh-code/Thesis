@@ -69,7 +69,7 @@ namespace Ths::Vk
         const char* validationLayer = "VK_LAYER_KHRONOS_validation";
         if (pLayers->size() > 0) {
             for (std::vector<const char*>::iterator i = pLayers->begin(); strcmp(*i, validationLayer) != 0; i++)
-                if (i == pLayers->end()) {
+                if (i == pLayers->end()-1) {
             pLayers->push_back(validationLayer);
             break;
         }} else pLayers->push_back(validationLayer);
@@ -77,7 +77,7 @@ namespace Ths::Vk
         const char* debugExtension = VK_EXT_DEBUG_UTILS_EXTENSION_NAME;
         if (pExtensions->size() > 0) {
             for (std::vector<const char*>::iterator i = pExtensions->begin(); strcmp(*i, debugExtension) != 0; i++)
-                if (i == pExtensions->end()) {
+                if (i == pExtensions->end()-1) {
             pExtensions->push_back(debugExtension);
             break;
         }} else pExtensions->push_back(debugExtension);

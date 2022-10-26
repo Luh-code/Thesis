@@ -42,9 +42,8 @@ namespace Ths
 
     void SDLApp::initVulkan()
     {
-        uint32_t eCount;
         std::vector<const char*> extensions;
-        Ths::SDL::querySDLVkInstanceExtensions(window, &eCount, &extensions);
+        Ths::SDL::querySDLVkInstanceExtensions(window, &extensions);
         std::vector<const char*> layers;
         Ths::Vk::addDebugging(&layers, &extensions, false);
         Ths::Vk::checkLayerAvailability(&layers);
