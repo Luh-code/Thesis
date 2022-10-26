@@ -49,6 +49,7 @@ namespace Ths
         Ths::Vk::addDebugging(&layers, &extensions, false);
         Ths::Vk::checkLayerAvailability(&layers);
         Vk::createVulkanInstance(vContext, extensions.size(), extensions.data(), layers.size(), layers.data(), name, version);
+        Vk::setupDebugMessenger(vContext);
     }
     
     void SDLApp::mainLoop(bool (*func)())

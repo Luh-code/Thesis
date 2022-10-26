@@ -2,6 +2,68 @@
 
 namespace Ths::Vk
 {
+    VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo,
+        const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger)
+    {
+        auto func = (PFN_vkCreateDebugUtilsMessengerEXT) vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
+        if (func != nullptr) return func(instance, pCreateInfo, pAllocator, pDebugMessenger);
+        else return VK_ERROR_EXTENSION_NOT_PRESENT;
+    }
+
+    VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(
+        VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
+        VkDebugUtilsMessageTypeFlagsEXT messageType,
+        const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
+        void* pUserData)
+    {
+        const char* prefix = "Validation Layer: ";
+        switch (messageSeverity)
+        {
+        case VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT:
+            LOG_DEBUG("Validation Layer: ", pCallbackData->pMessage);
+            break;
+        case VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT:
+            LOG_INFO("Validation Layer: ", pCallbackData->pMessage);
+            break;
+        case VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT:
+            LOG_WARN("Validation Layer: ", pCallbackData->pMessage);
+            break;
+        case VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT:
+            LOG_ERROR("Validation Layer: ", pCallbackData->pMessage);
+            break;
+        }
+        return VK_FALSE;
+    }
+
+    bool setupDebugMessenger(VContext* context)
+    {
+        LOG_INIT("Debug Messenger");
+        VkDebugUtilsMessengerCreateInfoEXT createInfo {VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT};
+        createInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT |
+            VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT
+#ifdef THS_VK_OUTPUT_INFO
+            | VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT
+#endif // THS_VK_OUTPUT_INFO
+#ifdef THS_VK_OUTPUT_VERBOSE
+            | VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT
+#endif // THS_VK_OUTPUT_VERBOSE
+        ;
+        createInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |
+            VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT |
+            VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
+        createInfo.pfnUserCallback = &debugCallback;
+        createInfo.pUserData = nullptr;
+
+        VKF(CreateDebugUtilsMessengerEXT(context->instance, &createInfo, nullptr, &context->debugMessenger))
+        {
+            LOG_ERROR("An Error occured whilst createing VkDebugUtilsMessengerEXT: ", res);
+            LOG_INIT_AB("Debug Messenger");
+            return false;
+        }
+        LOG_INIT_OK("Debug Messenger");
+        return true;
+    }
+
     bool addDebugging(std::vector<const char*>* pLayers, std::vector<const char*>* pExtensions, bool shrink)
     {
         const char* validationLayer = "VK_LAYER_KHRONOS_validation";

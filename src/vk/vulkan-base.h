@@ -25,10 +25,19 @@ namespace Ths::Vk
     typedef struct VulkanContext
     {
         VkInstance instance;
+        VkDebugUtilsMessengerEXT debugMessenger;
     } VContext;
 
     // Functions
 
+    VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo,
+        const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger);
+    VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(
+        VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
+        VkDebugUtilsMessageTypeFlagsEXT messageType,
+        const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
+        void* pUserData);
+    bool setupDebugMessenger(VContext* context);
     bool addDebugging(std::vector<const char*>* pLayers, std::vector<const char*>* pExtensions, bool shrink = true);
     bool queryAvailableLayers(std::vector<char*>* pLayers);
     bool checkLayerAvailability(std::vector<const char*>* pLayers);
