@@ -5,63 +5,22 @@ namespace Ths::Vk
     bool addDebugging(std::vector<const char*>* pLayers, std::vector<const char*>* pExtensions, bool shrink)
     {
         const char* validationLayer = "VK_LAYER_KHRONOS_validation";
-        for (std::vector<const char*>::iterator i = pLayers->begin(); *i == validationLayer; i++)
-            if (i == pLayers->end())
+        if (pLayers->size() > 0) {
+            for (std::vector<const char*>::iterator i = pLayers->begin(); *i != validationLayer; i++)
+                if (i == pLayers->end())
         {
             pLayers->push_back(validationLayer);
             break;
-        }
+        }} else pLayers->push_back(validationLayer);
 
         const char* debugExtension = VK_EXT_DEBUG_UTILS_EXTENSION_NAME;
-        for (std::vector<const char*>::iterator i = pExtensions->begin(); *i == debugExtension; i++)
-            if (i == pExtensions->end())
+        if (pLayers->size() > 0) {
+            for (std::vector<const char*>::iterator i = pExtensions->begin(); *i != debugExtension; i++)
+                if (i == pExtensions->end()-1)
         {
             pExtensions->push_back(debugExtension);
             break;
-        }
-
-        /*while (std::vector<const char*>::iterator i = pLayers->begin(); true)
-        {
-            if (*i == validationLayer) break;
-            if (*i == pLayers->end())
-            {
-                pLayers->push_back(validationLayer);
-                break;
-            }
-            i++;
-        }
-        bool add = true;
-        for (std::vector<const char*>::iterator i = pLayers->begin(); i != pLayers->end(); i++)
-            if (*i == validationLayer)
-        {
-            add = false;
-            break;
-        }
-        std::for_each(pLayers->begin(), pLayers->end(),
-            [&](std::vector<const char*>::iterator n){
-                if (*n == validationLayer){
-                    add = false;
-                }
-            }
-        );
-        if (add) pLayers->push_back(validationLayer);
-        
-        add = true;
-        const char* debugExtension = VK_EXT_DEBUG_UTILS_EXTENSION_NAME;
-        for (std::vector<const char*>::iterator i = pExtensions->begin(); i != pExtensions->end(); i++)
-            if (*i == debugExtension)
-        {
-            add = false;
-            break;
-        }
-        std::for_each(pExtensions->begin(), pExtensions->end(),
-            [&](std::vector<const char*>::iterator n){
-                if (*n == debugExtension){
-                    add = false;
-                }
-            }
-        );
-        if (add) pExtensions->push_back(debugExtension);*/
+        }} else pExtensions->push_back(debugExtension);
 
         if (shrink)
         {
