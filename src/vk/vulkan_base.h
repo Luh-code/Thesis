@@ -44,6 +44,7 @@ namespace Ths::Vk
     std::vector<VkImage> swapchainImages;
     VkFormat swapchainImageFormat;
     VkExtent2D swapchainExtent;
+    std::vector<VkImageView> swapchainImageViews;
   } VContext;
 
   typedef struct QueueFamilyIndices
@@ -72,6 +73,7 @@ namespace Ths::Vk
   } SwapChainSupportDetails;
 
   // Functions
+  bool createImageViews(VulkanContext* pContext);
   bool createSwapChain(VulkanContext* pContext, uint32_t win_width, uint32_t win_height, uint32_t imgs,
     VkPresentModeKHR preferredPresentMode = VK_PRESENT_MODE_MAILBOX_KHR,
     VkFormat preferredFormat = VK_FORMAT_B8G8R8A8_SRGB , VkColorSpaceKHR preferredColorSpace = VK_COLOR_SPACE_SRGB_NONLINEAR_KHR);
@@ -79,7 +81,7 @@ namespace Ths::Vk
   VkPresentModeKHR chooseSwapChainPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes,
     VkPresentModeKHR preferredPresentMode = VK_PRESENT_MODE_MAILBOX_KHR);
   VkSurfaceFormatKHR chooseSwapChainSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats,
-    VkFormat preferredFormat = VK_FORMAT_B8G8R8A8_SRGB , VkColorSpaceKHR preferredColorSpace = VK_COLOR_SPACE_SRGB_NONLINEAR_KHR);
+    VkFormat preferredFormat = VK_FORMAT_B8G8R8A8_SRGB, VkColorSpaceKHR preferredColorSpace = VK_COLOR_SPACE_SRGB_NONLINEAR_KHR);
   SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device, VkSurfaceKHR surface);
   bool createLogicalDevice(VulkanContext* pContext, VkPhysicalDeviceFeatures* pFeatures, std::vector<const char*>* pDeviceExtensions);
   QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device, VkSurfaceKHR surface);

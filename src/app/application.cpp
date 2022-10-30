@@ -59,6 +59,7 @@ namespace Ths
     int width, height;
     SDL_Vulkan_GetDrawableSize(window, &width, &height);
     Ths::Vk::createSwapChain(vContext, width, height, 2);
+    Ths::Vk::createImageViews(vContext);
   }
   
   void SDLApp::mainLoop(bool (*func)())
@@ -69,6 +70,9 @@ namespace Ths
   void SDLApp::cleanup(bool dein_sdl)
   {
     // Delete Vk stuff
+    for (auto imageView : vContext->swapchainImageViews) {
+        vkDestroyImageView(vContext->device, imageView, nullptr);
+    }
     vkDestroySwapchainKHR(vContext->device, vContext->swapchain, nullptr);
     vkDestroyDevice(vContext->device, nullptr);
     Ths::Vk::DestroyDebugUtilsMessengerEXT(vContext->instance, vContext->debugMessenger, nullptr);
