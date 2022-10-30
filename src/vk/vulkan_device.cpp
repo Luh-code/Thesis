@@ -2,6 +2,33 @@
 
 namespace Ths::Vk
 {
+  SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device, VkSurfaceKHR surface)
+  {
+    SwapChainSupportDetails details;
+
+    VK(vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, surface, &details.capabilities));
+
+    uint32_t formatCount;
+    VK(vkGetPhysicalDeviceSurfaceFormatsKHR(device, surface, &formatCount, nullptr));
+
+    if (formatCount != 0)
+    {
+      details.formats.resize(formatCount);
+      VK(vkGetPhysicalDeviceSurfaceFormatsKHR(device, surface, &formatCount, details.formats.data()));
+    }
+
+    uint32_t presentModeCount;
+    VK(vkGetPhysicalDeviceSurfacePresentModesKHR(device, surface, &presentModeCount, nullptr));
+
+    if (presentModeCount != 0)
+    {
+      details.presentModes.resize(presentModeCount);
+      VK(vkGetPhysicalDeviceSurfacePresentModesKHR(device, surface, &presentModeCount, details.presentModes.data()));
+    }
+
+    return details;
+  }
+
   bool createLogicalDevice(VulkanContext* pContext, VkPhysicalDeviceFeatures* pFeatures, std::vector<const char*>* pDeviceExtensions) // TODO: Make more customizable
   {
     LOG_INIT("Logical Device");
@@ -124,7 +151,15 @@ namespace Ths::Vk
 
     QueueFamilyIndices indices = findQueueFamilies(device, surface);
 
-    return indices.isComplete() && checkDeviceExtensionSupport(device, pDeviceExtensions); // TODO: Make more customizable (selectable which queueFamilies are required)
+    bool extensionsSupported = checkDeviceExtensionSupport(device, pDeviceExtensions);
+    bool swapchainAdequate = false;
+    if (extensionsSupported)
+    {
+      SwapChainSupportDetails swapChainSupport = querySwapChainSupport(device, surface);
+      swapchainAdequate = !swapChainSupport.formats.empty() && !swapChainSupport.presentModes.empty();
+    }
+
+    return indices.isComplete() && swapchainAdequate; // TODO: Make more customizable (selectable which queueFamilies are required)
   }
 
   bool selectPhysicalDevice(VContext* context, VkPhysicalDeviceFeatures* pRequiredFeatures, std::vector<const char*>* pDeviceExtensions)

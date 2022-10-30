@@ -50,10 +50,7 @@ namespace Ths
     Ths::Vk::createVulkanInstance(vContext, extensions.size(), extensions.data(), layers.size(), layers.data(), name, version, debug);
     Ths::Vk::setupDebugMessenger(vContext);
     Ths::SDL::createVkWindowSurfaceSDL(vContext->instance, window, &vContext->surface);
-    VkPhysicalDeviceFeatures gpuReqirements {false};
-    /*VkBool32* pBoolRequirements = reinterpret_cast<VkBool32*>(&gpuReqirements);
-    for (uint32_t i = 0; i < (sizeof(VkPhysicalDeviceFeatures)/sizeof(VkBool32)); i++)
-      pBoolRequirements[i] = false;*/
+    VkPhysicalDeviceFeatures gpuReqirements {};
     gpuReqirements.geometryShader = true;
     std::vector<const char*> deviceExtensions;
     deviceExtensions.push_back(VK_KHR_SWAPCHAIN_EXTENSION_NAME);
