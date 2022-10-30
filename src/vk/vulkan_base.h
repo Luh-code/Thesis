@@ -9,6 +9,7 @@
 #include <cstring>
 #include <map>
 #include <optional>
+#include <set>
 //#include "../sdl/sdl-base.h"
 
 #define VK_FAIL(val) if(VkResult res = (val); res != VK_SUCCESS)
@@ -21,53 +22,62 @@
 
 namespace Ths::Vk
 {
-    // Vulkan Creation
-    // Data
+  // Vulkan Creation
+  // Data
 
-    typedef struct VulkanContext
+  typedef struct VulkanContext
+  {
+    VkInstance instance;
+    VkDebugUtilsMessengerEXT debugMessenger;
+
+    VkPhysicalDevice physicalDevice;
+    VkDevice device = VK_NULL_HANDLE;
+
+    VkQueue graphicsQueue;
+    VkQueue presentQueue;
+
+    VkSurfaceKHR surface;
+  } VContext;
+
+  typedef struct QueueFamilyIndices
+  {
+    std::optional<uint32_t> graphicsFamily;
+    std::optional<uint32_t> presentFamily;
+
+    inline bool isComplete()
     {
-        VkInstance instance;
-        VkDebugUtilsMessengerEXT debugMessenger;
+      uint32_t arrSize = sizeof(QueueFamilyIndices)/sizeof(std::optional<uint32_t>);
+      std::optional<uint32_t>* pThisArr = reinterpret_cast<std::optional<uint32_t>*>(this);
+      for (int i = 0; i < arrSize; i++)
+      {
+        if (!pThisArr->has_value()) return false;
+        pThisArr++;
+      }
+      return true;
+    }
+  } QueueFamilyIndices;
 
-        VkPhysicalDevice physicalDevice;
-        VkDevice device = VK_NULL_HANDLE;
+  // Functions
+  // TODO: make everything use a VulkanContext, instead of VkInstance, VkPhysicalDevice, VkDevice, VkDebugUtilsMessengerKHR, etc.
+  bool createLogicalDevice(VulkanContext* context, VkPhysicalDeviceFeatures* pFeatures);
+  QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device, VkSurfaceKHR surface);
+  uint32_t rateDeviceSuitability(VkPhysicalDeviceProperties* pProps, VkPhysicalDeviceFeatures* pFeatures);
+  bool isPhysicalDeviceSuitable(VkPhysicalDevice device, VkSurfaceKHR surface, VkPhysicalDeviceProperties* pProps,
+    VkPhysicalDeviceFeatures* pFeatures, VkPhysicalDeviceFeatures* pRequiredFeatures);
+  bool selectPhysicalDevice(VContext* context, VkPhysicalDeviceFeatures* pRequiredFeatures);
 
-        VkQueue graphicsQueue;
-
-        VkSurfaceKHR surface;
-    } VContext;
-
-    typedef struct QueueFamilyIndices
-    {
-        std::optional<uint32_t> graphicsFamily;
-
-        inline bool isComplete()
-        {
-            return graphicsFamily.has_value();
-        }
-    } QueueFamilyIndices;
-
-    // Functions
-    // TODO: make everything use a VulkanContext, instead of VkInstance, VkPhysicalDevice, VkDevice, VkDebugUtilsMessengerKHR, etc.
-    bool createLogicalDevice(VulkanContext* context, VkPhysicalDeviceFeatures* pFeatures);
-    QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
-    uint32_t rateDeviceSuitability(VkPhysicalDeviceProperties* pProps, VkPhysicalDeviceFeatures* pFeatures);
-    bool isPhysicalDeviceSuitable(VkPhysicalDevice device, VkPhysicalDeviceProperties* pProps,
-        VkPhysicalDeviceFeatures* pFeatures, VkPhysicalDeviceFeatures* pRequiredFeatures);
-    bool selectPhysicalDevice(VContext* context, VkPhysicalDeviceFeatures* pRequiredFeatures);
-
-    void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator);
-    VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo,
-        const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger);
-    VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback( VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
-        VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
-        void* pUserData);
-    bool setupDebugMessenger(VContext* context);
-    bool addDebugging(std::vector<const char*>* pLayers, std::vector<const char*>* pExtensions, bool shrink = true);
-    bool queryAvailableLayers(std::vector<char*>* pLayers);
-    bool checkLayerAvailability(std::vector<const char*>* pLayers);
-    bool createVulkanInstance(VContext* pContext, uint32_t extensionCount, const char** ppExtensions,
-        uint32_t layerCount, const char** ppLayers, const char* pAppName = "Test App", uint32_t appVersion = VK_MAKE_API_VERSION(1,0,0,0), bool debug = true);
+  void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator);
+  VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo,
+    const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger);
+  VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback( VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
+    VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
+    void* pUserData);
+  bool setupDebugMessenger(VContext* context);
+  bool addDebugging(std::vector<const char*>* pLayers, std::vector<const char*>* pExtensions, bool shrink = true);
+  bool queryAvailableLayers(std::vector<char*>* pLayers);
+  bool checkLayerAvailability(std::vector<const char*>* pLayers);
+  bool createVulkanInstance(VContext* pContext, uint32_t extensionCount, const char** ppExtensions,
+    uint32_t layerCount, const char** ppLayers, const char* pAppName = "Test App", uint32_t appVersion = VK_MAKE_API_VERSION(1,0,0,0), bool debug = true);
 }
 
 #endif // __VULKAN_BASE_H__
