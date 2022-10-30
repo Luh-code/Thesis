@@ -58,7 +58,7 @@ namespace Ths::Vk
   } QueueFamilyIndices;
 
   // Functions
-  bool createLogicalDevice(VulkanContext* context, VkPhysicalDeviceFeatures* pFeatures);
+  bool createLogicalDevice(VulkanContext* pContext, VkPhysicalDeviceFeatures* pFeatures, std::vector<const char*>* pDeviceExtensions);
   QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device, VkSurfaceKHR surface);
   uint32_t rateDeviceSuitability(VkPhysicalDeviceProperties* pProps, VkPhysicalDeviceFeatures* pFeatures);
   bool checkDeviceExtensionSupport(VkPhysicalDevice device, std::vector<const char*>* pDeviceExtensions);

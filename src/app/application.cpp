@@ -58,7 +58,7 @@ namespace Ths
     std::vector<const char*> deviceExtensions;
     deviceExtensions.push_back(VK_KHR_SWAPCHAIN_EXTENSION_NAME);
     Ths::Vk::selectPhysicalDevice(vContext, &gpuReqirements, &deviceExtensions);
-    Ths::Vk::createLogicalDevice(vContext, &gpuReqirements);
+    Ths::Vk::createLogicalDevice(vContext, &gpuReqirements, &deviceExtensions);
   }
   
   void SDLApp::mainLoop(bool (*func)())

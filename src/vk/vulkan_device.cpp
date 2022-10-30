@@ -2,7 +2,7 @@
 
 namespace Ths::Vk
 {
-  bool createLogicalDevice(VulkanContext* pContext, VkPhysicalDeviceFeatures* pFeatures) // TODO: Make more customizable
+  bool createLogicalDevice(VulkanContext* pContext, VkPhysicalDeviceFeatures* pFeatures, std::vector<const char*>* pDeviceExtensions) // TODO: Make more customizable
   {
     LOG_INIT("Logical Device");
     QueueFamilyIndices indices = findQueueFamilies(pContext->physicalDevice, pContext->surface);
@@ -24,6 +24,8 @@ namespace Ths::Vk
     createInfo.pQueueCreateInfos = queueCreateInfos.data();
     createInfo.queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfos.size());
     createInfo.pEnabledFeatures = pFeatures;
+    createInfo.enabledExtensionCount = static_cast<uint32_t>(pDeviceExtensions->size());
+    createInfo.ppEnabledExtensionNames = pDeviceExtensions->data();
 
     // TODO: For compatibility, implement device-specific layers here
 
