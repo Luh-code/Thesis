@@ -11,6 +11,7 @@ namespace Ths::SDL
 {
     static bool sdl_initialized = false;
 
+    bool createVkWindowSurfaceSDL(VkInstance instance, SDL_Window* pWindow, VkSurfaceKHR* pSurface);
     bool initSDL(Uint32 flags = 0);
     bool initSDLVid(Uint32 flags = 0);
     SDL_Window* createSDLWindow(const char* title, uint32_t dx, uint32_t dy, uint32_t w, uint32_t h, Uint32 flags = 0);

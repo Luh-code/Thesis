@@ -2,6 +2,16 @@
 
 namespace Ths::SDL
 {
+    bool createVkWindowSurfaceSDL(VkInstance instance, SDL_Window* pWindow, VkSurfaceKHR* pSurface)
+    {
+        if (SDL_Vulkan_CreateSurface(pWindow, instance, pSurface) != SDL_TRUE)
+        {
+            LOG_ERROR("An error occured, whilst creating a VkSurfaceKHR via SDL");
+            return false;
+        }
+        return true;
+    }
+
     bool initSDL(Uint32 flags)
     {
         LOG_INIT("SDL");

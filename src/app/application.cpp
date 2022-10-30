@@ -49,12 +49,14 @@ namespace Ths
         Ths::Vk::checkLayerAvailability(&layers);
         Ths::Vk::createVulkanInstance(vContext, extensions.size(), extensions.data(), layers.size(), layers.data(), name, version, debug);
         Ths::Vk::setupDebugMessenger(vContext);
+        Ths::SDL::createVkWindowSurfaceSDL(vContext->instance, window, &vContext->surface);
         VkPhysicalDeviceFeatures gpuReqirements;
         VkBool32* pBoolRequirements = reinterpret_cast<VkBool32*>(&gpuReqirements);
         for (uint32_t i = 0; i < (sizeof(VkPhysicalDeviceFeatures)/sizeof(VkBool32)); i++)
             pBoolRequirements[i] = false;
         gpuReqirements.geometryShader = true;
         Ths::Vk::selectPhysicalDevice(vContext, &gpuReqirements);
+        Ths::Vk::createLogicalDevice(vContext, &gpuReqirements);
     }
     
     void SDLApp::mainLoop(bool (*func)())
@@ -65,7 +67,9 @@ namespace Ths
     void SDLApp::cleanup(bool dein_sdl)
     {
         // Delete Vk stuff
+        vkDestroyDevice(vContext->device, nullptr);
         Ths::Vk::DestroyDebugUtilsMessengerEXT(vContext->instance, vContext->debugMessenger, nullptr);
+        vkDestroySurfaceKHR(vContext->instance, vContext->surface, nullptr);
         vkDestroyInstance(vContext->instance, nullptr);
         
         delVContext(); // * Do AFTER deleting all Vk related objs

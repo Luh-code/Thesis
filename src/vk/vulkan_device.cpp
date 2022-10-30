@@ -2,6 +2,58 @@
 
 namespace Ths::Vk
 {
+    bool createLogicalDevice(VulkanContext* pContext, VkPhysicalDeviceFeatures* pFeatures) // TODO: Make more customizable
+    {
+        LOG_INIT("Logical Device");
+        QueueFamilyIndices indices = findQueueFamilies(pContext->physicalDevice);
+
+        VkDeviceQueueCreateInfo queueCreateInfo {VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO};
+        queueCreateInfo.queueFamilyIndex = indices.graphicsFamily.value();
+        queueCreateInfo.queueCount = 1;
+        float queuePriority = 1.0f;
+        queueCreateInfo.pQueuePriorities = &queuePriority;
+
+        VkDeviceCreateInfo createInfo {VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO};
+        createInfo.pQueueCreateInfos = &queueCreateInfo;
+        createInfo.queueCreateInfoCount = 1;
+        createInfo.pEnabledFeatures = pFeatures;
+
+        // TODO: For compatibility, implement device-specific layers here
+
+        VKF(vkCreateDevice(pContext->physicalDevice, &createInfo, nullptr, &pContext->device))
+        {
+            LOG_CRIT("An error occured, whilst creating Logical Device: ", res);
+            LOG_INIT_AB("Logical Device");
+            return false;
+        }
+
+        vkGetDeviceQueue(pContext->device, indices.graphicsFamily.value(), 0, &pContext->graphicsQueue);
+
+        LOG_INIT_OK("Logical Device");
+        return true;
+    }
+
+    QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device)
+    {
+        QueueFamilyIndices indices;
+
+        uint32_t queueFamilyCount = 0;
+        vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, nullptr);
+        std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
+        vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, queueFamilies.data());
+
+        uint32_t i = 0;
+        for(const auto& queueFamily : queueFamilies)
+        {
+            if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT)
+                indices.graphicsFamily = i;
+            if (indices.isComplete()) break;
+            i++;
+        }
+
+        return indices;
+    }
+
     uint32_t rateDeviceSuitability(VkPhysicalDeviceProperties* pProps, VkPhysicalDeviceFeatures* pFeatures)
     {
         uint32_t score = 0;
@@ -28,7 +80,10 @@ namespace Ths::Vk
         {
             return false;
         }
-        return true;//pProps->deviceType == type;
+
+        QueueFamilyIndices indices = findQueueFamilies(device);
+
+        return indices.isComplete(); // TODO: Make more customizable (selectable which queueFamilies are required)
     }
 
     bool selectPhysicalDevice(VContext* context, VkPhysicalDeviceFeatures* pRequiredFeatures)

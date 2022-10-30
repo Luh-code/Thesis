@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <cstring>
 #include <map>
+#include <optional>
 //#include "../sdl/sdl-base.h"
 
 #define VK_FAIL(val) if(VkResult res = (val); res != VK_SUCCESS)
@@ -30,9 +31,26 @@ namespace Ths::Vk
 
         VkPhysicalDevice physicalDevice;
         VkDevice device = VK_NULL_HANDLE;
+
+        VkQueue graphicsQueue;
+
+        VkSurfaceKHR surface;
     } VContext;
 
+    typedef struct QueueFamilyIndices
+    {
+        std::optional<uint32_t> graphicsFamily;
+
+        inline bool isComplete()
+        {
+            return graphicsFamily.has_value();
+        }
+    } QueueFamilyIndices;
+
     // Functions
+    // TODO: make everything use a VulkanContext, instead of VkInstance, VkPhysicalDevice, VkDevice, VkDebugUtilsMessengerKHR, etc.
+    bool createLogicalDevice(VulkanContext* context, VkPhysicalDeviceFeatures* pFeatures);
+    QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
     uint32_t rateDeviceSuitability(VkPhysicalDeviceProperties* pProps, VkPhysicalDeviceFeatures* pFeatures);
     bool isPhysicalDeviceSuitable(VkPhysicalDevice device, VkPhysicalDeviceProperties* pProps,
         VkPhysicalDeviceFeatures* pFeatures, VkPhysicalDeviceFeatures* pRequiredFeatures);
