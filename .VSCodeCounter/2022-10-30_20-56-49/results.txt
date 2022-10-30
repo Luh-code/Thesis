@@ -1,12 +1,12 @@
-Date : 2022-10-26 03:01:30
+Date : 2022-10-30 20:56:49
 Directory : d:\Projects\Thesis
-Total : 12 files,  438 codes, 96 comments, 83 blanks, all 617 lines
+Total : 13 files,  765 codes, 39 comments, 126 blanks, all 930 lines
 
 Languages
 +----------+------------+------------+------------+------------+------------+
 | language | files      | code       | comment    | blank      | total      |
 +----------+------------+------------+------------+------------+------------+
-| C++      |         11 |        437 |         96 |         82 |        615 |
+| C++      |         12 |        764 |         39 |        125 |        928 |
 | Markdown |          1 |          1 |          0 |          1 |          2 |
 +----------+------------+------------+------------+------------+------------+
 
@@ -14,11 +14,11 @@ Directories
 +-----------------------------------------------+------------+------------+------------+------------+------------+
 | path                                          | files      | code       | comment    | blank      | total      |
 +-----------------------------------------------+------------+------------+------------+------------+------------+
-| .                                             |         12 |        438 |         96 |         83 |        617 |
-| src                                           |         10 |        432 |         96 |         81 |        609 |
-| src\app                                       |          2 |        122 |          8 |         26 |        156 |
-| src\sdl                                       |          2 |        122 |          0 |         18 |        140 |
-| src\vk                                        |          2 |        141 |         63 |         21 |        225 |
+| .                                             |         13 |        765 |         39 |        126 |        930 |
+| src                                           |         11 |        759 |         39 |        124 |        922 |
+| src\app                                       |          2 |        135 |         10 |         28 |        173 |
+| src\sdl                                       |          2 |        133 |          0 |         19 |        152 |
+| src\vk                                        |          3 |        442 |         24 |         64 |        530 |
 | tests                                         |          1 |          5 |          0 |          1 |          6 |
 | tests\test1                                   |          1 |          5 |          0 |          1 |          6 |
 +-----------------------------------------------+------------+------------+------------+------------+------------+
@@ -28,16 +28,17 @@ Files
 | filename                                      | language | code       | comment    | blank      | total      |
 +-----------------------------------------------+----------+------------+------------+------------+------------+
 | d:\Projects\Thesis\README.md                  | Markdown |          1 |          0 |          1 |          2 |
-| d:\Projects\Thesis\src\app\application.cpp    | C++      |         55 |          3 |         15 |         73 |
-| d:\Projects\Thesis\src\app\application.h      | C++      |         67 |          5 |         11 |         83 |
-| d:\Projects\Thesis\src\main.cpp               | C++      |         11 |         20 |          3 |         34 |
+| d:\Projects\Thesis\src\app\application.cpp    | C++      |         63 |          5 |         17 |         85 |
+| d:\Projects\Thesis\src\app\application.h      | C++      |         72 |          5 |         11 |         88 |
+| d:\Projects\Thesis\src\main.cpp               | C++      |         13 |          0 |          0 |         13 |
 | d:\Projects\Thesis\src\memory_mger.h          | C++      |         27 |          5 |          9 |         41 |
 | d:\Projects\Thesis\src\pch.h                  | C++      |          3 |          0 |          1 |          4 |
-| d:\Projects\Thesis\src\sdl\sdl-base.cpp       | C++      |        102 |          0 |         14 |        116 |
-| d:\Projects\Thesis\src\sdl\sdl-base.h         | C++      |         20 |          0 |          4 |         24 |
+| d:\Projects\Thesis\src\sdl\sdl_base.cpp       | C++      |        112 |          0 |         15 |        127 |
+| d:\Projects\Thesis\src\sdl\sdl_base.h         | C++      |         21 |          0 |          4 |         25 |
 | d:\Projects\Thesis\src\thesis.h               | C++      |          6 |          0 |          3 |          9 |
-| d:\Projects\Thesis\src\vk\vulkan-base.h       | C++      |         25 |          4 |          8 |         37 |
-| d:\Projects\Thesis\src\vk\vulkan-instance.cpp | C++      |        116 |         59 |         13 |        188 |
+| d:\Projects\Thesis\src\vk\vulkan_base.h       | C++      |         73 |          4 |         14 |         91 |
+| d:\Projects\Thesis\src\vk\vulkan_device.cpp   | C++      |        175 |          1 |         33 |        209 |
+| d:\Projects\Thesis\src\vk\vulkan_instance.cpp | C++      |        194 |         19 |         17 |        230 |
 | d:\Projects\Thesis\tests\test1\Test.cpp       | C++      |          5 |          0 |          1 |          6 |
-| Total                                         |          |        438 |         96 |         83 |        617 |
+| Total                                         |          |        765 |         39 |        126 |        930 |
 +-----------------------------------------------+----------+------------+------------+------------+------------+

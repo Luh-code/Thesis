@@ -2,6 +2,126 @@
 
 namespace Ths::Vk
 {
+  bool createSwapChain(VulkanContext* pContext, uint32_t win_width, uint32_t win_height, uint32_t imgs,
+    VkPresentModeKHR preferredPresentMode,
+    VkFormat preferredFormat, VkColorSpaceKHR preferredColorSpace)
+  {
+    LOG_INIT("Swapchain");
+    SwapChainSupportDetails swapChainSupport = querySwapChainSupport(pContext->physicalDevice, pContext->surface);
+
+    VkSurfaceFormatKHR surfaceFormat = chooseSwapChainSurfaceFormat(swapChainSupport.formats, preferredFormat, preferredColorSpace);
+    VkPresentModeKHR presentMode = chooseSwapChainPresentMode(swapChainSupport.presentModes, preferredPresentMode);
+    VkExtent2D extent = chooseSwapChainExtent(swapChainSupport.capabilities, win_width, win_height);
+
+    uint32_t imageCount = swapChainSupport.capabilities.minImageCount + 1;
+
+    if (swapChainSupport.capabilities.maxImageCount == 0 || imgs <= swapChainSupport.capabilities.maxImageCount)
+    {
+      imageCount = imgs;
+    }
+    else LOG_WARN("  Couldn't set preferred image count! - continuing");
+
+    VkSwapchainCreateInfoKHR createInfo {VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR};
+    createInfo.surface = pContext->surface;
+    createInfo.minImageCount = imageCount;
+    createInfo.imageFormat = surfaceFormat.format;
+    createInfo.imageColorSpace = surfaceFormat.colorSpace;
+    createInfo.imageExtent = extent;
+    createInfo.imageArrayLayers = 1; // only increase to 2 for stereoscopic rendering
+    createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT; // if post-processing is used, you might want to change this
+
+    QueueFamilyIndices indices = findQueueFamilies(pContext->physicalDevice, pContext->surface);
+    uint32_t queueFamilyIndices[] = {indices.graphicsFamily.value(), indices.presentFamily.value()};
+
+    if (indices.graphicsFamily != indices.presentFamily)
+    {
+      createInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
+      createInfo.queueFamilyIndexCount = 2;
+      createInfo.pQueueFamilyIndices = queueFamilyIndices;
+    } else
+    {
+      createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
+      createInfo.queueFamilyIndexCount = 0;
+      createInfo.pQueueFamilyIndices = nullptr;
+    }
+
+    createInfo.preTransform = swapChainSupport.capabilities.currentTransform;
+    createInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
+    createInfo.presentMode = presentMode;
+    createInfo.clipped = VK_TRUE;
+    createInfo.oldSwapchain = VK_NULL_HANDLE; // used if swapchain becomes invalid (fe. when resizing window)
+
+    VKF(vkCreateSwapchainKHR(pContext->device, &createInfo, nullptr, &pContext->swapchain))
+    {
+      LOG_ERROR("An error occured whilst creating a swapchain: ", res);
+      LOG_INIT_AB("Swapchain");
+      return false;
+    }
+
+    LOG_INIT_OK("Swapchain");
+    return true;
+  }
+
+  VkExtent2D chooseSwapChainExtent(const VkSurfaceCapabilitiesKHR& capabilities, uint32_t win_width, uint32_t win_height)
+  {
+    if (capabilities.currentExtent.width != std::numeric_limits<uint32_t>::max())
+    {
+      return capabilities.currentExtent;
+    } else
+    {
+      //int width, height;
+      //SDL_Vulkan_GetDrawableSize(window, &width, &height);
+
+      VkExtent2D actualExtent =
+      {
+        static_cast<uint32_t>(win_width),
+        static_cast<uint32_t>(win_height)
+      };
+
+      actualExtent.width = std::clamp(actualExtent.width, capabilities.minImageExtent.width, capabilities.maxImageExtent.width);
+      actualExtent.height = std::clamp(actualExtent.height, capabilities.minImageExtent.height, capabilities.maxImageExtent.height);
+
+      return actualExtent;
+    }
+  }
+
+  VkPresentModeKHR chooseSwapChainPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes,
+    VkPresentModeKHR preferredPresentMode)
+  {
+    for (const auto& presentMode : availablePresentModes)
+    {
+      if (presentMode == preferredPresentMode)
+      {
+        LOG_INFO("  selected preferred present mode: ", presentMode);
+        return presentMode;
+      }
+    }
+    LOG_WARN("    preferred present mode not found! - continuing");
+
+    LOG_INFO("  selected alternative present mode: ", VK_PRESENT_MODE_FIFO_KHR);
+    return VK_PRESENT_MODE_FIFO_KHR;
+  }
+
+  VkSurfaceFormatKHR chooseSwapChainSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats,
+    VkFormat preferredFormat, VkColorSpaceKHR preferredColorSpace)
+  {
+    //LOG_ING("choose", "surface format");
+    for (const auto& format : availableFormats)
+    {
+      if (format.format == preferredFormat && format.colorSpace == preferredColorSpace)
+      {
+        LOG_INFO("  selected preferred surface format: ", format.format, "/", format.colorSpace);
+        //LOG_ING_OK("choose", "surface format");
+        return format;
+      }
+    }
+    LOG_WARN("    preferred surface format not found! - continuing");
+
+    LOG_INFO("  selected alternative surface format: ", availableFormats[0].format, "/", availableFormats[0].colorSpace);
+    //LOG_ING_OK("choose", "surface format");
+    return availableFormats[0];
+  }
+
   SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device, VkSurfaceKHR surface)
   {
     SwapChainSupportDetails details;

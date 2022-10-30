@@ -66,6 +66,7 @@ namespace Ths
   void SDLApp::cleanup(bool dein_sdl)
   {
     // Delete Vk stuff
+    vkDestroySwapchainKHR(vContext->device, vContext->swapchain, nullptr);
     vkDestroyDevice(vContext->device, nullptr);
     Ths::Vk::DestroyDebugUtilsMessengerEXT(vContext->instance, vContext->debugMessenger, nullptr);
     vkDestroySurfaceKHR(vContext->instance, vContext->surface, nullptr);

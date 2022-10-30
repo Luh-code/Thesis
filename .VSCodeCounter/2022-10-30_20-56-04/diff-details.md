@@ -1,8 +1,8 @@
 # Diff Details
 
-Date : 2022-10-24 11:48:23
+Date : 2022-10-30 20:56:04
 
-Directory /media/luh0/PARA/Projects/Thesis
+Directory d:\\Projects\\Thesis
 
 Total : 0 files,  0 codes, 0 comments, 0 blanks, all 0 lines
 

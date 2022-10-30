@@ -1,28 +1,28 @@
 # Summary
 
-Date : 2022-10-24 11:48:23
+Date : 2022-10-30 20:56:49
 
-Directory /media/luh0/PARA/Projects/Thesis
+Directory d:\\Projects\\Thesis
 
-Total : 11 files,  304 codes, 29 comments, 63 blanks, all 396 lines
+Total : 13 files,  765 codes, 39 comments, 126 blanks, all 930 lines
 
 Summary / [Details](details.md) / [Diff Summary](diff.md) / [Diff Details](diff-details.md)
 
 ## Languages
 | language | files | code | comment | blank | total |
 | :--- | ---: | ---: | ---: | ---: | ---: |
-| C++ | 10 | 303 | 29 | 62 | 394 |
+| C++ | 12 | 764 | 39 | 125 | 928 |
 | Markdown | 1 | 1 | 0 | 1 | 2 |
 
 ## Directories
 | path | files | code | comment | blank | total |
 | :--- | ---: | ---: | ---: | ---: | ---: |
-| . | 11 | 304 | 29 | 63 | 396 |
-| src | 9 | 298 | 29 | 61 | 388 |
-| src/app | 2 | 111 | 8 | 26 | 145 |
-| src/sdl | 2 | 122 | 0 | 18 | 140 |
-| src/vk | 2 | 46 | 5 | 11 | 62 |
+| . | 13 | 765 | 39 | 126 | 930 |
+| src | 11 | 759 | 39 | 124 | 922 |
+| src\\app | 2 | 135 | 10 | 28 | 173 |
+| src\\sdl | 2 | 133 | 0 | 19 | 152 |
+| src\\vk | 3 | 442 | 24 | 64 | 530 |
 | tests | 1 | 5 | 0 | 1 | 6 |
-| tests/test1 | 1 | 5 | 0 | 1 | 6 |
+| tests\\test1 | 1 | 5 | 0 | 1 | 6 |
 
 Summary / [Details](details.md) / [Diff Summary](diff.md) / [Diff Details](diff-details.md)

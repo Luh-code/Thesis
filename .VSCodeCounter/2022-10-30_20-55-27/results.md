@@ -1,27 +1,27 @@
 # Summary
 
-Date : 2022-10-26 03:01:30
+Date : 2022-10-30 20:55:27
 
 Directory d:\\Projects\\Thesis
 
-Total : 12 files,  438 codes, 96 comments, 83 blanks, all 617 lines
+Total : 13 files,  765 codes, 39 comments, 126 blanks, all 930 lines
 
 Summary / [Details](details.md) / [Diff Summary](diff.md) / [Diff Details](diff-details.md)
 
 ## Languages
 | language | files | code | comment | blank | total |
 | :--- | ---: | ---: | ---: | ---: | ---: |
-| C++ | 11 | 437 | 96 | 82 | 615 |
+| C++ | 12 | 764 | 39 | 125 | 928 |
 | Markdown | 1 | 1 | 0 | 1 | 2 |
 
 ## Directories
 | path | files | code | comment | blank | total |
 | :--- | ---: | ---: | ---: | ---: | ---: |
-| . | 12 | 438 | 96 | 83 | 617 |
-| src | 10 | 432 | 96 | 81 | 609 |
-| src\\app | 2 | 122 | 8 | 26 | 156 |
-| src\\sdl | 2 | 122 | 0 | 18 | 140 |
-| src\\vk | 2 | 141 | 63 | 21 | 225 |
+| . | 13 | 765 | 39 | 126 | 930 |
+| src | 11 | 759 | 39 | 124 | 922 |
+| src\\app | 2 | 135 | 10 | 28 | 173 |
+| src\\sdl | 2 | 133 | 0 | 19 | 152 |
+| src\\vk | 3 | 442 | 24 | 64 | 530 |
 | tests | 1 | 5 | 0 | 1 | 6 |
 | tests\\test1 | 1 | 5 | 0 | 1 | 6 |
 
