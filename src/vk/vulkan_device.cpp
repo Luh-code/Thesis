@@ -58,6 +58,13 @@ namespace Ths::Vk
       return false;
     }
 
+    VK(vkGetSwapchainImagesKHR(pContext->device, pContext->swapchain, &imageCount, nullptr));
+    pContext->swapchainImages.resize(imageCount);
+    VK(vkGetSwapchainImagesKHR(pContext->device, pContext->swapchain, &imageCount, pContext->swapchainImages.data()));
+
+    pContext->swapchainImageFormat = surfaceFormat.format;
+    pContext->swapchainExtent = extent;
+
     LOG_INIT_OK("Swapchain");
     return true;
   }
@@ -69,9 +76,6 @@ namespace Ths::Vk
       return capabilities.currentExtent;
     } else
     {
-      //int width, height;
-      //SDL_Vulkan_GetDrawableSize(window, &width, &height);
-
       VkExtent2D actualExtent =
       {
         static_cast<uint32_t>(win_width),
@@ -105,20 +109,17 @@ namespace Ths::Vk
   VkSurfaceFormatKHR chooseSwapChainSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats,
     VkFormat preferredFormat, VkColorSpaceKHR preferredColorSpace)
   {
-    //LOG_ING("choose", "surface format");
     for (const auto& format : availableFormats)
     {
       if (format.format == preferredFormat && format.colorSpace == preferredColorSpace)
       {
         LOG_INFO("  selected preferred surface format: ", format.format, "/", format.colorSpace);
-        //LOG_ING_OK("choose", "surface format");
         return format;
       }
     }
     LOG_WARN("    preferred surface format not found! - continuing");
 
     LOG_INFO("  selected alternative surface format: ", availableFormats[0].format, "/", availableFormats[0].colorSpace);
-    //LOG_ING_OK("choose", "surface format");
     return availableFormats[0];
   }
 

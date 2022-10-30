@@ -56,6 +56,9 @@ namespace Ths
     deviceExtensions.push_back(VK_KHR_SWAPCHAIN_EXTENSION_NAME);
     Ths::Vk::selectPhysicalDevice(vContext, &gpuReqirements, &deviceExtensions);
     Ths::Vk::createLogicalDevice(vContext, &gpuReqirements, &deviceExtensions);
+    int width, height;
+    SDL_Vulkan_GetDrawableSize(window, &width, &height);
+    Ths::Vk::createSwapChain(vContext, width, height, 2);
   }
   
   void SDLApp::mainLoop(bool (*func)())
