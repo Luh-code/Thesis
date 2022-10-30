@@ -80,8 +80,33 @@ namespace Ths::Vk
     return score;
   }
   
+  bool checkDeviceExtensionSupport(VkPhysicalDevice device, std::vector<const char*>* pDeviceExtensions)
+  {
+    uint32_t extensionCount = 0;
+    VK(vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, nullptr));
+
+    std::vector<VkExtensionProperties> availableExtensions(extensionCount);
+    VK(vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, availableExtensions.data()));
+
+    std::set<std::string> requiredExtensions(pDeviceExtensions->begin(), pDeviceExtensions->end());
+
+    for (const auto& extension : availableExtensions)
+    {
+      if (requiredExtensions.erase(extension.extensionName) > 0)
+      {
+        LOG_INFO("    \"", extension.extensionName, "\" - available");
+      }
+    }
+    for (const auto& extension : requiredExtensions)
+    {
+      LOG_WARN("    \"", extension, "\" - unavailable");
+    }
+
+    return requiredExtensions.empty();
+  }
+
   bool isPhysicalDeviceSuitable(VkPhysicalDevice device, VkSurfaceKHR surface, VkPhysicalDeviceProperties* pProps,
-    VkPhysicalDeviceFeatures* pFeatures, VkPhysicalDeviceFeatures* pRequiredFeatures)
+    VkPhysicalDeviceFeatures* pFeatures, VkPhysicalDeviceFeatures* pRequiredFeatures, std::vector<const char*>* pDeviceExtensions)
   {
     VK(vkGetPhysicalDeviceProperties(device, pProps));
     VK(vkGetPhysicalDeviceFeatures(device, pFeatures));
@@ -97,10 +122,10 @@ namespace Ths::Vk
 
     QueueFamilyIndices indices = findQueueFamilies(device, surface);
 
-    return indices.isComplete(); // TODO: Make more customizable (selectable which queueFamilies are required)
+    return indices.isComplete() && checkDeviceExtensionSupport(device, pDeviceExtensions); // TODO: Make more customizable (selectable which queueFamilies are required)
   }
 
-  bool selectPhysicalDevice(VContext* context, VkPhysicalDeviceFeatures* pRequiredFeatures)
+  bool selectPhysicalDevice(VContext* context, VkPhysicalDeviceFeatures* pRequiredFeatures, std::vector<const char*>* pDeviceExtensions)
   {
     LOG_ING("select", "Physical Device");
     uint32_t deviceCount = 0;
@@ -122,7 +147,7 @@ namespace Ths::Vk
     {
       VkPhysicalDeviceProperties props;
       VkPhysicalDeviceFeatures features;
-      if (isPhysicalDeviceSuitable(*i, context->surface, &props, &features, pRequiredFeatures))
+      if (isPhysicalDeviceSuitable(*i, context->surface, &props, &features, pRequiredFeatures, pDeviceExtensions))
       {
         uint32_t score = rateDeviceSuitability(&props, &features);
         candidates.insert(std::make_pair(score, std::make_tuple(*i, props.deviceName)));

@@ -119,7 +119,9 @@ namespace Ths::Vk
       LOG_QUER_AB("for available Layers");
       return false;
     }
+#ifdef THESIS_VULKAN_EXTRA_DEBUG_INFO
     LOG_DEBUG("AVAILABLE LAYERS:");
+#endif // THESIS_VULKAN_EXTRA_DEBUG_INFO
     for (uint32_t i = 0; i < pLayerPropertyCount; i++)
     {
       /*
@@ -131,7 +133,9 @@ namespace Ths::Vk
         alayer:       description
         anotherlayer: description
       */
+#ifdef THESIS_VULKAN_EXTRA_DEBUG_INFO
       LOG_DEBUG("  ", pLayerProperties[i].layerName, ": ", pLayerProperties[i].description);
+#endif // THESIS_VULKAN_EXTRA_DEBUG_INFO
       if (pLayers)
       {
         size_t len = strlen(pLayerProperties[i].layerName)+1;
