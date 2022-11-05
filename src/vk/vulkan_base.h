@@ -13,6 +13,7 @@
 #include <cstdint>
 #include <limits>
 #include <algorithm>
+#include <fstream>
 //#include "../sdl/sdl-base.h"
 
 #define VK_FAIL(val) if(VkResult res = (val); res != VK_SUCCESS)
@@ -73,6 +74,10 @@ namespace Ths::Vk
   } SwapChainSupportDetails;
 
   // Functions
+  VkShaderModule createShaderModule(VulkanContext* pContext, const std::vector<char>& code);
+  static std::vector<char> readFile(const std::string& filename);
+  bool createGraphicsPipeline(VulkanContext* pContext);
+
   bool createImageViews(VulkanContext* pContext);
   bool createSwapChain(VulkanContext* pContext, uint32_t win_width, uint32_t win_height, uint32_t imgs,
     VkPresentModeKHR preferredPresentMode = VK_PRESENT_MODE_MAILBOX_KHR,

@@ -60,6 +60,7 @@ namespace Ths
     SDL_Vulkan_GetDrawableSize(window, &width, &height);
     Ths::Vk::createSwapChain(vContext, width, height, 2);
     Ths::Vk::createImageViews(vContext);
+    Ths::Vk::createGraphicsPipeline(vContext);
   }
   
   void SDLApp::mainLoop(bool (*func)())
