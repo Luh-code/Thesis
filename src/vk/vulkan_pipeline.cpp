@@ -206,6 +206,30 @@ namespace Ths::Vk
       return false;
     }
 
+    VkGraphicsPipelineCreateInfo pipelineInfo {VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO};
+    pipelineInfo.stageCount = 2;
+    pipelineInfo.pStages = shaderStages;
+    pipelineInfo.pVertexInputState = &vertexInputInfo;
+    pipelineInfo.pInputAssemblyState = &inputAssembler;
+    pipelineInfo.pViewportState = &viewportState;
+    pipelineInfo.pRasterizationState = &rasterizer;
+    pipelineInfo.pMultisampleState = &multisampling;
+    pipelineInfo.pDepthStencilState = nullptr; // Optional
+    pipelineInfo.pColorBlendState = &colorBlending;
+    pipelineInfo.pDynamicState = &dynamicState;
+    pipelineInfo.layout = pContext->pipelineLayout;
+    pipelineInfo.renderPass = pContext->renderPasses[0];
+    pipelineInfo.subpass = 0;
+    pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
+    pipelineInfo.basePipelineIndex = -1;
+
+    VKF(vkCreateGraphicsPipelines(pContext->device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &pContext->graphicsPipeline))
+    {
+      LOG_ERROR("An error occured whilst creating a VkPipeline: ", res);
+      LOG_INIT_AB("Graphics Pipeline");
+      return false;
+    }
+
     vkDestroyShaderModule(pContext->device, vertModule, nullptr);
     vkDestroyShaderModule(pContext->device, fragModule, nullptr);
 

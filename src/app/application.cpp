@@ -72,6 +72,7 @@ namespace Ths
   void SDLApp::cleanup(bool dein_sdl)
   {
     // Delete Vk stuff
+    vkDestroyPipeline(vContext->device, vContext->graphicsPipeline, nullptr);
     vkDestroyPipelineLayout(vContext->device, vContext->pipelineLayout, nullptr);
     for (auto renderPass : vContext->renderPasses)
     {

@@ -49,6 +49,7 @@ namespace Ths::Vk
 
     std::vector<VkRenderPass> renderPasses;
     VkPipelineLayout pipelineLayout;
+    VkPipeline graphicsPipeline;
   } VContext;
 
   typedef struct QueueFamilyIndices
