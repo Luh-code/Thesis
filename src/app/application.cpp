@@ -71,6 +71,7 @@ namespace Ths
   void SDLApp::cleanup(bool dein_sdl)
   {
     // Delete Vk stuff
+    vkDestroyPipelineLayout(vContext->device, vContext->pipelineLayout, nullptr);
     for (auto imageView : vContext->swapchainImageViews) {
         vkDestroyImageView(vContext->device, imageView, nullptr);
     }

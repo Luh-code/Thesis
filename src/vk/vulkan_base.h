@@ -46,6 +46,8 @@ namespace Ths::Vk
     VkFormat swapchainImageFormat;
     VkExtent2D swapchainExtent;
     std::vector<VkImageView> swapchainImageViews;
+
+    VkPipelineLayout pipelineLayout;
   } VContext;
 
   typedef struct QueueFamilyIndices
