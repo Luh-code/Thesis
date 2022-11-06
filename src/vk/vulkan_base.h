@@ -24,6 +24,10 @@
 
 #define ARRAY_SIZE(v) (sizeof(v)/sizeof(v[0]))
 
+#ifndef MAX_FRAMES_IN_FLIGHT
+#define MAX_FRAMES_IN_FLIGHT 2
+#endif
+
 namespace Ths::Vk
 {
   // Vulkan Creation
@@ -53,11 +57,12 @@ namespace Ths::Vk
     std::vector<VkFramebuffer> swapchainFramebuffers;
 
     VkCommandPool commandPool;
-    VkCommandBuffer commandBuffer;
+    std::vector<VkCommandBuffer> commandBuffers;
 
-    VkSemaphore imageAvailableSemaphore;
-    VkSemaphore renderFinishedSemaphore;
-    VkFence inFlightFence;
+    std::vector<VkSemaphore> imageAvailableSemaphores;
+    std::vector<VkSemaphore> renderFinishedSemaphores;
+    std::vector<VkFence> inFlightFences;
+    uint32_t currentFrame = 0;
   } VContext;
 
   typedef struct QueueFamilyIndices
@@ -88,7 +93,7 @@ namespace Ths::Vk
   // Functions
   bool createSyncObjects(VContext* pContext);
   bool recordCommandBuffer(VContext* pContext, VkCommandBuffer commandBuffer, uint32_t imageIndex);
-  bool createCommandBuffer(VContext* pContext);
+  bool createCommandBuffers(VContext* pContext);
   bool createCommandPool(VContext* pContext);
 
   bool createFramebuffers(VContext* pContext);

@@ -5,17 +5,24 @@ namespace Ths::Vk
   bool createSyncObjects(VContext* pContext)
   {
     LOG_INIT("syncronization objects");
+    pContext->imageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
+    pContext->renderFinishedSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
+    pContext->inFlightFences.resize(MAX_FRAMES_IN_FLIGHT);
+
     VkSemaphoreCreateInfo semaphoreInfo {VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO};
     VkFenceCreateInfo fenceInfo {VK_STRUCTURE_TYPE_FENCE_CREATE_INFO};
     fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
 
-    if (vkCreateSemaphore(pContext->device, &semaphoreInfo, nullptr, &pContext->imageAvailableSemaphore) != VK_SUCCESS ||
-      vkCreateSemaphore(pContext->device, &semaphoreInfo, nullptr, &pContext->renderFinishedSemaphore) != VK_SUCCESS ||
-      vkCreateFence(pContext->device, &fenceInfo, nullptr, &pContext->inFlightFence) != VK_SUCCESS)
+    for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
     {
-      LOG_ERROR("An error occured whilst creating syncronization objects!");
-      LOG_INIT_AB("syncronization objects");
-      return false;
+      if (vkCreateSemaphore(pContext->device, &semaphoreInfo, nullptr, &pContext->imageAvailableSemaphores[i]) != VK_SUCCESS ||
+        vkCreateSemaphore(pContext->device, &semaphoreInfo, nullptr, &pContext->renderFinishedSemaphores[i]) != VK_SUCCESS ||
+        vkCreateFence(pContext->device, &fenceInfo, nullptr, &pContext->inFlightFences[i]) != VK_SUCCESS)
+      {
+        LOG_ERROR("An error occured whilst creating syncronization objects (iteration ", i, ")!");
+        LOG_INIT_AB("syncronization objects");
+        return false;
+      }
     }
     LOG_INIT_OK("syncronization objects");
     return true;
@@ -70,15 +77,16 @@ namespace Ths::Vk
     return true;
   }
 
-  bool createCommandBuffer(VContext* pContext)
+  bool createCommandBuffers(VContext* pContext)
   {
     LOG_INIT("Command Buffer");
+    pContext->commandBuffers.resize(MAX_FRAMES_IN_FLIGHT);
     VkCommandBufferAllocateInfo allocInfo {VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO};
     allocInfo.commandPool = pContext->commandPool;
     allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-    allocInfo.commandBufferCount = 1;
+    allocInfo.commandBufferCount = static_cast<uint32_t>(pContext->commandBuffers.size());
 
-    VKF(vkAllocateCommandBuffers(pContext->device, &allocInfo, &pContext->commandBuffer))
+    VKF(vkAllocateCommandBuffers(pContext->device, &allocInfo, pContext->commandBuffers.data()))
     {
       LOG_ERROR("An error occured whilst creating command buffers: ", res);
       LOG_INIT_AB("Command Buffer");

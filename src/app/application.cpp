@@ -64,34 +64,34 @@ namespace Ths
     Ths::Vk::createGraphicsPipeline(vContext);
     Ths::Vk::createFramebuffers(vContext);
     Ths::Vk::createCommandPool(vContext);
-    Ths::Vk::createCommandBuffer(vContext);
+    Ths::Vk::createCommandBuffers(vContext);
     Ths::Vk::createSyncObjects(vContext);
   }
   
   void SDLApp::drawFrame()
   {
-    vkWaitForFences(vContext->device, 1, &vContext->inFlightFence, VK_TRUE, UINT64_MAX);
-    vkResetFences(vContext->device, 1, &vContext->inFlightFence);
+    vkWaitForFences(vContext->device, 1, &vContext->inFlightFences[vContext->currentFrame], VK_TRUE, UINT64_MAX);
+    vkResetFences(vContext->device, 1, &vContext->inFlightFences[vContext->currentFrame]);
     uint32_t imageIndex;
-    vkAcquireNextImageKHR(vContext->device, vContext->swapchain, UINT64_MAX, vContext->imageAvailableSemaphore, VK_NULL_HANDLE, &imageIndex);
-    vkResetCommandBuffer(vContext->commandBuffer, 0);
-    Ths::Vk::recordCommandBuffer(vContext, vContext->commandBuffer, imageIndex);
+    vkAcquireNextImageKHR(vContext->device, vContext->swapchain, UINT64_MAX, vContext->imageAvailableSemaphores[vContext->currentFrame], VK_NULL_HANDLE, &imageIndex);
+    vkResetCommandBuffer(vContext->commandBuffers[vContext->currentFrame], 0);
+    Ths::Vk::recordCommandBuffer(vContext, vContext->commandBuffers[vContext->currentFrame], imageIndex);
 
     VkSubmitInfo submitInfo {VK_STRUCTURE_TYPE_SUBMIT_INFO};
     
-    VkSemaphore waitSemaphores[] = {vContext->imageAvailableSemaphore};
+    VkSemaphore waitSemaphores[] = {vContext->imageAvailableSemaphores[vContext->currentFrame]};
     VkPipelineStageFlags waitStages[] = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
     submitInfo.waitSemaphoreCount = 1;
     submitInfo.pWaitSemaphores = waitSemaphores;
     submitInfo.pWaitDstStageMask = waitStages;
     submitInfo.commandBufferCount = 1;
-    submitInfo.pCommandBuffers = &vContext->commandBuffer;
+    submitInfo.pCommandBuffers = &vContext->commandBuffers[vContext->currentFrame];
 
-    VkSemaphore signalSemaphores[] = {vContext->renderFinishedSemaphore};
+    VkSemaphore signalSemaphores[] = {vContext->renderFinishedSemaphores[vContext->currentFrame]};
     submitInfo.signalSemaphoreCount = 1;
     submitInfo.pSignalSemaphores = signalSemaphores;
 
-    VKF(vkQueueSubmit(vContext->graphicsQueue, 1, &submitInfo, vContext->inFlightFence))
+    VKF(vkQueueSubmit(vContext->graphicsQueue, 1, &submitInfo, vContext->inFlightFences[vContext->currentFrame]))
     {
       LOG_ERROR("An error occured whilst submitting draw command buffer: ", res);
     }
@@ -107,6 +107,7 @@ namespace Ths
     presentInfo.pResults = nullptr;
 
     vkQueuePresentKHR(vContext->presentQueue, &presentInfo);
+    vContext->currentFrame = (vContext->currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
   }
 
   void SDLApp::mainLoop(bool (*func)())
@@ -122,9 +123,12 @@ namespace Ths
   void SDLApp::cleanup(bool dein_sdl)
   {
     // Delete Vk stuff
-    vkDestroySemaphore(vContext->device, vContext->imageAvailableSemaphore, nullptr);
-    vkDestroySemaphore(vContext->device, vContext->renderFinishedSemaphore, nullptr);
-    vkDestroyFence(vContext->device, vContext->inFlightFence, nullptr);
+    for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
+    {
+      vkDestroySemaphore(vContext->device, vContext->imageAvailableSemaphores[i], nullptr);
+      vkDestroySemaphore(vContext->device, vContext->renderFinishedSemaphores[i], nullptr);
+      vkDestroyFence(vContext->device, vContext->inFlightFences[i], nullptr);
+    }
     vkDestroyCommandPool(vContext->device, vContext->commandPool, nullptr);
     for (auto framebuffer : vContext->swapchainFramebuffers) {
         vkDestroyFramebuffer(vContext->device, framebuffer, nullptr);
