@@ -53,6 +53,7 @@ namespace Ths::Vk
     std::vector<VkFramebuffer> swapchainFramebuffers;
 
     VkCommandPool commandPool;
+    VkCommandBuffer commandBuffer;
   } VContext;
 
   typedef struct QueueFamilyIndices
@@ -81,6 +82,8 @@ namespace Ths::Vk
   } SwapChainSupportDetails;
 
   // Functions
+  bool recordCommandBuffer(VContext* pContext, VkCommandBuffer commandBuffer, uint32_t imageIndex);
+  bool createCommandBuffer(VContext* pContext);
   bool createCommandPool(VContext* pContext);
 
   bool createFramebuffers(VContext* pContext);
