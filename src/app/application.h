@@ -69,7 +69,7 @@ namespace Ths
     virtual inline void run()
     {
       LOG_INIT("SDL App \"", name, "\"");
-      initWindow(name, 1240, 720);
+      initWindow(name, 800, 600);
       initVulkan();
       LOG_INIT_OK("SDL App \"", name, "\"");
       mainLoop([]() -> bool {return true;});

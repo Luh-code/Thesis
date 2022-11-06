@@ -7,6 +7,7 @@ namespace Ths::Vk
     LOG_INIT("syncronization objects");
     VkSemaphoreCreateInfo semaphoreInfo {VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO};
     VkFenceCreateInfo fenceInfo {VK_STRUCTURE_TYPE_FENCE_CREATE_INFO};
+    fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
 
     if (vkCreateSemaphore(pContext->device, &semaphoreInfo, nullptr, &pContext->imageAvailableSemaphore) != VK_SUCCESS ||
       vkCreateSemaphore(pContext->device, &semaphoreInfo, nullptr, &pContext->renderFinishedSemaphore) != VK_SUCCESS ||

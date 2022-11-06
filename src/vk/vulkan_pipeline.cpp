@@ -56,6 +56,17 @@ namespace Ths::Vk
     renderPassInfo.subpassCount = 1;
     renderPassInfo.pSubpasses = &subpass;
 
+    VkSubpassDependency dependency {};
+    dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
+    dependency.dstSubpass = 0;
+    dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    dependency.srcAccessMask = 0;
+    dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+
+    renderPassInfo.dependencyCount = 1;
+    renderPassInfo.pDependencies = &dependency;
+
     if (pContext->renderPasses.size() <= idx) pContext->renderPasses.push_back(VK_NULL_HANDLE);
 
     VKF(vkCreateRenderPass(pContext->device, &renderPassInfo, nullptr, &pContext->renderPasses[idx]))
@@ -92,7 +103,9 @@ namespace Ths::Vk
     }
 
     size_t fileSize = static_cast<size_t>(file.tellg());
+#ifdef THESIS_VULKAN_EXTRA_DEBUG_INFO
     LOG_DEBUG("Loaded \"", filename, "\", size(", fileSize, ")");
+#endif // THESIS_VULKAN_EXTRA_DEBUG_INFO
     std::vector<char> buffer(fileSize);
     file.seekg(0);
     file.read(buffer.data(), fileSize);

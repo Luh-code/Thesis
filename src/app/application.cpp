@@ -64,12 +64,49 @@ namespace Ths
     Ths::Vk::createGraphicsPipeline(vContext);
     Ths::Vk::createFramebuffers(vContext);
     Ths::Vk::createCommandPool(vContext);
+    Ths::Vk::createCommandBuffer(vContext);
     Ths::Vk::createSyncObjects(vContext);
   }
   
   void SDLApp::drawFrame()
   {
+    vkWaitForFences(vContext->device, 1, &vContext->inFlightFence, VK_TRUE, UINT64_MAX);
+    vkResetFences(vContext->device, 1, &vContext->inFlightFence);
+    uint32_t imageIndex;
+    vkAcquireNextImageKHR(vContext->device, vContext->swapchain, UINT64_MAX, vContext->imageAvailableSemaphore, VK_NULL_HANDLE, &imageIndex);
+    vkResetCommandBuffer(vContext->commandBuffer, 0);
+    Ths::Vk::recordCommandBuffer(vContext, vContext->commandBuffer, imageIndex);
+
+    VkSubmitInfo submitInfo {VK_STRUCTURE_TYPE_SUBMIT_INFO};
     
+    VkSemaphore waitSemaphores[] = {vContext->imageAvailableSemaphore};
+    VkPipelineStageFlags waitStages[] = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
+    submitInfo.waitSemaphoreCount = 1;
+    submitInfo.pWaitSemaphores = waitSemaphores;
+    submitInfo.pWaitDstStageMask = waitStages;
+    submitInfo.commandBufferCount = 1;
+    submitInfo.pCommandBuffers = &vContext->commandBuffer;
+
+    VkSemaphore signalSemaphores[] = {vContext->renderFinishedSemaphore};
+    submitInfo.signalSemaphoreCount = 1;
+    submitInfo.pSignalSemaphores = signalSemaphores;
+
+    VKF(vkQueueSubmit(vContext->graphicsQueue, 1, &submitInfo, vContext->inFlightFence))
+    {
+      LOG_ERROR("An error occured whilst submitting draw command buffer: ", res);
+    }
+
+    VkPresentInfoKHR presentInfo {VK_STRUCTURE_TYPE_PRESENT_INFO_KHR};
+    presentInfo.waitSemaphoreCount = 1;
+    presentInfo.pWaitSemaphores = signalSemaphores;
+
+    VkSwapchainKHR swapChains[] = {vContext->swapchain};
+    presentInfo.swapchainCount = 1;
+    presentInfo.pSwapchains = swapChains;
+    presentInfo.pImageIndices = &imageIndex;
+    presentInfo.pResults = nullptr;
+
+    vkQueuePresentKHR(vContext->presentQueue, &presentInfo);
   }
 
   void SDLApp::mainLoop(bool (*func)())
@@ -78,6 +115,8 @@ namespace Ths
     {
       this->drawFrame();
     }
+
+    vkDeviceWaitIdle(vContext->device);
   }
   
   void SDLApp::cleanup(bool dein_sdl)
