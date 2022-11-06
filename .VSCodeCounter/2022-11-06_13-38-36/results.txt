@@ -1,0 +1,51 @@
+Date : 2022-11-06 13:38:36
+Directory : d:\Projects\Thesis
+Total : 17 files,  1157 codes, 50 comments, 191 blanks, all 1398 lines
+
+Languages
++----------+------------+------------+------------+------------+------------+
+| language | files      | code       | comment    | blank      | total      |
++----------+------------+------------+------------+------------+------------+
+| C++      |         13 |      1,130 |         50 |        184 |      1,364 |
+| GLSL     |          2 |         24 |          0 |          6 |         30 |
+| Batch    |          1 |          2 |          0 |          0 |          2 |
+| Markdown |          1 |          1 |          0 |          1 |          2 |
++----------+------------+------------+------------+------------+------------+
+
+Directories
++-------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                  | files      | code       | comment    | blank      | total      |
++-------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                     |         17 |      1,157 |         50 |        191 |      1,398 |
+| src                                                   |         15 |      1,151 |         50 |        189 |      1,390 |
+| src\app                                               |          2 |        152 |         10 |         28 |        190 |
+| src\sdl                                               |          2 |        133 |          0 |         19 |        152 |
+| src\vk                                                |          7 |        817 |         35 |        129 |        981 |
+| src\vk\shaders                                        |          3 |         26 |          0 |          6 |         32 |
+| tests                                                 |          1 |          5 |          0 |          1 |          6 |
+| tests\test1                                           |          1 |          5 |          0 |          1 |          6 |
++-------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-------------------------------------------------------+----------+------------+------------+------------+------------+
+| filename                                              | language | code       | comment    | blank      | total      |
++-------------------------------------------------------+----------+------------+------------+------------+------------+
+| d:\Projects\Thesis\README.md                          | Markdown |          1 |          0 |          1 |          2 |
+| d:\Projects\Thesis\src\app\application.cpp            | C++      |         80 |          5 |         17 |        102 |
+| d:\Projects\Thesis\src\app\application.h              | C++      |         72 |          5 |         11 |         88 |
+| d:\Projects\Thesis\src\main.cpp                       | C++      |         13 |          0 |          0 |         13 |
+| d:\Projects\Thesis\src\memory_mger.h                  | C++      |         27 |          5 |          9 |         41 |
+| d:\Projects\Thesis\src\pch.h                          | C++      |          3 |          0 |          1 |          4 |
+| d:\Projects\Thesis\src\sdl\sdl_base.cpp               | C++      |        112 |          0 |         15 |        127 |
+| d:\Projects\Thesis\src\sdl\sdl_base.h                 | C++      |         21 |          0 |          4 |         25 |
+| d:\Projects\Thesis\src\thesis.h                       | C++      |          6 |          0 |          3 |          9 |
+| d:\Projects\Thesis\src\vk\shaders\compile_shaders.bat | Batch    |          2 |          0 |          0 |          2 |
+| d:\Projects\Thesis\src\vk\shaders\triangle.frag       | GLSL     |          7 |          0 |          2 |          9 |
+| d:\Projects\Thesis\src\vk\shaders\triangle.vert       | GLSL     |         17 |          0 |          4 |         21 |
+| d:\Projects\Thesis\src\vk\vulkan_base.h               | C++      |         98 |          4 |         16 |        118 |
+| d:\Projects\Thesis\src\vk\vulkan_device.cpp           | C++      |        306 |          1 |         54 |        361 |
+| d:\Projects\Thesis\src\vk\vulkan_instance.cpp         | C++      |        194 |         19 |         17 |        230 |
+| d:\Projects\Thesis\src\vk\vulkan_pipeline.cpp         | C++      |        193 |         11 |         36 |        240 |
+| d:\Projects\Thesis\tests\test1\Test.cpp               | C++      |          5 |          0 |          1 |          6 |
+| Total                                                 |          |      1,157 |         50 |        191 |      1,398 |
++-------------------------------------------------------+----------+------------+------------+------------+------------+

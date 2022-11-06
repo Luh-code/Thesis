@@ -2,6 +2,32 @@
 
 namespace Ths::Vk
 {
+  bool createFramebuffers(VContext* pContext)
+  {
+    pContext->swapchainFramebuffers.resize(pContext->swapchainImageViews.size());
+    for (size_t i = 0; i < pContext->swapchainImageViews.size(); i++)
+    {
+      VkImageView attachments[] = {
+        pContext->swapchainImageViews[i]
+      };
+
+      VkFramebufferCreateInfo framebufferInfo {VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO};
+      framebufferInfo.renderPass = pContext->renderPasses[0];
+      framebufferInfo.attachmentCount = 1;
+      framebufferInfo.pAttachments = attachments;
+      framebufferInfo.width = pContext->swapchainExtent.width;
+      framebufferInfo.height = pContext->swapchainExtent.height;
+      framebufferInfo.layers = 1;
+
+      VKF(vkCreateFramebuffer(pContext->device, &framebufferInfo, nullptr, &pContext->swapchainFramebuffers[i]))
+      {
+        LOG_ERROR("An error occured whilst creating framebuffer \"", i, "\": ", res);
+        return false;
+      }
+    }
+    return true;
+  }
+
   bool createRenderPass(VContext* pContext, uint32_t idx)
   {
     LOG_INIT("Render Pass");

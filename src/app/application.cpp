@@ -62,6 +62,8 @@ namespace Ths
     Ths::Vk::createImageViews(vContext);
     Ths::Vk::createRenderPass(vContext, 0);
     Ths::Vk::createGraphicsPipeline(vContext);
+    Ths::Vk::createFramebuffers(vContext);
+    Ths::Vk::createCommandPool(vContext);
   }
   
   void SDLApp::mainLoop(bool (*func)())
@@ -72,6 +74,10 @@ namespace Ths
   void SDLApp::cleanup(bool dein_sdl)
   {
     // Delete Vk stuff
+    vkDestroyCommandPool(vContext->device, vContext->commandPool, nullptr);
+    for (auto framebuffer : vContext->swapchainFramebuffers) {
+        vkDestroyFramebuffer(vContext->device, framebuffer, nullptr);
+    }
     vkDestroyPipeline(vContext->device, vContext->graphicsPipeline, nullptr);
     vkDestroyPipelineLayout(vContext->device, vContext->pipelineLayout, nullptr);
     for (auto renderPass : vContext->renderPasses)

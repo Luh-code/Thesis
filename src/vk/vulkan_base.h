@@ -50,6 +50,9 @@ namespace Ths::Vk
     std::vector<VkRenderPass> renderPasses;
     VkPipelineLayout pipelineLayout;
     VkPipeline graphicsPipeline;
+    std::vector<VkFramebuffer> swapchainFramebuffers;
+
+    VkCommandPool commandPool;
   } VContext;
 
   typedef struct QueueFamilyIndices
@@ -78,6 +81,9 @@ namespace Ths::Vk
   } SwapChainSupportDetails;
 
   // Functions
+  bool createCommandPool(VContext* pContext);
+
+  bool createFramebuffers(VContext* pContext);
   bool createRenderPass(VContext* pContext, uint32_t idx);
   VkShaderModule createShaderModule(VulkanContext* pContext, const std::vector<char>& code);
   static std::vector<char> readFile(const std::string& filename);
