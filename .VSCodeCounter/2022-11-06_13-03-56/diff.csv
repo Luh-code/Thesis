@@ -1,0 +1,9 @@
+"filename", "language", "C++", "GLSL", "Batch", "comment", "blank", "total"
+"d:\Projects\Thesis\src\app\application.cpp", "C++", 6, 0, 0, 0, 0, 6
+"d:\Projects\Thesis\src\vk\shaders\compile_shaders.bat", "Batch", 0, 0, 2, 0, 0, 2
+"d:\Projects\Thesis\src\vk\shaders\triangle.frag", "GLSL", 0, 7, 0, 0, 2, 9
+"d:\Projects\Thesis\src\vk\shaders\triangle.vert", "GLSL", 0, 17, 0, 0, 4, 21
+"d:\Projects\Thesis\src\vk\vulkan_base.h", "C++", 7, 0, 0, 0, 2, 9
+"d:\Projects\Thesis\src\vk\vulkan_device.cpp", "C++", 29, 0, 0, 0, 2, 31
+"d:\Projects\Thesis\src\vk\vulkan_pipeline.cpp", "C++", 137, 0, 0, 11, 28, 176
+"Total", "-", 179, 24, 2, 11, 38, 254

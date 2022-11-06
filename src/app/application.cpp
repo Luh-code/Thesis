@@ -60,6 +60,7 @@ namespace Ths
     SDL_Vulkan_GetDrawableSize(window, &width, &height);
     Ths::Vk::createSwapChain(vContext, width, height, 2);
     Ths::Vk::createImageViews(vContext);
+    Ths::Vk::createRenderPass(vContext, 0);
     Ths::Vk::createGraphicsPipeline(vContext);
   }
   
@@ -72,8 +73,13 @@ namespace Ths
   {
     // Delete Vk stuff
     vkDestroyPipelineLayout(vContext->device, vContext->pipelineLayout, nullptr);
-    for (auto imageView : vContext->swapchainImageViews) {
-        vkDestroyImageView(vContext->device, imageView, nullptr);
+    for (auto renderPass : vContext->renderPasses)
+    {
+      vkDestroyRenderPass(vContext->device, renderPass, nullptr);
+    }
+    for (auto imageView : vContext->swapchainImageViews)
+    {
+      vkDestroyImageView(vContext->device, imageView, nullptr);
     }
     vkDestroySwapchainKHR(vContext->device, vContext->swapchain, nullptr);
     vkDestroyDevice(vContext->device, nullptr);

@@ -1,8 +1,0 @@
-"filename", "language", "C++", "comment", "blank", "total"
-"d:\Projects\Thesis\src\app\application.cpp", "C++", 3, 0, 0, 3
-"d:\Projects\Thesis\src\sdl\sdl_base.cpp", "C++", 9, 0, 1, 10
-"d:\Projects\Thesis\src\sdl\sdl_base.h", "C++", 1, 0, 0, 1
-"d:\Projects\Thesis\src\vk\vulkan_base.h", "C++", 33, 0, 5, 38
-"d:\Projects\Thesis\src\vk\vulkan_device.cpp", "C++", 116, 1, 29, 146
-"d:\Projects\Thesis\src\vk\vulkan_instance.cpp", "C++", 4, 0, 0, 4
-"Total", "-", 166, 1, 35, 202

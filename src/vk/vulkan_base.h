@@ -47,6 +47,7 @@ namespace Ths::Vk
     VkExtent2D swapchainExtent;
     std::vector<VkImageView> swapchainImageViews;
 
+    std::vector<VkRenderPass> renderPasses;
     VkPipelineLayout pipelineLayout;
   } VContext;
 
@@ -76,6 +77,7 @@ namespace Ths::Vk
   } SwapChainSupportDetails;
 
   // Functions
+  bool createRenderPass(VContext* pContext, uint32_t idx);
   VkShaderModule createShaderModule(VulkanContext* pContext, const std::vector<char>& code);
   static std::vector<char> readFile(const std::string& filename);
   bool createGraphicsPipeline(VulkanContext* pContext);

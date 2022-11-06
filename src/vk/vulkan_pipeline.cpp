@@ -2,6 +2,46 @@
 
 namespace Ths::Vk
 {
+  bool createRenderPass(VContext* pContext, uint32_t idx)
+  {
+    LOG_INIT("Render Pass");
+    VkAttachmentDescription colorAttachment {};
+    colorAttachment.format = pContext->swapchainImageFormat;
+    colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT; // Increase when using multisampling
+    colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR; // Enable screen clearing
+    colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+    colorAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+    colorAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+    colorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    colorAttachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+
+    VkAttachmentReference colorAttachmentRef {};
+    colorAttachmentRef.attachment = 0;
+    colorAttachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+
+    VkSubpassDescription subpass {};
+    subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+    subpass.colorAttachmentCount = 1;
+    subpass.pColorAttachments = &colorAttachmentRef;
+
+    VkRenderPassCreateInfo renderPassInfo {VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO};
+    renderPassInfo.attachmentCount = 1;
+    renderPassInfo.pAttachments = &colorAttachment;
+    renderPassInfo.subpassCount = 1;
+    renderPassInfo.pSubpasses = &subpass;
+
+    if (pContext->renderPasses.size() <= idx) pContext->renderPasses.push_back(VK_NULL_HANDLE);
+
+    VKF(vkCreateRenderPass(pContext->device, &renderPassInfo, nullptr, &pContext->renderPasses[idx]))
+    {
+      LOG_ERROR("An Error occured whilst creating a render pass: ", res);
+      LOG_INIT_AB("Render Pass");
+      return false;
+    }
+    LOG_INIT_OK("Render Pass");
+    return true;
+  }
+
   VkShaderModule createShaderModule(VulkanContext* pContext, const std::vector<char>& code)
   {
     VkShaderModuleCreateInfo createInfo {VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO};
