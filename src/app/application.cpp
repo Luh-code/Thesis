@@ -37,7 +37,7 @@ namespace Ths
   void SDLApp::initWindow(const char* title, uint32_t w, uint32_t h, uint32_t dx, uint32_t dy)
   {
     if (!Ths::SDL::sdl_initialized) Ths::SDL::initSDLVid();
-    window = Ths::SDL::createSDLWindowVk(title, dx, dy, w, h);
+    window = Ths::SDL::createSDLWindowVk(title, dx, dy, w, h, SDL_WINDOW_RESIZABLE);
   }
 
   void SDLApp::initVulkan()
@@ -106,7 +106,17 @@ namespace Ths
     presentInfo.pImageIndices = &imageIndex;
     presentInfo.pResults = nullptr;
 
-    vkQueuePresentKHR(vContext->presentQueue, &presentInfo);
+    if (VkResult result = vkQueuePresentKHR(vContext->presentQueue, &presentInfo); result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR)
+    {
+      int width, height;
+      SDL_Vulkan_GetDrawableSize(window, &width, &height);
+      Ths::Vk::recreateSwapChain(vContext, width, height, 2);
+      LOG_DEBUG("Rebuilding swapchain; reason: ", result);
+    }
+    else if (result != VK_SUCCESS)
+    {
+      LOG_ERROR("An error occured whilst presenting swap chain image: ", result, " continuing");
+    }
     vContext->currentFrame = (vContext->currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
   }
 
@@ -123,6 +133,7 @@ namespace Ths
   void SDLApp::cleanup(bool dein_sdl)
   {
     // Delete Vk stuff
+    Ths::Vk::cleanupSwapChain(vContext);
     for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
     {
       vkDestroySemaphore(vContext->device, vContext->imageAvailableSemaphores[i], nullptr);
@@ -130,20 +141,12 @@ namespace Ths
       vkDestroyFence(vContext->device, vContext->inFlightFences[i], nullptr);
     }
     vkDestroyCommandPool(vContext->device, vContext->commandPool, nullptr);
-    for (auto framebuffer : vContext->swapchainFramebuffers) {
-        vkDestroyFramebuffer(vContext->device, framebuffer, nullptr);
-    }
     vkDestroyPipeline(vContext->device, vContext->graphicsPipeline, nullptr);
     vkDestroyPipelineLayout(vContext->device, vContext->pipelineLayout, nullptr);
     for (auto renderPass : vContext->renderPasses)
     {
       vkDestroyRenderPass(vContext->device, renderPass, nullptr);
     }
-    for (auto imageView : vContext->swapchainImageViews)
-    {
-      vkDestroyImageView(vContext->device, imageView, nullptr);
-    }
-    vkDestroySwapchainKHR(vContext->device, vContext->swapchain, nullptr);
     vkDestroyDevice(vContext->device, nullptr);
     Ths::Vk::DestroyDebugUtilsMessengerEXT(vContext->instance, vContext->debugMessenger, nullptr);
     vkDestroySurfaceKHR(vContext->instance, vContext->surface, nullptr);

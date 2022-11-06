@@ -102,6 +102,10 @@ namespace Ths::Vk
   static std::vector<char> readFile(const std::string& filename);
   bool createGraphicsPipeline(VulkanContext* pContext);
 
+  void cleanupSwapChain(VulkanContext* pContext);
+  bool recreateSwapChain(VulkanContext* pContext, uint32_t win_width, uint32_t win_height, uint32_t imgs,
+    VkPresentModeKHR preferredPresentMode = VK_PRESENT_MODE_MAILBOX_KHR,
+    VkFormat preferredFormat = VK_FORMAT_B8G8R8A8_SRGB , VkColorSpaceKHR preferredColorSpace = VK_COLOR_SPACE_SRGB_NONLINEAR_KHR);
   bool createImageViews(VulkanContext* pContext);
   bool createSwapChain(VulkanContext* pContext, uint32_t win_width, uint32_t win_height, uint32_t imgs,
     VkPresentModeKHR preferredPresentMode = VK_PRESENT_MODE_MAILBOX_KHR,

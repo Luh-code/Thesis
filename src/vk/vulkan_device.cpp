@@ -2,6 +2,33 @@
 
 namespace Ths::Vk
 {
+  void cleanupSwapChain(VulkanContext* pContext)
+  {
+    for (size_t i = 0; i < pContext->swapchainFramebuffers.size(); i++) {
+        vkDestroyFramebuffer(pContext->device, pContext->swapchainFramebuffers[i], nullptr);
+    }
+
+    for (size_t i = 0; i < pContext->swapchainImageViews.size(); i++) {
+        vkDestroyImageView(pContext->device, pContext->swapchainImageViews[i], nullptr);
+    }
+
+    vkDestroySwapchainKHR(pContext->device, pContext->swapchain, nullptr);
+  }
+
+  bool recreateSwapChain(VulkanContext* pContext, uint32_t win_width, uint32_t win_height, uint32_t imgs,
+    VkPresentModeKHR preferredPresentMode,
+    VkFormat preferredFormat, VkColorSpaceKHR preferredColorSpace)
+  {
+    vkDeviceWaitIdle(pContext->device);
+
+    cleanupSwapChain(pContext);
+
+    createSwapChain(pContext, win_width, win_height, imgs, preferredPresentMode, preferredFormat, preferredColorSpace);
+    createImageViews(pContext);
+    createFramebuffers(pContext);
+    return true;
+  }
+
   bool createImageViews(VulkanContext* pContext)
   {
     LOG_INIT("Image Views");
