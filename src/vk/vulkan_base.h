@@ -54,6 +54,10 @@ namespace Ths::Vk
 
     VkCommandPool commandPool;
     VkCommandBuffer commandBuffer;
+
+    VkSemaphore imageAvailableSemaphore;
+    VkSemaphore renderFinishedSemaphore;
+    VkFence inFlightFence;
   } VContext;
 
   typedef struct QueueFamilyIndices
@@ -82,6 +86,7 @@ namespace Ths::Vk
   } SwapChainSupportDetails;
 
   // Functions
+  bool createSyncObjects(VContext* pContext);
   bool recordCommandBuffer(VContext* pContext, VkCommandBuffer commandBuffer, uint32_t imageIndex);
   bool createCommandBuffer(VContext* pContext);
   bool createCommandPool(VContext* pContext);

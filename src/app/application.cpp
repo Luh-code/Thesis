@@ -64,16 +64,28 @@ namespace Ths
     Ths::Vk::createGraphicsPipeline(vContext);
     Ths::Vk::createFramebuffers(vContext);
     Ths::Vk::createCommandPool(vContext);
+    Ths::Vk::createSyncObjects(vContext);
   }
   
+  void SDLApp::drawFrame()
+  {
+    
+  }
+
   void SDLApp::mainLoop(bool (*func)())
   {
-    while(Ths::SDL::maintainSDLWindow() && func()) {}
+    while(Ths::SDL::maintainSDLWindow() && func())
+    {
+      this->drawFrame();
+    }
   }
   
   void SDLApp::cleanup(bool dein_sdl)
   {
     // Delete Vk stuff
+    vkDestroySemaphore(vContext->device, vContext->imageAvailableSemaphore, nullptr);
+    vkDestroySemaphore(vContext->device, vContext->renderFinishedSemaphore, nullptr);
+    vkDestroyFence(vContext->device, vContext->inFlightFence, nullptr);
     vkDestroyCommandPool(vContext->device, vContext->commandPool, nullptr);
     for (auto framebuffer : vContext->swapchainFramebuffers) {
         vkDestroyFramebuffer(vContext->device, framebuffer, nullptr);

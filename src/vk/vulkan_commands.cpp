@@ -2,6 +2,24 @@
 
 namespace Ths::Vk
 {
+  bool createSyncObjects(VContext* pContext)
+  {
+    LOG_INIT("syncronization objects");
+    VkSemaphoreCreateInfo semaphoreInfo {VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO};
+    VkFenceCreateInfo fenceInfo {VK_STRUCTURE_TYPE_FENCE_CREATE_INFO};
+
+    if (vkCreateSemaphore(pContext->device, &semaphoreInfo, nullptr, &pContext->imageAvailableSemaphore) != VK_SUCCESS ||
+      vkCreateSemaphore(pContext->device, &semaphoreInfo, nullptr, &pContext->renderFinishedSemaphore) != VK_SUCCESS ||
+      vkCreateFence(pContext->device, &fenceInfo, nullptr, &pContext->inFlightFence) != VK_SUCCESS)
+    {
+      LOG_ERROR("An error occured whilst creating syncronization objects!");
+      LOG_INIT_AB("syncronization objects");
+      return false;
+    }
+    LOG_INIT_OK("syncronization objects");
+    return true;
+  }
+
   bool recordCommandBuffer(VContext* pContext, VkCommandBuffer commandBuffer, uint32_t imageIndex)
   {
     VkCommandBufferBeginInfo beginInfo {VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO};
