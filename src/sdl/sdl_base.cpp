@@ -109,7 +109,7 @@ namespace Ths::SDL
           }
           else
           {
-            LOG_DEBUG("resizeCallback not defined!");
+            LOG_WARN("resizeCallback not defined!");
           }
           break;
         default:

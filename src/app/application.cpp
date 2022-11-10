@@ -68,6 +68,20 @@ namespace Ths
     Ths::Vk::createSyncObjects(vContext);
   }
   
+  void SDLApp::safeRecreateSwapChain(uint32_t imgs,
+    VkPresentModeKHR preferredPresentMode,
+    VkFormat preferredFormat, VkColorSpaceKHR preferredColorSpace)
+  {
+    if ((SDL_GetWindowFlags(window) & SDL_WINDOW_MINIMIZED) == SDL_WINDOW_MINIMIZED)
+    {
+      SDL_WaitEvent(nullptr);
+    }
+    int win_width = 0, win_height = 0;
+    SDL_Vulkan_GetDrawableSize(window, &win_width, &win_height);
+
+    Ths::Vk::recreateSwapChain(vContext, win_width, win_height, imgs, preferredPresentMode, preferredFormat, preferredColorSpace);
+  }
+  
   void SDLApp::drawFrame()
   {
     vkWaitForFences(vContext->device, 1, &vContext->inFlightFences[vContext->currentFrame], VK_TRUE, UINT64_MAX);
@@ -78,8 +92,9 @@ namespace Ths
     {
       LOG_DEBUG("Rebuilding swapchain; reason: ", result);
       int width, height;
+      safeRecreateSwapChain(2);
       SDL_Vulkan_GetDrawableSize(window, &width, &height);
-      Ths::Vk::recreateSwapChain(vContext, width, height, 2);
+      //Ths::Vk::recreateSwapChain(vContext, width, height, 2);
       return;
     }
     else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
@@ -126,8 +141,9 @@ namespace Ths
     {
       LOG_DEBUG("Rebuilding swapchain; reason: ", result);
       int width, height;
+      //Ths::Vk::recreateSwapChain(vContext, width, height, 2);
+      safeRecreateSwapChain(2);
       SDL_Vulkan_GetDrawableSize(window, &width, &height);
-      Ths::Vk::recreateSwapChain(vContext, width, height, 2);
       vContext->framebufferResized = false;
     }
     else if (result != VK_SUCCESS)

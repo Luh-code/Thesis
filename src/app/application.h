@@ -79,6 +79,9 @@ namespace Ths
     }
     virtual void initWindow(const char* title, uint32_t w, uint32_t h, uint32_t dx = SDL_WINDOWPOS_CENTERED, uint32_t dy = SDL_WINDOWPOS_CENTERED);
     virtual void initVulkan() override;
+    virtual void safeRecreateSwapChain(uint32_t imgs,
+      VkPresentModeKHR preferredPresentMode = VK_PRESENT_MODE_MAILBOX_KHR,
+      VkFormat preferredFormat = VK_FORMAT_B8G8R8A8_SRGB , VkColorSpaceKHR preferredColorSpace = VK_COLOR_SPACE_SRGB_NONLINEAR_KHR);
     virtual void drawFrame();
     virtual void resizeCallback(int w, int h);
     virtual void mainLoop(bool (*func)()) override;
