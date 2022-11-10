@@ -86,7 +86,7 @@ namespace Ths::SDL
     return true;
   }
 
-  bool maintainSDLWindow()
+  bool maintainSDLWindow(SDL_Window* window, std::function<void(int, int)> resizeCallback)
   {
     SDL_Event event;
     while (SDL_PollEvent(&event))
@@ -95,6 +95,29 @@ namespace Ths::SDL
       {
       case SDL_QUIT:
         return false;
+        break;
+      case SDL_WINDOWEVENT:
+        switch (event.window.event)
+        {
+        case SDL_WINDOWEVENT_RESIZED:
+          if (resizeCallback)
+          {
+            int w, h;
+            SDL_Vulkan_GetDrawableSize(window, &w, &h);
+            resizeCallback(w, h);
+            LOG_DEBUG("SDL_Window resized!");
+          }
+          else
+          {
+            LOG_DEBUG("resizeCallback not defined!");
+          }
+          break;
+        default:
+          break;
+        }
+        break;
+      default:
+        break;
       }
     }
     return true;

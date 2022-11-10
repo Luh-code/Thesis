@@ -71,9 +71,24 @@ namespace Ths
   void SDLApp::drawFrame()
   {
     vkWaitForFences(vContext->device, 1, &vContext->inFlightFences[vContext->currentFrame], VK_TRUE, UINT64_MAX);
-    vkResetFences(vContext->device, 1, &vContext->inFlightFences[vContext->currentFrame]);
     uint32_t imageIndex;
-    vkAcquireNextImageKHR(vContext->device, vContext->swapchain, UINT64_MAX, vContext->imageAvailableSemaphores[vContext->currentFrame], VK_NULL_HANDLE, &imageIndex);
+    if (VkResult result =
+      vkAcquireNextImageKHR(vContext->device, vContext->swapchain, UINT64_MAX,
+      vContext->imageAvailableSemaphores[vContext->currentFrame], VK_NULL_HANDLE, &imageIndex); result == VK_ERROR_OUT_OF_DATE_KHR)
+    {
+      LOG_DEBUG("Rebuilding swapchain; reason: ", result);
+      int width, height;
+      SDL_Vulkan_GetDrawableSize(window, &width, &height);
+      Ths::Vk::recreateSwapChain(vContext, width, height, 2);
+      return;
+    }
+    else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
+    {
+      LOG_ERROR("Error acquireing VkImage: ", result);
+      return;
+    }
+    vkResetFences(vContext->device, 1, &vContext->inFlightFences[vContext->currentFrame]);
+
     vkResetCommandBuffer(vContext->commandBuffers[vContext->currentFrame], 0);
     Ths::Vk::recordCommandBuffer(vContext, vContext->commandBuffers[vContext->currentFrame], imageIndex);
 
@@ -106,23 +121,31 @@ namespace Ths
     presentInfo.pImageIndices = &imageIndex;
     presentInfo.pResults = nullptr;
 
-    if (VkResult result = vkQueuePresentKHR(vContext->presentQueue, &presentInfo); result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR)
+    if (VkResult result = vkQueuePresentKHR(vContext->presentQueue, &presentInfo); result == VK_ERROR_OUT_OF_DATE_KHR ||
+      result == VK_SUBOPTIMAL_KHR || vContext->framebufferResized)
     {
+      LOG_DEBUG("Rebuilding swapchain; reason: ", result);
       int width, height;
       SDL_Vulkan_GetDrawableSize(window, &width, &height);
       Ths::Vk::recreateSwapChain(vContext, width, height, 2);
-      LOG_DEBUG("Rebuilding swapchain; reason: ", result);
+      vContext->framebufferResized = false;
     }
     else if (result != VK_SUCCESS)
     {
       LOG_ERROR("An error occured whilst presenting swap chain image: ", result, " continuing");
     }
+
     vContext->currentFrame = (vContext->currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
+  }
+
+  void SDLApp::resizeCallback(int w, int h)
+  {
+    vContext->framebufferResized = true;
   }
 
   void SDLApp::mainLoop(bool (*func)())
   {
-    while(Ths::SDL::maintainSDLWindow() && func())
+    while(Ths::SDL::maintainSDLWindow(window, [this](int w, int h) { this->resizeCallback(w, h); }) && func())
     {
       this->drawFrame();
     }

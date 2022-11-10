@@ -80,6 +80,7 @@ namespace Ths
     virtual void initWindow(const char* title, uint32_t w, uint32_t h, uint32_t dx = SDL_WINDOWPOS_CENTERED, uint32_t dy = SDL_WINDOWPOS_CENTERED);
     virtual void initVulkan() override;
     virtual void drawFrame();
+    virtual void resizeCallback(int w, int h);
     virtual void mainLoop(bool (*func)()) override;
     virtual void cleanup(bool dein_sdl);
     virtual void cleanup() override;

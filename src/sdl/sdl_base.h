@@ -6,6 +6,7 @@
 #include "logger.h"
 #include <string>
 #include <vector>
+#include <functional>
 
 namespace Ths::SDL
 {
@@ -18,7 +19,7 @@ namespace Ths::SDL
   SDL_Window* createSDLWindowVk(const char* title, uint32_t dx, uint32_t dy, uint32_t w, uint32_t h, Uint32 flags = 0);
   bool destroySDLWindow(SDL_Window* wnd);
   bool quitSDL();
-  bool maintainSDLWindow();
+  bool maintainSDLWindow(SDL_Window* window, std::function<void(int, int)> resizeCallback);
   bool querySDLVkInstanceExtensions(SDL_Window* window, std::vector<const char*>* extensions);
 }
 

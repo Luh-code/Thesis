@@ -63,6 +63,7 @@ namespace Ths::Vk
     std::vector<VkSemaphore> renderFinishedSemaphores;
     std::vector<VkFence> inFlightFences;
     uint32_t currentFrame = 0;
+    bool framebufferResized = false;
   } VContext;
 
   typedef struct QueueFamilyIndices
