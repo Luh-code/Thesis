@@ -101,9 +101,15 @@ namespace Ths::Vk
     bool framebufferResized = false;
 
     const std::vector<Vertex> verticies = {
+      {{-0.1f, -0.6f}, {0.0f, 0.0f, 1.0f}},
+      {{0.4f, 0.4f}, {1.0f, 0.0f, 0.0f}},
+      {{-0.6f, 0.4f}, {0.0f, 1.0f, 0.0f}},
       {{0.0f, -0.5f}, {1.0f, 0.0f, 0.0f}},
       {{0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}},
-      {{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}}
+      {{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}},
+      {{0.1f, -0.4f}, {0.0f, 1.0f, 0.0f}},
+      {{0.6f, 0.6f}, {0.0f, 0.0f, 1.0f}},
+      {{-0.4f, 0.6f}, {1.0f, 0.0f, 0.0f}}
     };
     VkBuffer vertexBuffer;
     VkDeviceMemory vertexBufferMemory;
