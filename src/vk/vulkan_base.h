@@ -14,6 +14,8 @@
 #include <limits>
 #include <algorithm>
 #include <fstream>
+#include <glm/glm.hpp>
+#include <array>
 //#include "../sdl/sdl-base.h"
 
 #define VK_FAIL(val) if(VkResult res = (val); res != VK_SUCCESS)
@@ -32,6 +34,39 @@ namespace Ths::Vk
 {
   // Vulkan Creation
   // Data
+
+  typedef struct Vertex
+  {
+    glm::vec2 pos;
+    glm::vec3 color;
+
+    static std::array<VkVertexInputAttributeDescription, 2> getAttributeDescriptions()
+    {
+      std::array<VkVertexInputAttributeDescription, 2> ad {};
+      ad[0].binding = 0;
+      ad[0].location = 0;
+      ad[0].format = VK_FORMAT_R32G32_SFLOAT; //aka vec2
+      ad[0].offset = offsetof(Vertex, pos);
+
+      ad[1].binding = 0;
+      ad[1].location = 1;
+      ad[1].format = VK_FORMAT_R32G32B32_SFLOAT; //aka vec3
+      ad[1].offset = offsetof(Vertex, color);
+
+      return ad;
+    }
+
+    static VkVertexInputBindingDescription getBindingDescription()
+    {
+      VkVertexInputBindingDescription bd {};
+      bd.binding = 0;
+      bd.stride = sizeof(Vertex);
+      bd.inputRate = VK_VERTEX_INPUT_RATE_VERTEX; // Change to VK_VERTEX_INPUT_RATE_INSTANCE for instanced rendering
+
+
+      return bd;
+    }
+  } Vertex;
 
   typedef struct VulkanContext
   {
@@ -64,6 +99,13 @@ namespace Ths::Vk
     std::vector<VkFence> inFlightFences;
     uint32_t currentFrame = 0;
     bool framebufferResized = false;
+
+    const std::vector<Vertex> verticies = {
+      {{0.0f, -0.5f}, {1.0f, 0.0f, 0.0f}},
+      {{0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}},
+      {{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}}
+    };
+    VkBuffer vertexBuffer;
   } VContext;
 
   typedef struct QueueFamilyIndices
@@ -91,12 +133,14 @@ namespace Ths::Vk
     std::vector<VkPresentModeKHR> presentModes;
   } SwapChainSupportDetails;
 
+
   // Functions
   bool createSyncObjects(VContext* pContext);
   bool recordCommandBuffer(VContext* pContext, VkCommandBuffer commandBuffer, uint32_t imageIndex);
   bool createCommandBuffers(VContext* pContext);
   bool createCommandPool(VContext* pContext);
 
+  bool createVertexBuffer(VContext* pContext);
   bool createFramebuffers(VContext* pContext);
   bool createRenderPass(VContext* pContext, uint32_t idx);
   VkShaderModule createShaderModule(VulkanContext* pContext, const std::vector<char>& code);

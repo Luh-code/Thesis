@@ -53,6 +53,7 @@
         "set": "cpp",
         "unordered_set": "cpp",
         "optional": "cpp",
-        "fstream": "cpp"
+        "fstream": "cpp",
+        "cassert": "cpp"
     }
 }

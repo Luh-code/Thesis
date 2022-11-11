@@ -72,12 +72,13 @@ namespace Ths
     VkPresentModeKHR preferredPresentMode,
     VkFormat preferredFormat, VkColorSpaceKHR preferredColorSpace)
   {
-    if ((SDL_GetWindowFlags(window) & SDL_WINDOW_MINIMIZED) == SDL_WINDOW_MINIMIZED)
-    {
-      SDL_WaitEvent(nullptr);
-    }
     int win_width = 0, win_height = 0;
     SDL_Vulkan_GetDrawableSize(window, &win_width, &win_height);
+    if ((SDL_GetWindowFlags(window) & SDL_WINDOW_MINIMIZED) == SDL_WINDOW_MINIMIZED || win_width == 0 || win_height == 0)
+    {
+      SDL_Vulkan_GetDrawableSize(window, &win_width, &win_height);
+      SDL_WaitEvent(nullptr);
+    }
 
     Ths::Vk::recreateSwapChain(vContext, win_width, win_height, imgs, preferredPresentMode, preferredFormat, preferredColorSpace);
   }
@@ -173,6 +174,10 @@ namespace Ths
   {
     // Delete Vk stuff
     Ths::Vk::cleanupSwapChain(vContext);
+
+    vkDestroyBuffer(vContext->device, vContext->vertexBuffer, nullptr);
+    // TODO: Continue with memory requirements
+
     for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
     {
       vkDestroySemaphore(vContext->device, vContext->imageAvailableSemaphores[i], nullptr);

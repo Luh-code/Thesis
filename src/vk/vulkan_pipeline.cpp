@@ -2,6 +2,21 @@
 
 namespace Ths::Vk
 {
+  bool createVertexBuffer(VContext* pContext)
+  {
+    VkBufferCreateInfo bufferInfo {VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO};
+    bufferInfo.size = sizeof(Vertex)*pContext->verticies.size();
+    bufferInfo.usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
+    bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+
+    VKF(vkCreateBuffer(pContext->device, &bufferInfo, nullptr, &pContext->vertexBuffer))
+    {
+      LOG_ERROR("An error occured whilst creating vertex buffer: ", res);
+      return false;
+    }
+    return true;
+  }
+
   bool createFramebuffers(VContext* pContext)
   {
     pContext->swapchainFramebuffers.resize(pContext->swapchainImageViews.size());
@@ -143,10 +158,12 @@ namespace Ths::Vk
     
     // Defines input to graphics pipeline
     VkPipelineVertexInputStateCreateInfo vertexInputInfo {VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO};
-    vertexInputInfo.vertexBindingDescriptionCount = 0;
-    vertexInputInfo.pVertexBindingDescriptions = nullptr;
-    vertexInputInfo.vertexAttributeDescriptionCount = 0;
-    vertexInputInfo.pVertexAttributeDescriptions = nullptr;
+    auto bindingDescription = Vertex::getBindingDescription();
+    auto attributeDescriptions = Vertex::getAttributeDescriptions();
+    vertexInputInfo.vertexBindingDescriptionCount = 1;
+    vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(attributeDescriptions.size());
+    vertexInputInfo.pVertexBindingDescriptions = &bindingDescription;
+    vertexInputInfo.pVertexAttributeDescriptions = attributeDescriptions.data();
 
     // Create Input assembler
     VkPipelineInputAssemblyStateCreateInfo inputAssembler {VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO};
