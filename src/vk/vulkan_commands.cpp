@@ -51,8 +51,8 @@ namespace Ths::Vk
     renderPassInfo.clearValueCount = 1;
     renderPassInfo.pClearValues = &clearColor;
 
-    VK(vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE));
-    VK(vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pContext->graphicsPipeline));
+    vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+    vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pContext->graphicsPipeline);
     VkViewport viewport{};
     viewport.x = 0.0f;
     viewport.y = 0.0f;
@@ -65,8 +65,11 @@ namespace Ths::Vk
     scissor.offset = {0, 0};
     scissor.extent = pContext->swapchainExtent;
     vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
-    VK(vkCmdDraw(commandBuffer, 3, 1, 0, 0));
-    VK(vkCmdEndRenderPass(commandBuffer));
+    VkBuffer vertexBuffers[] = {pContext->vertexBuffer};
+    VkDeviceSize offsets[] = {0};
+    vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);
+    vkCmdDraw(commandBuffer, static_cast<uint32_t>(pContext->verticies.size()), 1, 0, 0);
+    vkCmdEndRenderPass(commandBuffer);
 
     VKF(vkEndCommandBuffer(commandBuffer))
     {

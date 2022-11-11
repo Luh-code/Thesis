@@ -106,6 +106,7 @@ namespace Ths::Vk
       {{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}}
     };
     VkBuffer vertexBuffer;
+    VkDeviceMemory vertexBufferMemory;
   } VContext;
 
   typedef struct QueueFamilyIndices
@@ -140,6 +141,7 @@ namespace Ths::Vk
   bool createCommandBuffers(VContext* pContext);
   bool createCommandPool(VContext* pContext);
 
+  int findMemoryType(VContext* pContext, uint32_t typeFilter, VkMemoryPropertyFlags properties);
   bool createVertexBuffer(VContext* pContext);
   bool createFramebuffers(VContext* pContext);
   bool createRenderPass(VContext* pContext, uint32_t idx);

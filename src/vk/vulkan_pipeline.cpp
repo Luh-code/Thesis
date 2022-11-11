@@ -2,6 +2,19 @@
 
 namespace Ths::Vk
 {
+  int findMemoryType(VContext* pContext, uint32_t typeFilter, VkMemoryPropertyFlags properties)
+  {
+    VkPhysicalDeviceMemoryProperties memoryProperties;
+    vkGetPhysicalDeviceMemoryProperties(pContext->physicalDevice, &memoryProperties);
+
+    for (uint32_t i = 0; i < memoryProperties.memoryTypeCount; i++)
+      if (typeFilter & (1 << i) && (memoryProperties.memoryTypes[i].propertyFlags & properties) == properties)
+        return i;
+    
+    LOG_ERROR("No suitable memory type found!");
+    return -1;
+  }
+
   bool createVertexBuffer(VContext* pContext)
   {
     VkBufferCreateInfo bufferInfo {VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO};
@@ -14,6 +27,29 @@ namespace Ths::Vk
       LOG_ERROR("An error occured whilst creating vertex buffer: ", res);
       return false;
     }
+
+    VkMemoryRequirements memoryRequirements;
+    vkGetBufferMemoryRequirements(pContext->device, pContext->vertexBuffer, &memoryRequirements);
+
+    VkMemoryAllocateInfo allocInfo {VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO};
+    allocInfo.allocationSize = memoryRequirements.size;
+    allocInfo.memoryTypeIndex = findMemoryType(pContext, memoryRequirements.memoryTypeBits,
+      VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+    
+    VKF(vkAllocateMemory(pContext->device, &allocInfo, nullptr, &pContext->vertexBufferMemory))
+    {
+      LOG_ERROR("An error occured whilst allocating GPU memory: ", res);
+      return false;
+    }
+
+    vkBindBufferMemory(pContext->device, pContext->vertexBuffer, pContext->vertexBufferMemory, 0);
+
+    // ? maybe consider explicit flushing
+    void* data;
+    vkMapMemory(pContext->device, pContext->vertexBufferMemory, 0, bufferInfo.size, 0, &data);
+    memcpy(data, pContext->verticies.data(), static_cast<size_t>(bufferInfo.size));
+    vkUnmapMemory(pContext->device, pContext->vertexBufferMemory);
+
     return true;
   }
 

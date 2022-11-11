@@ -62,6 +62,7 @@ namespace Ths
     Ths::Vk::createImageViews(vContext);
     Ths::Vk::createRenderPass(vContext, 0);
     Ths::Vk::createGraphicsPipeline(vContext);
+    Ths::Vk::createVertexBuffer(vContext);
     Ths::Vk::createFramebuffers(vContext);
     Ths::Vk::createCommandPool(vContext);
     Ths::Vk::createCommandBuffers(vContext);
@@ -176,7 +177,7 @@ namespace Ths
     Ths::Vk::cleanupSwapChain(vContext);
 
     vkDestroyBuffer(vContext->device, vContext->vertexBuffer, nullptr);
-    // TODO: Continue with memory requirements
+    vkFreeMemory(vContext->device, vContext->vertexBufferMemory, nullptr);
 
     for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
     {
