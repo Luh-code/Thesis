@@ -62,10 +62,10 @@ namespace Ths
     Ths::Vk::createImageViews(vContext);
     Ths::Vk::createRenderPass(vContext, 0);
     Ths::Vk::createGraphicsPipeline(vContext);
-    Ths::Vk::createVertexBuffer(vContext);
-    Ths::Vk::createFramebuffers(vContext);
     Ths::Vk::createCommandPools(vContext);
     Ths::Vk::createCommandBuffers(vContext);
+    Ths::Vk::createVertexBuffer(vContext);
+    Ths::Vk::createFramebuffers(vContext);
     Ths::Vk::createSyncObjects(vContext);
   }
   

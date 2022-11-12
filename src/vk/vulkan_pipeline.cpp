@@ -16,44 +16,97 @@ namespace Ths::Vk
     return -1;
   }
 
-  bool createVertexBuffer(VContext* pContext)
+  void copyBuffer(VContext* pContext, VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size)
+  {
+    VkCommandBufferAllocateInfo allocInfo {VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO};
+    allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+    allocInfo.commandPool = pContext->transferPool;
+    allocInfo.commandBufferCount = 1;
+
+    VkCommandBuffer commandBuffer = VK_NULL_HANDLE;
+    vkAllocateCommandBuffers(pContext->device, &allocInfo, &commandBuffer);
+
+    VkCommandBufferBeginInfo beginInfo {VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO};
+    beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+
+    vkBeginCommandBuffer(commandBuffer, &beginInfo);
+
+    VkBufferCopy copyRegion {};
+    copyRegion.srcOffset = 0;
+    copyRegion.dstOffset = 0;
+    copyRegion.size = size;
+    vkCmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, 1, &copyRegion);
+    vkEndCommandBuffer(commandBuffer);
+
+    VkSubmitInfo submitInfo {VK_STRUCTURE_TYPE_SUBMIT_INFO};
+    submitInfo.commandBufferCount = 1;
+    submitInfo.pCommandBuffers = &commandBuffer;
+
+    vkQueueSubmit(pContext->transferQueue, 1, &submitInfo, VK_NULL_HANDLE);
+    // ? consider using fence here instead of waiting for idle
+    vkQueueWaitIdle(pContext->transferQueue);
+  }
+
+  bool createBuffer(VContext* pContext, VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory)
   {
     VkBufferCreateInfo bufferInfo {VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO};
-    bufferInfo.size = sizeof(Vertex)*pContext->verticies.size();
-    bufferInfo.usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
+    bufferInfo.size = size;
+    bufferInfo.usage = usage;
     bufferInfo.sharingMode = VK_SHARING_MODE_CONCURRENT;
     QueueFamilyIndices indices = findQueueFamilies(pContext->physicalDevice, pContext->surface);
     uint32_t queueFamilyIndices[] = {indices.graphicsFamily.value(), indices.transferFamily.value()};
     bufferInfo.queueFamilyIndexCount = 2;
     bufferInfo.pQueueFamilyIndices = queueFamilyIndices;
 
-    VKF(vkCreateBuffer(pContext->device, &bufferInfo, nullptr, &pContext->vertexBuffer))
+    VKF(vkCreateBuffer(pContext->device, &bufferInfo, nullptr, &buffer))
     {
       LOG_ERROR("An error occured whilst creating vertex buffer: ", res);
       return false;
     }
 
     VkMemoryRequirements memoryRequirements;
-    vkGetBufferMemoryRequirements(pContext->device, pContext->vertexBuffer, &memoryRequirements);
+    vkGetBufferMemoryRequirements(pContext->device, buffer, &memoryRequirements);
 
     VkMemoryAllocateInfo allocInfo {VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO};
     allocInfo.allocationSize = memoryRequirements.size;
-    allocInfo.memoryTypeIndex = findMemoryType(pContext, memoryRequirements.memoryTypeBits,
-      VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+    allocInfo.memoryTypeIndex = findMemoryType(pContext, memoryRequirements.memoryTypeBits, properties);
     
-    VKF(vkAllocateMemory(pContext->device, &allocInfo, nullptr, &pContext->vertexBufferMemory))
+    VKF(vkAllocateMemory(pContext->device, &allocInfo, nullptr, &bufferMemory))
     {
       LOG_ERROR("An error occured whilst allocating GPU memory: ", res);
       return false;
     }
 
-    vkBindBufferMemory(pContext->device, pContext->vertexBuffer, pContext->vertexBufferMemory, 0);
+    vkBindBufferMemory(pContext->device, buffer, bufferMemory, 0);
+
+    return true;
+  }
+
+  bool createVertexBuffer(VContext* pContext)
+  {
+    VkDeviceSize bufferSize = sizeof(Vertex) * pContext->verticies.size();
+
+    VkBuffer stagingBuffer;
+    VkDeviceMemory stagingBufferMemory;
+    createBuffer(pContext, bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+      VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+      stagingBuffer, stagingBufferMemory);
 
     // ? maybe consider explicit flushing
     void* data;
-    vkMapMemory(pContext->device, pContext->vertexBufferMemory, 0, bufferInfo.size, 0, &data);
-    memcpy(data, pContext->verticies.data(), static_cast<size_t>(bufferInfo.size));
-    vkUnmapMemory(pContext->device, pContext->vertexBufferMemory);
+    vkMapMemory(pContext->device, stagingBufferMemory, 0, bufferSize, 0, &data);
+    memcpy(data, pContext->verticies.data(), static_cast<size_t>(bufferSize));
+    vkUnmapMemory(pContext->device, stagingBufferMemory);
+
+    createBuffer(pContext, bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
+      VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+      pContext->vertexBuffer, pContext->vertexBufferMemory);
+
+    
+    copyBuffer(pContext, stagingBuffer, pContext->vertexBuffer, bufferSize);
+
+    vkDestroyBuffer(pContext->device, stagingBuffer, nullptr);
+    vkFreeMemory(pContext->device, stagingBufferMemory, nullptr);
 
     return true;
   }

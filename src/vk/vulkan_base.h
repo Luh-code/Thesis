@@ -64,7 +64,6 @@ namespace Ths::Vk
       bd.stride = sizeof(Vertex);
       bd.inputRate = VK_VERTEX_INPUT_RATE_VERTEX; // Change to VK_VERTEX_INPUT_RATE_INSTANCE for instanced rendering
 
-
       return bd;
     }
   } Vertex;
@@ -115,7 +114,9 @@ namespace Ths::Vk
       {{-0.4f, 0.6f}, {1.0f, 0.0f, 0.0f}}
     };
     VkBuffer vertexBuffer;
+    //VkBuffer stagingBuffer;
     VkDeviceMemory vertexBufferMemory;
+    //VkDeviceMemory stagingBufferMemory;
   } VContext;
 
   typedef struct QueueFamilyIndices
@@ -144,6 +145,7 @@ namespace Ths::Vk
     std::vector<VkPresentModeKHR> presentModes;
   } SwapChainSupportDetails;
 
+  // TODO: Change all VContext*/VulkanContext* to VContext&
 
   // Functions
   bool createSyncObjects(VContext* pContext);
@@ -152,6 +154,8 @@ namespace Ths::Vk
   bool createCommandPools(VContext* pContext);
 
   int findMemoryType(VContext* pContext, uint32_t typeFilter, VkMemoryPropertyFlags properties);
+  void copyBuffer(VContext* pContext, VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
+  bool createBuffer(VContext* pContext, VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
   bool createVertexBuffer(VContext* pContext);
   bool createFramebuffers(VContext* pContext);
   bool createRenderPass(VContext* pContext, uint32_t idx);

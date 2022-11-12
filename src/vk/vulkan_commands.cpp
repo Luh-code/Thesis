@@ -117,7 +117,7 @@ namespace Ths::Vk
     }
 
     VkCommandPoolCreateInfo poolInfo2 {VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO};
-    poolInfo2.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
+    poolInfo2.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT | VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
     poolInfo2.queueFamilyIndex = queueFamilyIndices.transferFamily.value();
 
     VKF(vkCreateCommandPool(pContext->device, &poolInfo2, nullptr, &pContext->transferPool))
