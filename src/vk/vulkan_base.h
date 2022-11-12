@@ -1,21 +1,22 @@
 #ifndef __VULKAN_BASE_H__
 #define __VULKAN_BASE_H__
 
-#include "vulkan/vulkan.h"
-#include "../thesis.h"
-#include "logger.h"
-#include <vector>
-#include <algorithm>
-#include <cstring>
-#include <map>
-#include <optional>
-#include <set>
-#include <cstdint>
-#include <limits>
-#include <algorithm>
-#include <fstream>
-#include <glm/glm.hpp>
-#include <array>
+#include "../pch.h"
+// #include "vulkan/vulkan.h"
+// #include "../thesis.h"
+// #include "logger.h"
+// #include <vector>
+// #include <algorithm>
+// #include <cstring>
+// #include <map>
+// #include <optional>
+// #include <set>
+// #include <cstdint>
+// #include <limits>
+// #include <algorithm>
+// #include <fstream>
+// #include <glm/glm.hpp>
+// #include <array>
 //#include "../sdl/sdl-base.h"
 
 #define VK_FAIL(val) if(VkResult res = (val); res != VK_SUCCESS)

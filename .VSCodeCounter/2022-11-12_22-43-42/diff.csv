@@ -1,0 +1,11 @@
+"filename", "language", "C++", "GLSL", "comment", "blank", "total"
+"d:\Projects\Thesis\src\app\application.cpp", "C++", 43, 0, 1, 2, 46
+"d:\Projects\Thesis\src\app\application.h", "C++", 4, 0, 0, 0, 4
+"d:\Projects\Thesis\src\sdl\sdl_base.cpp", "C++", 23, 0, 0, 0, 23
+"d:\Projects\Thesis\src\sdl\sdl_base.h", "C++", 1, 0, 0, 0, 1
+"d:\Projects\Thesis\src\vk\shaders\triangle.vert", "GLSL", 0, -8, 0, -1, -9
+"d:\Projects\Thesis\src\vk\vulkan_base.h", "C++", 47, 0, 0, 9, 56
+"d:\Projects\Thesis\src\vk\vulkan_commands.cpp", "C++", 12, 0, 0, 3, 15
+"d:\Projects\Thesis\src\vk\vulkan_device.cpp", "C++", 8, 0, 0, 0, 8
+"d:\Projects\Thesis\src\vk\vulkan_pipeline.cpp", "C++", 55, 0, 0, 2, 57
+"Total", "-", 193, -8, 1, 15, 201
