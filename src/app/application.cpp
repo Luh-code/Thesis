@@ -64,7 +64,7 @@ namespace Ths
     Ths::Vk::createGraphicsPipeline(vContext);
     Ths::Vk::createVertexBuffer(vContext);
     Ths::Vk::createFramebuffers(vContext);
-    Ths::Vk::createCommandPool(vContext);
+    Ths::Vk::createCommandPools(vContext);
     Ths::Vk::createCommandBuffers(vContext);
     Ths::Vk::createSyncObjects(vContext);
   }
@@ -185,6 +185,7 @@ namespace Ths
       vkDestroySemaphore(vContext->device, vContext->renderFinishedSemaphores[i], nullptr);
       vkDestroyFence(vContext->device, vContext->inFlightFences[i], nullptr);
     }
+    vkDestroyCommandPool(vContext->device, vContext->transferPool, nullptr);
     vkDestroyCommandPool(vContext->device, vContext->commandPool, nullptr);
     vkDestroyPipeline(vContext->device, vContext->graphicsPipeline, nullptr);
     vkDestroyPipelineLayout(vContext->device, vContext->pipelineLayout, nullptr);

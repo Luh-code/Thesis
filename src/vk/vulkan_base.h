@@ -78,6 +78,7 @@ namespace Ths::Vk
 
     VkQueue graphicsQueue;
     VkQueue presentQueue;
+    VkQueue transferQueue;
 
     VkSurfaceKHR surface;
     VkSwapchainKHR swapchain;
@@ -92,6 +93,7 @@ namespace Ths::Vk
     std::vector<VkFramebuffer> swapchainFramebuffers;
 
     VkCommandPool commandPool;
+    VkCommandPool transferPool;
     std::vector<VkCommandBuffer> commandBuffers;
 
     std::vector<VkSemaphore> imageAvailableSemaphores;
@@ -119,6 +121,7 @@ namespace Ths::Vk
   {
     std::optional<uint32_t> graphicsFamily;
     std::optional<uint32_t> presentFamily;
+    std::optional<uint32_t> transferFamily;
 
     inline bool isComplete()
     {
@@ -145,7 +148,7 @@ namespace Ths::Vk
   bool createSyncObjects(VContext* pContext);
   bool recordCommandBuffer(VContext* pContext, VkCommandBuffer commandBuffer, uint32_t imageIndex);
   bool createCommandBuffers(VContext* pContext);
-  bool createCommandPool(VContext* pContext);
+  bool createCommandPools(VContext* pContext);
 
   int findMemoryType(VContext* pContext, uint32_t typeFilter, VkMemoryPropertyFlags properties);
   bool createVertexBuffer(VContext* pContext);

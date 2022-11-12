@@ -89,15 +89,17 @@ namespace Ths::Vk
     createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT; // if post-processing is used, you might want to change this
 
     QueueFamilyIndices indices = findQueueFamilies(pContext->physicalDevice, pContext->surface);
-    uint32_t queueFamilyIndices[] = {indices.graphicsFamily.value(), indices.presentFamily.value()};
+    uint32_t queueFamilyIndices[] = {indices.graphicsFamily.value(), indices.presentFamily.value(), indices.transferFamily.value()};
 
     if (indices.graphicsFamily != indices.presentFamily)
     {
+      LOG_DEBUG("Sharing Mode: Concurrent");
       createInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
-      createInfo.queueFamilyIndexCount = 2;
+      createInfo.queueFamilyIndexCount = 3;
       createInfo.pQueueFamilyIndices = queueFamilyIndices;
     } else
     {
+      LOG_DEBUG("Sharing Mode: Exclusive");
       createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
       createInfo.queueFamilyIndexCount = 0;
       createInfo.pQueueFamilyIndices = nullptr;
@@ -214,13 +216,13 @@ namespace Ths::Vk
     QueueFamilyIndices indices = findQueueFamilies(pContext->physicalDevice, pContext->surface);
 
     std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
-    std::set<uint32_t> uniqueQueueFamilies = {indices.graphicsFamily.value(), indices.presentFamily.value()};
+    std::set<uint32_t> uniqueQueueFamilies = {indices.graphicsFamily.value(), indices.presentFamily.value(), indices.transferFamily.value()};
 
     float queuePriority = 1.0f;
     for (uint32_t queueFamily : uniqueQueueFamilies)
     {
       VkDeviceQueueCreateInfo queueCreateInfo {VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO};
-      queueCreateInfo.queueFamilyIndex = indices.graphicsFamily.value();
+      queueCreateInfo.queueFamilyIndex = queueFamily;
       queueCreateInfo.queueCount = 1;
       queueCreateInfo.pQueuePriorities = &queuePriority;
       queueCreateInfos.push_back(queueCreateInfo);
@@ -244,6 +246,7 @@ namespace Ths::Vk
 
     vkGetDeviceQueue(pContext->device, indices.graphicsFamily.value(), 0, &pContext->graphicsQueue);
     vkGetDeviceQueue(pContext->device, indices.presentFamily.value(), 0, &pContext->presentQueue);
+    vkGetDeviceQueue(pContext->device, indices.transferFamily.value(), 0, &pContext->transferQueue);
 
     LOG_INIT_OK("Logical Device");
     return true;
@@ -262,11 +265,16 @@ namespace Ths::Vk
     for(const auto& queueFamily : queueFamilies)
     {
       VkBool32 presentSupport = false;
-      if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT)
+      vkGetPhysicalDeviceSurfaceSupportKHR(device, i, surface, &presentSupport);
+      if (!indices.graphicsFamily.has_value() && (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT) == VK_QUEUE_GRAPHICS_BIT)
       {
         indices.graphicsFamily = i;
       }
-      if (vkGetPhysicalDeviceSurfaceSupportKHR(device, i, surface, &presentSupport) == VK_SUCCESS)
+      else if (!indices.transferFamily.has_value() && (queueFamily.queueFlags & VK_QUEUE_TRANSFER_BIT) == VK_QUEUE_TRANSFER_BIT)
+      {
+        indices.transferFamily = i;
+      }
+      else if (!indices.presentFamily.has_value() && presentSupport == VK_TRUE)
       {
         indices.presentFamily = i;
       }

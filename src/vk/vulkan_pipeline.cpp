@@ -20,7 +20,11 @@ namespace Ths::Vk
     VkBufferCreateInfo bufferInfo {VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO};
     bufferInfo.size = sizeof(Vertex)*pContext->verticies.size();
     bufferInfo.usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
-    bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+    bufferInfo.sharingMode = VK_SHARING_MODE_CONCURRENT;
+    QueueFamilyIndices indices = findQueueFamilies(pContext->physicalDevice, pContext->surface);
+    uint32_t queueFamilyIndices[] = {indices.graphicsFamily.value(), indices.transferFamily.value()};
+    bufferInfo.queueFamilyIndexCount = 2;
+    bufferInfo.pQueueFamilyIndices = queueFamilyIndices;
 
     VKF(vkCreateBuffer(pContext->device, &bufferInfo, nullptr, &pContext->vertexBuffer))
     {

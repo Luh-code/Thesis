@@ -99,7 +99,7 @@ namespace Ths::Vk
     return false;
   }
 
-  bool createCommandPool(VContext* pContext)
+  bool createCommandPools(VContext* pContext)
   {
     LOG_INIT("Command Pool");
     QueueFamilyIndices queueFamilyIndices = findQueueFamilies(pContext->physicalDevice, pContext->surface);
@@ -114,6 +114,18 @@ namespace Ths::Vk
       LOG_INIT_AB("Command Pool");
       return false;
     }
+
+    VkCommandPoolCreateInfo poolInfo2 {VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO};
+    poolInfo2.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
+    poolInfo2.queueFamilyIndex = queueFamilyIndices.transferFamily.value();
+
+    VKF(vkCreateCommandPool(pContext->device, &poolInfo2, nullptr, &pContext->transferPool))
+    {
+      LOG_ERROR("An error occured whilst creating a VkCommandPool: ", res);
+      LOG_INIT_AB("Command Pool");
+      return false;
+    }
+
     LOG_INIT_OK("Command Pool");
     return true;
   }
