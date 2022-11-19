@@ -103,20 +103,28 @@ namespace Ths::Vk
     bool framebufferResized = false;
 
     const std::vector<Vertex> verticies = {
-      {{-0.1f, -0.6f}, {0.0f, 0.0f, 1.0f}},
-      {{0.4f, 0.4f}, {1.0f, 0.0f, 0.0f}},
-      {{-0.6f, 0.4f}, {0.0f, 1.0f, 0.0f}},
-      {{0.0f, -0.5f}, {1.0f, 0.0f, 0.0f}},
-      {{0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}},
-      {{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}},
-      {{0.1f, -0.4f}, {0.0f, 1.0f, 0.0f}},
-      {{0.6f, 0.6f}, {0.0f, 0.0f, 1.0f}},
-      {{-0.4f, 0.6f}, {1.0f, 0.0f, 0.0f}}
+      {{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},
+      {{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}},
+      {{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}},
+      {{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}}
+      // {{-0.1f, -0.6f}, {0.0f, 0.0f, 1.0f}},
+      // {{0.4f, 0.4f}, {1.0f, 0.0f, 0.0f}},
+      // {{-0.6f, 0.4f}, {0.0f, 1.0f, 0.0f}},
+      // {{0.0f, -0.5f}, {1.0f, 0.0f, 0.0f}},
+      // {{0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}},
+      // {{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}},
+      // {{0.1f, -0.4f}, {0.0f, 1.0f, 0.0f}},
+      // {{0.6f, 0.6f}, {0.0f, 0.0f, 1.0f}},
+      // {{-0.4f, 0.6f}, {1.0f, 0.0f, 0.0f}}
+    };
+    const std::vector<uint16_t> indices = {
+      0, 1, 2,
+      2, 3, 0
     };
     VkBuffer vertexBuffer;
-    //VkBuffer stagingBuffer;
+    VkBuffer indexBuffer;
     VkDeviceMemory vertexBufferMemory;
-    //VkDeviceMemory stagingBufferMemory;
+    VkDeviceMemory indexBufferMemory;
   } VContext;
 
   typedef struct QueueFamilyIndices
@@ -156,6 +164,7 @@ namespace Ths::Vk
   int findMemoryType(VContext* pContext, uint32_t typeFilter, VkMemoryPropertyFlags properties);
   void copyBuffer(VContext* pContext, VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
   bool createBuffer(VContext* pContext, VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
+  bool createIndexBuffer(VContext* pContext);
   bool createVertexBuffer(VContext* pContext);
   bool createFramebuffers(VContext* pContext);
   bool createRenderPass(VContext* pContext, uint32_t idx);

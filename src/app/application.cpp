@@ -52,6 +52,7 @@ namespace Ths
     Ths::SDL::createVkWindowSurfaceSDL(vContext->instance, window, &vContext->surface);
     VkPhysicalDeviceFeatures gpuReqirements {};
     gpuReqirements.geometryShader = true;
+    gpuReqirements.tessellationShader = true;
     std::vector<const char*> deviceExtensions;
     deviceExtensions.push_back(VK_KHR_SWAPCHAIN_EXTENSION_NAME);
     Ths::Vk::selectPhysicalDevice(vContext, &gpuReqirements, &deviceExtensions);
@@ -65,6 +66,7 @@ namespace Ths
     Ths::Vk::createCommandPools(vContext);
     Ths::Vk::createCommandBuffers(vContext);
     Ths::Vk::createVertexBuffer(vContext);
+    Ths::Vk::createIndexBuffer(vContext);
     Ths::Vk::createFramebuffers(vContext);
     Ths::Vk::createSyncObjects(vContext);
   }
@@ -110,7 +112,6 @@ namespace Ths
     Ths::Vk::recordCommandBuffer(vContext, vContext->commandBuffers[vContext->currentFrame], imageIndex);
 
     VkSubmitInfo submitInfo {VK_STRUCTURE_TYPE_SUBMIT_INFO};
-    
     VkSemaphore waitSemaphores[] = {vContext->imageAvailableSemaphores[vContext->currentFrame]};
     VkPipelineStageFlags waitStages[] = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
     submitInfo.waitSemaphoreCount = 1;
@@ -175,6 +176,9 @@ namespace Ths
   {
     // Delete Vk stuff
     Ths::Vk::cleanupSwapChain(vContext);
+
+    vkDestroyBuffer(vContext->device, vContext->indexBuffer, nullptr);
+    vkFreeMemory(vContext->device, vContext->indexBufferMemory, nullptr);
 
     vkDestroyBuffer(vContext->device, vContext->vertexBuffer, nullptr);
     vkFreeMemory(vContext->device, vContext->vertexBufferMemory, nullptr);

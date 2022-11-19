@@ -82,6 +82,35 @@ namespace Ths::Vk
     return true;
   }
 
+  bool createIndexBuffer(VContext* pContext)
+  {
+    VkDeviceSize bufferSize = sizeof(pContext->indices[0]) * pContext->indices.size();
+
+    VkBuffer stagingBuffer;
+    VkDeviceMemory stagingBufferMemory;
+    createBuffer(pContext, bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+      VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+      stagingBuffer, stagingBufferMemory);
+
+    // ? maybe consider explicit flushing
+    void* data;
+    vkMapMemory(pContext->device, stagingBufferMemory, 0, bufferSize, 0, &data);
+    memcpy(data, pContext->indices.data(), static_cast<size_t>(bufferSize));
+    vkUnmapMemory(pContext->device, stagingBufferMemory);
+
+    createBuffer(pContext, bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT,
+      VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+      pContext->indexBuffer, pContext->indexBufferMemory);
+
+    
+    copyBuffer(pContext, stagingBuffer, pContext->indexBuffer, bufferSize);
+
+    vkDestroyBuffer(pContext->device, stagingBuffer, nullptr);
+    vkFreeMemory(pContext->device, stagingBufferMemory, nullptr);
+
+    return true;
+  }
+
   bool createVertexBuffer(VContext* pContext)
   {
     VkDeviceSize bufferSize = sizeof(Vertex) * pContext->verticies.size();
