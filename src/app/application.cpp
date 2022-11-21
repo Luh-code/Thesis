@@ -1,3 +1,4 @@
+#include "../pch.h"
 #include "application.h"
 
 namespace Ths
@@ -62,12 +63,16 @@ namespace Ths
     Ths::Vk::createSwapChain(vContext, width, height, 2);
     Ths::Vk::createImageViews(vContext);
     Ths::Vk::createRenderPass(vContext, 0);
+    Ths::Vk::createDescriptorSetLayout(vContext);
     Ths::Vk::createGraphicsPipeline(vContext);
     Ths::Vk::createCommandPools(vContext);
     Ths::Vk::createCommandBuffers(vContext);
     Ths::Vk::createVertexBuffer(vContext);
     Ths::Vk::createIndexBuffer(vContext);
     Ths::Vk::createFramebuffers(vContext);
+    Ths::Vk::createUniformBuffers(vContext);
+    Ths::Vk::createDescriptorPool(vContext);
+    Ths::Vk::createDescriptorSets(vContext);
     Ths::Vk::createSyncObjects(vContext);
   }
   
@@ -86,6 +91,26 @@ namespace Ths
     Ths::Vk::recreateSwapChain(vContext, win_width, win_height, imgs, preferredPresentMode, preferredFormat, preferredColorSpace);
   }
   
+  void SDLApp::updateUniformBuffer()
+  {
+    // TODO: Use push constants instead of uniform buffers
+
+    static auto startTime = std::chrono::high_resolution_clock::now();
+
+    auto currentTime = std::chrono::high_resolution_clock::now();
+    float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
+
+    Ths::Vk::UniformBufferObject ubo {};
+    ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+    ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+    float fov = 45.0f;
+    ubo.proj = glm::perspective(glm::radians(fov), vContext->swapchainExtent.width / static_cast<float>(vContext->swapchainExtent.height),
+      0.1f, 10.0f);
+    ubo.proj[1][1] *= -1;
+
+    memcpy(vContext->uniformBuffersMapped[vContext->currentFrame], &ubo, sizeof(ubo));
+  }
+
   void SDLApp::drawFrame()
   {
     vkWaitForFences(vContext->device, 1, &vContext->inFlightFences[vContext->currentFrame], VK_TRUE, UINT64_MAX);
@@ -107,9 +132,12 @@ namespace Ths
       return;
     }
     vkResetFences(vContext->device, 1, &vContext->inFlightFences[vContext->currentFrame]);
+    
+    updateUniformBuffer();
 
     vkResetCommandBuffer(vContext->commandBuffers[vContext->currentFrame], 0);
     Ths::Vk::recordCommandBuffer(vContext, vContext->commandBuffers[vContext->currentFrame], imageIndex);
+
 
     VkSubmitInfo submitInfo {VK_STRUCTURE_TYPE_SUBMIT_INFO};
     VkSemaphore waitSemaphores[] = {vContext->imageAvailableSemaphores[vContext->currentFrame]};
@@ -176,6 +204,16 @@ namespace Ths
   {
     // Delete Vk stuff
     Ths::Vk::cleanupSwapChain(vContext);
+
+    for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
+    {
+      vkDestroyBuffer(vContext->device, vContext->uniformBuffers[i], nullptr);
+      vkFreeMemory(vContext->device, vContext->uniformBuffersMemory[i], nullptr);
+    }
+
+    vkDestroyDescriptorPool(vContext->device, vContext->descriptorPool, nullptr);
+
+    vkDestroyDescriptorSetLayout(vContext->device, vContext->descriptorSetLayout, nullptr);
 
     vkDestroyBuffer(vContext->device, vContext->indexBuffer, nullptr);
     vkFreeMemory(vContext->device, vContext->indexBufferMemory, nullptr);

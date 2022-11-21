@@ -82,6 +82,7 @@ namespace Ths
     virtual void safeRecreateSwapChain(uint32_t imgs,
       VkPresentModeKHR preferredPresentMode = VK_PRESENT_MODE_MAILBOX_KHR,
       VkFormat preferredFormat = VK_FORMAT_B8G8R8A8_SRGB , VkColorSpaceKHR preferredColorSpace = VK_COLOR_SPACE_SRGB_NONLINEAR_KHR);
+    virtual void updateUniformBuffer();
     virtual void drawFrame();
     virtual void resizeCallback(int w, int h);
     virtual void mainLoop(bool (*func)()) override;

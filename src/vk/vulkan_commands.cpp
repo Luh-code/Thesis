@@ -69,8 +69,8 @@ namespace Ths::Vk
     VkBuffer vertexBuffers[] = {pContext->vertexBuffer};
     VkDeviceSize offsets[] = {0};
     vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);
-    vkCmdBindIndexBuffer(commandBuffer, pContext->indexBuffer, 0, VK_INDEX_TYPE_UINT16);
-    //vkCmdDrawIndexedIndirect(commandBuffer, pContext->indexBuffer, offsets[0], 0, 0);
+    vkCmdBindIndexBuffer(commandBuffer, pContext->indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+    vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pContext->pipelineLayout, 0, 1, &pContext->descriptorSets[pContext->currentFrame], 0, nullptr);
     vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(pContext->indices.size()), 1, 0, 0, 0);
     //vkCmdDraw(commandBuffer, static_cast<uint32_t>(pContext->verticies.size()), 1, 0, 0);
     vkCmdEndRenderPass(commandBuffer);

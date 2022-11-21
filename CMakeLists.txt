@@ -79,7 +79,8 @@ set(SOURCE ${PROJECT_SOURCE_DIR}/src/main.cpp
             ${PROJECT_SOURCE_DIR}/src/vk/vulkan_instance.cpp
             ${PROJECT_SOURCE_DIR}/src/vk/vulkan_device.cpp
             ${PROJECT_SOURCE_DIR}/src/vk/vulkan_pipeline.cpp
-            ${PROJECT_SOURCE_DIR}/src/vk/vulkan_commands.cpp)
+            ${PROJECT_SOURCE_DIR}/src/vk/vulkan_commands.cpp
+            ${PROJECT_SOURCE_DIR}/src/vk/vulkan_descriptors.cpp)
 
 # Create Thesis as executable
 add_executable(thesis ${SOURCE})
@@ -93,7 +94,7 @@ target_include_directories(thesis PUBLIC ${PROJECT_SOURCE_DIR}/dependencies/Flag
 target_link_libraries(thesis PUBLIC #${PROJECT_SOURCE_DIR}/dependencies/Vulkan/1.3.216.0/x86_64/lib/libvulkan.so
                                 ${SDL2_LIBRARIES}
                                 ${Vulkan_LIBRARIES})
-#target_precompile_headers(thesis PUBLIC ${PROJECT_SOURCE_DIR}/src/pch.h)
+target_precompile_headers(thesis PUBLIC ${PROJECT_SOURCE_DIR}/src/pch.h)
 # Setup Testing
 #add_subdirectory(tests)
 

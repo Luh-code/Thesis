@@ -2,22 +2,6 @@
 #define __VULKAN_BASE_H__
 
 #include "../pch.h"
-// #include "vulkan/vulkan.h"
-// #include "../thesis.h"
-// #include "logger.h"
-// #include <vector>
-// #include <algorithm>
-// #include <cstring>
-// #include <map>
-// #include <optional>
-// #include <set>
-// #include <cstdint>
-// #include <limits>
-// #include <algorithm>
-// #include <fstream>
-// #include <glm/glm.hpp>
-// #include <array>
-//#include "../sdl/sdl-base.h"
 
 #define VK_FAIL(val) if(VkResult res = (val); res != VK_SUCCESS)
 #define VKF(val) VK_FAIL(val)
@@ -88,6 +72,7 @@ namespace Ths::Vk
     std::vector<VkImageView> swapchainImageViews;
 
     std::vector<VkRenderPass> renderPasses;
+    VkDescriptorSetLayout descriptorSetLayout;
     VkPipelineLayout pipelineLayout;
     VkPipeline graphicsPipeline;
     std::vector<VkFramebuffer> swapchainFramebuffers;
@@ -106,25 +91,22 @@ namespace Ths::Vk
       {{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},
       {{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}},
       {{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}},
-      {{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}}
-      // {{-0.1f, -0.6f}, {0.0f, 0.0f, 1.0f}},
-      // {{0.4f, 0.4f}, {1.0f, 0.0f, 0.0f}},
-      // {{-0.6f, 0.4f}, {0.0f, 1.0f, 0.0f}},
-      // {{0.0f, -0.5f}, {1.0f, 0.0f, 0.0f}},
-      // {{0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}},
-      // {{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}},
-      // {{0.1f, -0.4f}, {0.0f, 1.0f, 0.0f}},
-      // {{0.6f, 0.6f}, {0.0f, 0.0f, 1.0f}},
-      // {{-0.4f, 0.6f}, {1.0f, 0.0f, 0.0f}}
+      {{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}},
     };
-    const std::vector<uint16_t> indices = {
+    const std::vector<uint32_t> indices = {
       0, 1, 2,
-      2, 3, 0
+      2, 3, 0,
     };
     VkBuffer vertexBuffer;
     VkBuffer indexBuffer;
     VkDeviceMemory vertexBufferMemory;
     VkDeviceMemory indexBufferMemory;
+
+    std::vector<VkBuffer> uniformBuffers;
+    std::vector<VkDeviceMemory> uniformBuffersMemory;
+    std::vector<void*> uniformBuffersMapped;
+    VkDescriptorPool descriptorPool;
+    std::vector<VkDescriptorSet> descriptorSets;
   } VContext;
 
   typedef struct QueueFamilyIndices
@@ -153,9 +135,24 @@ namespace Ths::Vk
     std::vector<VkPresentModeKHR> presentModes;
   } SwapChainSupportDetails;
 
+  typedef struct UniformBufferObject
+  {
+    /*
+      If need be align to 16 is possible with alignas(16)
+    */
+    glm::mat4 model;
+    glm::mat4 view;
+    glm::mat4 proj;
+  } UniformBufferObject;
+
   // TODO: Change all VContext*/VulkanContext* to VContext&
 
   // Functions
+  bool createDescriptorSets(VContext* pContext);
+  bool createDescriptorPool(VContext* pContext);
+  bool createUniformBuffers(VContext* pContext);
+  bool createDescriptorSetLayout(VContext* pContext);
+
   bool createSyncObjects(VContext* pContext);
   bool recordCommandBuffer(VContext* pContext, VkCommandBuffer commandBuffer, uint32_t imageIndex);
   bool createCommandBuffers(VContext* pContext);

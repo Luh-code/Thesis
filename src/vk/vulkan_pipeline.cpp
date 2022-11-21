@@ -1,5 +1,5 @@
-#include "../pch.h"
 #include "vulkan_base.h"
+#include "../pch.h"
 
 namespace Ths::Vk
 {
@@ -322,7 +322,7 @@ namespace Ths::Vk
     rasterizer.polygonMode = VK_POLYGON_MODE_FILL; // Defines how polygons are rendered. VK_POLYGON_MODE_LINE will render wireframe fe.
     rasterizer.lineWidth = 1.0f; // Describes thickness of lines. Highter than 1.0f requires the wideLines GPU feature
     rasterizer.cullMode = VK_CULL_MODE_BACK_BIT; // Bitmask for culling options
-    rasterizer.frontFace = VK_FRONT_FACE_CLOCKWISE; // Specifies vertex order, to determine polygon facing
+    rasterizer.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE; // Specifies vertex order, to determine polygon facing
     rasterizer.depthBiasEnable = VK_FALSE; // Biases depthbuffer, normally disabled, somethimes used for shadowmaps
     rasterizer.depthBiasConstantFactor = 0.0f;
     rasterizer.depthBiasClamp = 0.0f;
@@ -373,8 +373,8 @@ namespace Ths::Vk
     dynamicState.pDynamicStates = dynamicStates.data();
 
     VkPipelineLayoutCreateInfo pipelineLayoutInfo {VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO};
-    pipelineLayoutInfo.setLayoutCount = 0;
-    pipelineLayoutInfo.pSetLayouts = nullptr;
+    pipelineLayoutInfo.setLayoutCount = 1;
+    pipelineLayoutInfo.pSetLayouts = &pContext->descriptorSetLayout;
     pipelineLayoutInfo.pushConstantRangeCount = 0;
     pipelineLayoutInfo.pPushConstantRanges = nullptr;
 
