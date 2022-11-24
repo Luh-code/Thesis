@@ -67,6 +67,7 @@ namespace Ths
     Ths::Vk::createGraphicsPipeline(vContext);
     Ths::Vk::createCommandPools(vContext);
     Ths::Vk::createCommandBuffers(vContext);
+    Ths::Vk::createTextureImage(vContext);
     Ths::Vk::createVertexBuffer(vContext);
     Ths::Vk::createIndexBuffer(vContext);
     Ths::Vk::createFramebuffers(vContext);

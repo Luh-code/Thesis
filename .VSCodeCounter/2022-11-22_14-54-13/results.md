@@ -1,30 +1,30 @@
 # Summary
 
-Date : 2022-11-06 15:53:39
+Date : 2022-11-22 14:54:13
 
-Directory d:\\Projects\\Thesis
+Directory d:\\dev\\Neuer Ordner (3)
 
-Total : 18 files,  1364 codes, 48 comments, 206 blanks, all 1618 lines
+Total : 20 files,  1871 codes, 56 comments, 284 blanks, all 2211 lines
 
 Summary / [Details](details.md) / [Diff Summary](diff.md) / [Diff Details](diff-details.md)
 
 ## Languages
 | language | files | code | comment | blank | total |
 | :--- | ---: | ---: | ---: | ---: | ---: |
-| C++ | 14 | 1,337 | 48 | 199 | 1,584 |
-| GLSL | 2 | 24 | 0 | 6 | 30 |
-| Batch | 1 | 2 | 0 | 0 | 2 |
+| C++ | 16 | 1,846 | 56 | 277 | 2,179 |
+| GLSL | 2 | 21 | 0 | 6 | 27 |
+| Batch | 1 | 3 | 0 | 0 | 3 |
 | Markdown | 1 | 1 | 0 | 1 | 2 |
 
 ## Directories
 | path | files | code | comment | blank | total |
 | :--- | ---: | ---: | ---: | ---: | ---: |
-| . | 18 | 1,364 | 48 | 206 | 1,618 |
-| src | 16 | 1,358 | 48 | 204 | 1,610 |
-| src\\app | 2 | 212 | 8 | 28 | 248 |
-| src\\sdl | 2 | 133 | 0 | 19 | 152 |
-| src\\vk | 8 | 964 | 35 | 144 | 1,143 |
-| src\\vk\\shaders | 3 | 26 | 0 | 6 | 32 |
+| . | 20 | 1,871 | 56 | 284 | 2,211 |
+| src | 18 | 1,865 | 56 | 282 | 2,203 |
+| src\\app | 2 | 292 | 12 | 45 | 349 |
+| src\\sdl | 2 | 157 | 0 | 19 | 176 |
+| src\\vk | 10 | 1,344 | 39 | 201 | 1,584 |
+| src\\vk\\shaders | 3 | 24 | 0 | 6 | 30 |
 | tests | 1 | 5 | 0 | 1 | 6 |
 | tests\\test1 | 1 | 5 | 0 | 1 | 6 |
 

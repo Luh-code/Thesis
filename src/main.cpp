@@ -1,6 +1,7 @@
 #define SDL_MAIN_HANDLED
 #include "app/application.h"
 #include "memory_mger.h"
+
 int main()
 {
   LOG_INFO_IV("|-----------< Thesis >-----------|");

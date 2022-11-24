@@ -1,0 +1,20 @@
+"filename", "language", "C++", "Markdown", "GLSL", "Batch", "comment", "blank", "total"
+"d:\dev\Neuer Ordner (3)\README.md", "Markdown", 0, 1, 0, 0, 0, 1, 2
+"d:\dev\Neuer Ordner (3)\src\app\application.cpp", "C++", 181, 0, 0, 0, 6, 25, 212
+"d:\dev\Neuer Ordner (3)\src\app\application.h", "C++", 77, 0, 0, 0, 5, 11, 93
+"d:\dev\Neuer Ordner (3)\src\main.cpp", "C++", 13, 0, 0, 0, 0, 0, 13
+"d:\dev\Neuer Ordner (3)\src\memory_mger.h", "C++", 6, 0, 0, 0, 26, 9, 41
+"d:\dev\Neuer Ordner (3)\src\pch.h", "C++", 18, 0, 0, 0, 0, 2, 20
+"d:\dev\Neuer Ordner (3)\src\sdl\sdl_base.cpp", "C++", 135, 0, 0, 0, 0, 15, 150
+"d:\dev\Neuer Ordner (3)\src\sdl\sdl_base.h", "C++", 22, 0, 0, 0, 0, 4, 26
+"d:\dev\Neuer Ordner (3)\src\thesis.h", "C++", 6, 0, 0, 0, 0, 3, 9
+"d:\dev\Neuer Ordner (3)\src\vk\shaders\compile_shaders.bat", "Batch", 0, 0, 0, 3, 0, 0, 3
+"d:\dev\Neuer Ordner (3)\src\vk\shaders\triangle.frag", "GLSL", 0, 0, 7, 0, 0, 2, 9
+"d:\dev\Neuer Ordner (3)\src\vk\shaders\triangle.vert", "GLSL", 0, 0, 9, 0, 0, 3, 12
+"d:\dev\Neuer Ordner (3)\src\vk\vulkan_base.h", "C++", 152, 0, 0, 0, 20, 28, 200
+"d:\dev\Neuer Ordner (3)\src\vk\vulkan_commands.cpp", "C++", 121, 0, 0, 0, 0, 12, 133
+"d:\dev\Neuer Ordner (3)\src\vk\vulkan_device.cpp", "C++", 337, 0, 0, 0, 1, 60, 398
+"d:\dev\Neuer Ordner (3)\src\vk\vulkan_instance.cpp", "C++", 195, 0, 0, 0, 19, 17, 231
+"d:\dev\Neuer Ordner (3)\src\vk\vulkan_pipeline.cpp", "C++", 329, 0, 0, 0, 12, 49, 390
+"d:\dev\Neuer Ordner (3)\tests\test1\Test.cpp", "C++", 5, 0, 0, 0, 0, 1, 6
+"Total", "-", 1597, 1, 16, 3, 89, 242, 1948

@@ -36,6 +36,7 @@ set(COMPILE_SDL_LOCALLY OFF)
 # Includes
 if (UNIX)
     find_package(Vulkan REQUIRED) # <-- fix this
+    find_library(STB_LIB REQUIRED)
     if (COMPILE_SDL_LOCALLY)
         make_sdl_locally()
     else (COMPILE_SDL_LOCALLY)
@@ -80,17 +81,20 @@ set(SOURCE ${PROJECT_SOURCE_DIR}/src/main.cpp
             ${PROJECT_SOURCE_DIR}/src/vk/vulkan_device.cpp
             ${PROJECT_SOURCE_DIR}/src/vk/vulkan_pipeline.cpp
             ${PROJECT_SOURCE_DIR}/src/vk/vulkan_commands.cpp
-            ${PROJECT_SOURCE_DIR}/src/vk/vulkan_descriptors.cpp)
+            ${PROJECT_SOURCE_DIR}/src/vk/vulkan_descriptors.cpp
+            ${PROJECT_SOURCE_DIR}/src/vk/vulkan_images.cpp)
 
 # Create Thesis as executable
 add_executable(thesis ${SOURCE})
+
 #target_compile_definitions(thesis PUBLIC ${PREPROCESSOR_DEFINITIONS})
 target_include_directories(thesis PUBLIC ${PROJECT_SOURCE_DIR}/dependencies/FlagEx/include
                                 ${PROJECT_SOURCE_DIR}/dependencies/Sheriff/include
                                 ${PROJECT_SOURCE_DIR}/dependencies/lhg/include
                                 #${PROJECT_SOURCE_DIR}/dependencies/Vulkan/1.3.216.0/x86_64/include
                                 ${SDL2_INCLUDE_DIRS}
-                                ${Vulkan_INCLUDE_DIRS})
+                                ${Vulkan_INCLUDE_DIRS}
+                                C:/stb)
 target_link_libraries(thesis PUBLIC #${PROJECT_SOURCE_DIR}/dependencies/Vulkan/1.3.216.0/x86_64/lib/libvulkan.so
                                 ${SDL2_LIBRARIES}
                                 ${Vulkan_LIBRARIES})

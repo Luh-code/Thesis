@@ -107,6 +107,9 @@ namespace Ths::Vk
     std::vector<void*> uniformBuffersMapped;
     VkDescriptorPool descriptorPool;
     std::vector<VkDescriptorSet> descriptorSets;
+
+    VkImage textureImage;
+    VkDeviceMemory textureImageMemory;
   } VContext;
 
   typedef struct QueueFamilyIndices
@@ -148,6 +151,8 @@ namespace Ths::Vk
   // TODO: Change all VContext*/VulkanContext* to VContext&
 
   // Functions
+  bool createTextureImage(VContext* pContext);
+
   bool createDescriptorSets(VContext* pContext);
   bool createDescriptorPool(VContext* pContext);
   bool createUniformBuffers(VContext* pContext);
