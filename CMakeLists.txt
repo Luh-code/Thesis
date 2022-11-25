@@ -91,10 +91,10 @@ add_executable(thesis ${SOURCE})
 target_include_directories(thesis PUBLIC ${PROJECT_SOURCE_DIR}/dependencies/FlagEx/include
                                 ${PROJECT_SOURCE_DIR}/dependencies/Sheriff/include
                                 ${PROJECT_SOURCE_DIR}/dependencies/lhg/include
+                                ${PROJECT_SOURCE_DIR}/dependencies/stb
                                 #${PROJECT_SOURCE_DIR}/dependencies/Vulkan/1.3.216.0/x86_64/include
                                 ${SDL2_INCLUDE_DIRS}
-                                ${Vulkan_INCLUDE_DIRS}
-                                C:/stb)
+                                ${Vulkan_INCLUDE_DIRS})
 target_link_libraries(thesis PUBLIC #${PROJECT_SOURCE_DIR}/dependencies/Vulkan/1.3.216.0/x86_64/lib/libvulkan.so
                                 ${SDL2_LIBRARIES}
                                 ${Vulkan_LIBRARIES})

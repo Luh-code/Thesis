@@ -255,8 +255,8 @@ namespace Ths::Vk
   bool createGraphicsPipeline(VulkanContext* pContext)
   {
     LOG_INIT("Graphics Pipeline");
-    auto vertShaderCode = readFile("D:\\dev\\Neuer Ordner (3)\\src\\vk\\shaders\\vert.spv");
-    auto fragShaderCode = readFile("D:\\dev\\Neuer Ordner (3)\\src\\vk\\shaders\\frag.spv");
+    auto vertShaderCode = readFile("D:/Projects/Thesis/src/vk/shaders/vert.spv");
+    auto fragShaderCode = readFile("D:/Projects/Thesis/src/vk/shaders/frag.spv");
     if (vertShaderCode.size() == 0 || fragShaderCode.size() == 0)
     {
       LOG_ERROR("An error occured whilst loading shaders!");
