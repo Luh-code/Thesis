@@ -24,10 +24,11 @@ namespace Ths::Vk
   {
     glm::vec2 pos; // make vec3
     glm::vec3 color;
+    glm::vec2 texCoord;
 
-    static std::array<VkVertexInputAttributeDescription, 2> getAttributeDescriptions()
+    static std::array<VkVertexInputAttributeDescription, 3> getAttributeDescriptions()
     {
-      std::array<VkVertexInputAttributeDescription, 2> ad {};
+      std::array<VkVertexInputAttributeDescription, 3> ad {};
       ad[0].binding = 0;
       ad[0].location = 0;
       ad[0].format = VK_FORMAT_R32G32_SFLOAT; //aka vec2
@@ -37,6 +38,11 @@ namespace Ths::Vk
       ad[1].location = 1;
       ad[1].format = VK_FORMAT_R32G32B32_SFLOAT; //aka vec3
       ad[1].offset = offsetof(Vertex, color);
+
+      ad[2].binding = 0;
+      ad[2].location = 2;
+      ad[2].format = VK_FORMAT_R32G32_SFLOAT;
+      ad[2].offset = offsetof(Vertex, texCoord);
 
       return ad;
     }
@@ -88,10 +94,10 @@ namespace Ths::Vk
     bool framebufferResized = false;
 
     const std::vector<Vertex> verticies = {
-      {{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},
-      {{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}},
-      {{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}},
-      {{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}},
+      {{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
+      {{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
+      {{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}},
+      {{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}},
     };
     const std::vector<uint32_t> indices = {
       0, 1, 2,
