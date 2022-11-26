@@ -3,6 +3,74 @@
 
 namespace Ths::Vk
 {
+  bool createTextureSampler(VContext* pContext)
+  {
+    VkSamplerCreateInfo samplerInfo {VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO};
+    // VK_FILTER_LINEAR is with filtering
+    // VK_FILTER_NEAREST is without filtering
+    samplerInfo.magFilter = VK_FILTER_LINEAR; // Oversampling
+    samplerInfo.minFilter = VK_FILTER_LINEAR; // Undersampling
+    // What to do when image is too small
+    // VK_SAMPLER_ADDRESS_MODE_REPEAT - repeats image
+    // VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT - repeats image mirrored
+    // VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE - repeats color of closest texel
+    // VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE - repeats color of farthest texel
+    // VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER - repeats solid color when beyond the dimensions of the image
+    samplerInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT; // x
+    samplerInfo.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT; // y
+    samplerInfo.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT; // z
+    samplerInfo.anisotropyEnable = true;
+    VkPhysicalDeviceProperties properties{};
+    vkGetPhysicalDeviceProperties(pContext->physicalDevice, &properties);
+    samplerInfo.maxAnisotropy = properties.limits.maxSamplerAnisotropy; // Enable maximal supported anistropy (can be lowered)
+    samplerInfo.borderColor = VK_BORDER_COLOR_INT_OPAQUE_BLACK; // Border color if adress mode is clamp to border
+    samplerInfo.unnormalizedCoordinates = VK_FALSE; // Convert texture space to UV space?
+    samplerInfo.compareEnable = VK_FALSE;
+    samplerInfo.compareOp = VK_COMPARE_OP_ALWAYS;
+    // Mipmapping
+    samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
+    samplerInfo.mipLodBias = 0.0f;
+    samplerInfo.minLod = 0.0f;
+    samplerInfo.maxLod = 0.0f;
+
+    VKF(vkCreateSampler(pContext->device, &samplerInfo, nullptr, &pContext->textureSampler))
+    {
+      LOG_ERROR("An error occured whilst creating a VkSampler: ", res);
+      return false;
+    }
+    return true;
+  }
+
+  VkImageView createImageView(VContext* pContext, VkImage image, VkFormat format)
+  {
+    VkImageViewCreateInfo createInfo {VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO};
+    createInfo.image = image;
+    createInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+    createInfo.format = format;
+    createInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+    createInfo.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+    createInfo.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+    createInfo.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+    createInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    createInfo.subresourceRange.baseMipLevel = 0;
+    createInfo.subresourceRange.levelCount = 1;
+    createInfo.subresourceRange.baseArrayLayer = 0;
+    createInfo.subresourceRange.layerCount = 1;
+
+    VkImageView imageView = VK_NULL_HANDLE;
+    VKF(vkCreateImageView(pContext->device, &createInfo, nullptr, &imageView))
+    {
+      LOG_ERROR("An Error occured whilst creating a VkImageView: ", res);
+    }
+    return imageView;
+  }
+
+  bool createTextureImageView(VContext* pContext)
+  {
+    pContext->textureImageView = createImageView(pContext, pContext->textureImage, VK_FORMAT_R8G8B8A8_SRGB);
+    return pContext->textureImageView != VK_NULL_HANDLE;
+  }
+
   void copyBufferToImage(VContext* pContext, VkBuffer buffer, VkImage image, uint32_t w, uint32_t h)
   {
     VkCommandBuffer commandBuffer = beginSingleTimeTransferCommands(pContext);

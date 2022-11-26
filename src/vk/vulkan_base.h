@@ -110,6 +110,8 @@ namespace Ths::Vk
 
     VkImage textureImage;
     VkDeviceMemory textureImageMemory;
+    VkImageView textureImageView;
+    VkSampler textureSampler;
   } VContext;
 
   typedef struct QueueFamilyIndices
@@ -151,6 +153,9 @@ namespace Ths::Vk
   // TODO: Change all VContext*/VulkanContext* to VContext&
 
   // Functions
+  bool createTextureSampler(VContext* pContext);
+  VkImageView createImageView(VContext* pContext, VkImage image, VkFormat format);
+  bool createTextureImageView(VContext* pContext);
   void copyBufferToImage(VContext* pContext, VkBuffer buffer, VkImage image, uint32_t w, uint32_t h);
   void transitionImageLayout(VContext* pContext, VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout);
   bool createImage(VContext* pContext, uint32_t w, uint32_t h, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage,

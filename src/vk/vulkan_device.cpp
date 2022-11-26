@@ -37,20 +37,9 @@ namespace Ths::Vk
 
     for (uint32_t i = 0; i < pContext->swapchainImages.size(); i++)
     {
-      VkImageViewCreateInfo createInfo {VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO};
-      createInfo.image = pContext->swapchainImages[i];
-      createInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
-      createInfo.format = pContext->swapchainImageFormat;
-      createInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
-      createInfo.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
-      createInfo.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
-      createInfo.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
-      createInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-      createInfo.subresourceRange.baseMipLevel = 0;
-      createInfo.subresourceRange.levelCount = 1;
-      createInfo.subresourceRange.baseArrayLayer = 0;
-      createInfo.subresourceRange.layerCount = 1;
-      VKF(vkCreateImageView(pContext->device, &createInfo, nullptr, &pContext->swapchainImageViews[i]))
+      pContext->swapchainImageViews[i] = createImageView(pContext, pContext->swapchainImages[i], pContext->swapchainImageFormat);
+      
+      if (pContext->swapchainImageViews[i] == VK_NULL_HANDLE)
       {
         LOG_ERROR("An error occured whilst creating an image view");
         LOG_INIT_AB("Image Views");

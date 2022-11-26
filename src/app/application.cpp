@@ -54,6 +54,7 @@ namespace Ths
     VkPhysicalDeviceFeatures gpuReqirements {};
     gpuReqirements.geometryShader = true;
     gpuReqirements.tessellationShader = true;
+    gpuReqirements.samplerAnisotropy = true;
     std::vector<const char*> deviceExtensions;
     deviceExtensions.push_back(VK_KHR_SWAPCHAIN_EXTENSION_NAME);
     Ths::Vk::selectPhysicalDevice(vContext, &gpuReqirements, &deviceExtensions);
@@ -68,6 +69,8 @@ namespace Ths
     Ths::Vk::createCommandPools(vContext);
     Ths::Vk::createCommandBuffers(vContext);
     Ths::Vk::createTextureImage(vContext);
+    Ths::Vk::createTextureImageView(vContext);
+    Ths::Vk::createTextureSampler(vContext);
     Ths::Vk::createVertexBuffer(vContext);
     Ths::Vk::createIndexBuffer(vContext);
     Ths::Vk::createFramebuffers(vContext);
@@ -205,6 +208,9 @@ namespace Ths
   {
     // Delete Vk stuff
     Ths::Vk::cleanupSwapChain(vContext);
+
+    vkDestroySampler(vContext->device, vContext->textureSampler, nullptr);
+    vkDestroyImageView(vContext->device, vContext->textureImageView, nullptr);
 
     vkDestroyImage(vContext->device, vContext->textureImage, nullptr);
     vkFreeMemory(vContext->device, vContext->textureImageMemory, nullptr);
