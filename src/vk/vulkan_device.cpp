@@ -275,7 +275,7 @@ namespace Ths::Vk
       {
         indices.transferFamily = i;
       }
-      if (!indices.presentFamily.has_value() && presentSupport == VK_TRUE)
+      else if (!indices.presentFamily.has_value() && presentSupport == VK_TRUE)
       {
         indices.presentFamily = i;
       }

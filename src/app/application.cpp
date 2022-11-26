@@ -67,7 +67,7 @@ namespace Ths
     Ths::Vk::createGraphicsPipeline(vContext);
     Ths::Vk::createCommandPools(vContext);
     Ths::Vk::createCommandBuffers(vContext);
-    //Ths::Vk::createTextureImage(vContext);
+    Ths::Vk::createTextureImage(vContext);
     Ths::Vk::createVertexBuffer(vContext);
     Ths::Vk::createIndexBuffer(vContext);
     Ths::Vk::createFramebuffers(vContext);
@@ -205,6 +205,9 @@ namespace Ths
   {
     // Delete Vk stuff
     Ths::Vk::cleanupSwapChain(vContext);
+
+    vkDestroyImage(vContext->device, vContext->textureImage, nullptr);
+    vkFreeMemory(vContext->device, vContext->textureImageMemory, nullptr);
 
     for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
     {

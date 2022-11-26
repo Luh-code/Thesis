@@ -3,6 +3,59 @@
 
 namespace Ths::Vk
 {
+  VkCommandBuffer beginSingleTimeGraphicsCommands(VContext* pContext)
+  {
+    return beginSingleTimeCommands(pContext, pContext->commandPool);
+  }
+
+  void endSingleTimeGraphicsCommands(VContext* pContext, VkCommandBuffer& commandBuffer)
+  {
+    endSingleTimeCommands(pContext, commandBuffer, pContext->commandPool, pContext->graphicsQueue);
+  }
+
+  VkCommandBuffer beginSingleTimeTransferCommands(VContext* pContext)
+  {
+    return beginSingleTimeCommands(pContext, pContext->transferPool);
+  }
+
+  void endSingleTimeTransferCommands(VContext* pContext, VkCommandBuffer& commandBuffer)
+  {
+    endSingleTimeCommands(pContext, commandBuffer, pContext->transferPool, pContext->transferQueue);
+  }
+
+  VkCommandBuffer beginSingleTimeCommands(VContext* pContext, VkCommandPool pool)
+  {
+    VkCommandBufferAllocateInfo allocInfo {VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO};
+    allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+    allocInfo.commandPool = pool;
+    allocInfo.commandBufferCount = 1;
+
+    VkCommandBuffer commandBuffer = VK_NULL_HANDLE;
+    vkAllocateCommandBuffers(pContext->device, &allocInfo, &commandBuffer);
+
+    VkCommandBufferBeginInfo beginInfo {VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO};
+    beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+
+    vkBeginCommandBuffer(commandBuffer, &beginInfo);
+
+    return commandBuffer;
+  }
+
+  void endSingleTimeCommands(VContext* pContext, VkCommandBuffer& commandBuffer, VkCommandPool pool, VkQueue queue)
+  {
+    vkEndCommandBuffer(commandBuffer);
+
+    VkSubmitInfo submitInfo {VK_STRUCTURE_TYPE_SUBMIT_INFO};
+    submitInfo.commandBufferCount = 1;
+    submitInfo.pCommandBuffers = &commandBuffer;
+
+    vkQueueSubmit(queue, 1, &submitInfo, VK_NULL_HANDLE);
+    // ? consider using fence here instead of waiting for idle
+    vkQueueWaitIdle(queue);
+
+    vkFreeCommandBuffers(pContext->device, pool, 1, &commandBuffer);
+  }
+
   bool createSyncObjects(VContext* pContext)
   {
     LOG_INIT("syncronization objects");

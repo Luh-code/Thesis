@@ -22,7 +22,7 @@ namespace Ths::Vk
 
   typedef struct Vertex
   {
-    glm::vec2 pos;
+    glm::vec2 pos; // make vec3
     glm::vec3 color;
 
     static std::array<VkVertexInputAttributeDescription, 2> getAttributeDescriptions()
@@ -141,7 +141,7 @@ namespace Ths::Vk
   typedef struct UniformBufferObject
   {
     /*
-      If need be align to 16 is possible with alignas(16)
+      If need be align to 16 - possible with alignas(16)
     */
     glm::mat4 model;
     glm::mat4 view;
@@ -151,6 +151,10 @@ namespace Ths::Vk
   // TODO: Change all VContext*/VulkanContext* to VContext&
 
   // Functions
+  void copyBufferToImage(VContext* pContext, VkBuffer buffer, VkImage image, uint32_t w, uint32_t h);
+  void transitionImageLayout(VContext* pContext, VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout);
+  bool createImage(VContext* pContext, uint32_t w, uint32_t h, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage,
+    VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory);
   bool createTextureImage(VContext* pContext);
 
   bool createDescriptorSets(VContext* pContext);
@@ -158,6 +162,12 @@ namespace Ths::Vk
   bool createUniformBuffers(VContext* pContext);
   bool createDescriptorSetLayout(VContext* pContext);
 
+  VkCommandBuffer beginSingleTimeGraphicsCommands(VContext* pContext);
+  void endSingleTimeGraphicsCommands(VContext* pContext, VkCommandBuffer& commandBuffer);
+  VkCommandBuffer beginSingleTimeTransferCommands(VContext* pContext);
+  void endSingleTimeTransferCommands(VContext* pContext, VkCommandBuffer& commandBuffer);
+  VkCommandBuffer beginSingleTimeCommands(VContext* pContext, VkCommandPool pool);
+  void endSingleTimeCommands(VContext* pContext, VkCommandBuffer& commandBuffer, VkCommandPool pool, VkQueue queue);
   bool createSyncObjects(VContext* pContext);
   bool recordCommandBuffer(VContext* pContext, VkCommandBuffer commandBuffer, uint32_t imageIndex);
   bool createCommandBuffers(VContext* pContext);
