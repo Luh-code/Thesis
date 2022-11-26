@@ -82,7 +82,8 @@ set(SOURCE ${PROJECT_SOURCE_DIR}/src/main.cpp
             ${PROJECT_SOURCE_DIR}/src/vk/vulkan_pipeline.cpp
             ${PROJECT_SOURCE_DIR}/src/vk/vulkan_commands.cpp
             ${PROJECT_SOURCE_DIR}/src/vk/vulkan_descriptors.cpp
-            ${PROJECT_SOURCE_DIR}/src/vk/vulkan_images.cpp)
+            ${PROJECT_SOURCE_DIR}/src/vk/vulkan_images.cpp
+            ${PROJECT_SOURCE_DIR}/src/vk/vulkan_depth.cpp)
 
 # Create Thesis as executable
 add_executable(thesis ${SOURCE})

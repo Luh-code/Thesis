@@ -5,6 +5,10 @@ namespace Ths::Vk
 {
   void cleanupSwapChain(VulkanContext* pContext)
   {
+    vkDestroyImageView(pContext->device, pContext->depthImageView, nullptr);
+    vkDestroyImage(pContext->device, pContext->depthImage, nullptr);
+    vkFreeMemory(pContext->device, pContext->depthImageMemory, nullptr);
+
     for (size_t i = 0; i < pContext->swapchainFramebuffers.size(); i++) {
         vkDestroyFramebuffer(pContext->device, pContext->swapchainFramebuffers[i], nullptr);
     }
@@ -26,6 +30,7 @@ namespace Ths::Vk
 
     createSwapChain(pContext, win_width, win_height, imgs, preferredPresentMode, preferredFormat, preferredColorSpace);
     createImageViews(pContext);
+    createDepthResources(pContext);
     createFramebuffers(pContext);
     return true;
   }

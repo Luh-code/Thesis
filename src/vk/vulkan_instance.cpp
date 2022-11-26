@@ -3,13 +3,13 @@
 
 namespace Ths::Vk
 {
-  void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator)
+  void destroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator)
   {
     auto func = (PFN_vkDestroyDebugUtilsMessengerEXT) vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
     if (func != nullptr) func(instance, debugMessenger, pAllocator);
   }
 
-  VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo,
+  VkResult createDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo,
     const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger)
   {
     auto func = (PFN_vkCreateDebugUtilsMessengerEXT) vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
@@ -67,7 +67,7 @@ namespace Ths::Vk
     VkDebugUtilsMessengerCreateInfoEXT createInfo;
     populateDebugMessengerCreateInfo(createInfo);
 
-    VKF(CreateDebugUtilsMessengerEXT(context->instance, &createInfo, nullptr, &context->debugMessenger))
+    VKF(createDebugUtilsMessengerEXT(context->instance, &createInfo, nullptr, &context->debugMessenger))
     {
       LOG_ERROR("An Error occured whilst createing VkDebugUtilsMessengerEXT: ", res);
       LOG_INIT_AB("Debug Messenger");

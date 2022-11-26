@@ -73,6 +73,7 @@ namespace Ths
     Ths::Vk::createTextureSampler(vContext);
     Ths::Vk::createVertexBuffer(vContext);
     Ths::Vk::createIndexBuffer(vContext);
+    Ths::Vk::createDepthResources(vContext);
     Ths::Vk::createFramebuffers(vContext);
     Ths::Vk::createUniformBuffers(vContext);
     Ths::Vk::createDescriptorPool(vContext);
@@ -246,7 +247,7 @@ namespace Ths
       vkDestroyRenderPass(vContext->device, renderPass, nullptr);
     }
     vkDestroyDevice(vContext->device, nullptr);
-    Ths::Vk::DestroyDebugUtilsMessengerEXT(vContext->instance, vContext->debugMessenger, nullptr);
+    Ths::Vk::destroyDebugUtilsMessengerEXT(vContext->instance, vContext->debugMessenger, nullptr);
     vkDestroySurfaceKHR(vContext->instance, vContext->surface, nullptr);
     vkDestroyInstance(vContext->instance, nullptr);
     

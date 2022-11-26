@@ -101,9 +101,11 @@ namespace Ths::Vk
     renderPassInfo.renderArea.offset = {0, 0};
     renderPassInfo.renderArea.extent = pContext->swapchainExtent;
     
-    VkClearValue clearColor = {{{0.0f, 0.0f, 0.0f, 1.0f}}};
-    renderPassInfo.clearValueCount = 1;
-    renderPassInfo.pClearValues = &clearColor;
+    std::array<VkClearValue, 2> clearColors;
+    clearColors[0].color = {{0.0f, 0.0f, 0.0f, 1.0f}};
+    clearColors[1].depthStencil = {1.0f, 0};
+    renderPassInfo.clearValueCount = static_cast<uint32_t>(clearColors.size());
+    renderPassInfo.pClearValues = clearColors.data();
 
     vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
     vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pContext->graphicsPipeline);

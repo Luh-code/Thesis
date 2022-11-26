@@ -22,7 +22,7 @@ namespace Ths::Vk
 
   typedef struct Vertex
   {
-    glm::vec2 pos; // make vec3
+    glm::vec3 pos;
     glm::vec3 color;
     glm::vec2 texCoord;
 
@@ -31,17 +31,17 @@ namespace Ths::Vk
       std::array<VkVertexInputAttributeDescription, 3> ad {};
       ad[0].binding = 0;
       ad[0].location = 0;
-      ad[0].format = VK_FORMAT_R32G32_SFLOAT; //aka vec2
+      ad[0].format = VK_FORMAT_R32G32B32_SFLOAT; //aka vec3
       ad[0].offset = offsetof(Vertex, pos);
 
       ad[1].binding = 0;
       ad[1].location = 1;
-      ad[1].format = VK_FORMAT_R32G32B32_SFLOAT; //aka vec3
+      ad[1].format = VK_FORMAT_R32G32B32_SFLOAT;
       ad[1].offset = offsetof(Vertex, color);
 
       ad[2].binding = 0;
       ad[2].location = 2;
-      ad[2].format = VK_FORMAT_R32G32_SFLOAT;
+      ad[2].format = VK_FORMAT_R32G32_SFLOAT; //aka vec2
       ad[2].offset = offsetof(Vertex, texCoord);
 
       return ad;
@@ -94,14 +94,47 @@ namespace Ths::Vk
     bool framebufferResized = false;
 
     const std::vector<Vertex> verticies = {
-      {{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
-      {{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
-      {{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}},
-      {{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}},
+      {{-0.5f, -0.5f, 0.25f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
+      {{0.5f, -0.5f, 0.25f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
+      {{0.5f, 0.5f, 0.25f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}},
+      {{-0.5f, 0.5f, 0.25f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}},
+
+      {{-0.5f, -0.5f, -0.25f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
+      {{0.5f, -0.5f, -0.25f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
+      {{0.5f, 0.5f, -0.25f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}},
+      {{-0.5f, 0.5f, -0.25f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}},
+
+      // {{-0.5f, -0.5f, 0.5f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
+      // {{0.5f, -0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
+      // {{0.5f, 0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}},
+      // {{-0.5f, 0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}},
+
+      // {{-0.5f, -0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
+      // {{0.5f, -0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
+      // {{0.5f, 0.5f, -0.5f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}},
+      // {{-0.5f, 0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}},
     };
     const std::vector<uint32_t> indices = {
       0, 1, 2,
       2, 3, 0,
+      
+      // 2, 1, 5,
+      // 5, 6, 2,
+
+      // 2, 6, 3,
+      // 6, 7, 3,
+
+      // 3, 7, 4,
+      // 3, 4, 0,
+
+      // 0, 4, 1,
+      // 4, 5, 1,
+
+      // 6, 5, 4,
+      // 4, 7, 6,
+
+      4, 5, 6,
+      6, 7, 4,
     };
     VkBuffer vertexBuffer;
     VkBuffer indexBuffer;
@@ -118,6 +151,10 @@ namespace Ths::Vk
     VkDeviceMemory textureImageMemory;
     VkImageView textureImageView;
     VkSampler textureSampler;
+
+    VkImage depthImage;
+    VkDeviceMemory depthImageMemory;
+    VkImageView depthImageView;
   } VContext;
 
   typedef struct QueueFamilyIndices
@@ -159,8 +196,14 @@ namespace Ths::Vk
   // TODO: Change all VContext*/VulkanContext* to VContext&
 
   // Functions
+  bool hasStencilComponent(VkFormat format);
+  VkFormat findDepthFormat(VContext* pContext);
+  VkFormat findSupportedFormat(VContext* pContext, const std::vector<VkFormat>& candidates, VkImageTiling tiling,
+    VkFormatFeatureFlags features);
+  bool createDepthResources(VContext* pContext);
+
   bool createTextureSampler(VContext* pContext);
-  VkImageView createImageView(VContext* pContext, VkImage image, VkFormat format);
+  VkImageView createImageView(VContext* pContext, VkImage image, VkFormat format, VkImageAspectFlags aspectFlags = VK_IMAGE_ASPECT_COLOR_BIT);
   bool createTextureImageView(VContext* pContext);
   void copyBufferToImage(VContext* pContext, VkBuffer buffer, VkImage image, uint32_t w, uint32_t h);
   void transitionImageLayout(VContext* pContext, VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout);
@@ -217,8 +260,8 @@ namespace Ths::Vk
     VkPhysicalDeviceFeatures* pFeatures, VkPhysicalDeviceFeatures* pRequiredFeatures, std::vector<const char*>* pDeviceExtensions);
   bool selectPhysicalDevice(VContext* context, VkPhysicalDeviceFeatures* pRequiredFeatures, std::vector<const char*>* pDeviceExtensions);
 
-  void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator);
-  VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo,
+  void destroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator);
+  VkResult createDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo,
     const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger);
   VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback( VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
     VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
