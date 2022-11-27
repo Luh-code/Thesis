@@ -48,7 +48,12 @@ namespace Ths
     std::vector<const char*> layers;
     Ths::Vk::addDebugging(&layers, &extensions, false);
     Ths::Vk::checkLayerAvailability(&layers);
-    Ths::Vk::createVulkanInstance(vContext, extensions.size(), extensions.data(), layers.size(), layers.data(), name, version, debug);
+    Ths::Vk::createVulkanInstance(
+      vContext, static_cast<uint32_t>(extensions.size()), extensions.data(),
+      static_cast<uint32_t>(layers.size()), layers.data(),
+      name, static_cast<uint32_t>(version),
+      debug
+    );
     Ths::Vk::setupDebugMessenger(vContext);
     Ths::SDL::createVkWindowSurfaceSDL(vContext->instance, window, &vContext->surface);
     VkPhysicalDeviceFeatures gpuReqirements {};
@@ -71,6 +76,7 @@ namespace Ths
     Ths::Vk::createTextureImage(vContext);
     Ths::Vk::createTextureImageView(vContext);
     Ths::Vk::createTextureSampler(vContext);
+    Ths::Vk::loadModel(vContext);
     Ths::Vk::createVertexBuffer(vContext);
     Ths::Vk::createIndexBuffer(vContext);
     Ths::Vk::createDepthResources(vContext);
@@ -106,7 +112,7 @@ namespace Ths
     float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
     Ths::Vk::UniformBufferObject ubo {};
-    ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+    ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.5f, -0.7f, 1.0f));
     ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
     float fov = 45.0f;
     ubo.proj = glm::perspective(glm::radians(fov), vContext->swapchainExtent.width / static_cast<float>(vContext->swapchainExtent.height),

@@ -209,7 +209,7 @@ namespace Ths::Vk
   bool createTextureImage(VContext* pContext)
   {
     int w, h, channels;
-    stbi_uc* pixels = stbi_load("D:/Projects/Thesis/src/vk/textures/texture.jpg", &w, &h, &channels, STBI_rgb_alpha);
+    stbi_uc* pixels = stbi_load(TEXTURE_PATH.c_str(), &w, &h, &channels, STBI_rgb_alpha);
     VkDeviceSize size = w * h * 4; // 4 for amt of channels (rgba)
 
     if(size == 0)

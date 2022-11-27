@@ -20,6 +20,13 @@ namespace Ths::Vk
   // Vulkan Creation
   // Data
 
+  // bonk
+  // static const std::string MODEL_PATH = "assets/models/2bonk.obj";
+  // static const std::string TEXTURE_PATH = "assets/textures/2butterfly.png";
+
+  static const std::string MODEL_PATH = "assets/models/Obama.obj";
+  static const std::string TEXTURE_PATH = "assets/textures/Obama.png";
+
   typedef struct Vertex
   {
     glm::vec3 pos;
@@ -56,7 +63,42 @@ namespace Ths::Vk
 
       return bd;
     }
+
+    // inline size_t operator()()
+    // {
+    //   std::hash<Vertex> hasher {};
+    //   return hasher.operator(static_cast<const Vertex&>(*this);
+    // }
   } Vertex;
+
+  // struct VertexHasher
+  // {
+  //   inline size_t vec(const glm::vec2& vec) const
+  //   {
+  //     size_t res = 17;
+  //     res = res * 31 + std::hash<float>()(vec.x);
+  //     res = res * 31 + std::hash<float>()(vec.y);
+  //     return res;
+  //   }
+
+  //   inline size_t vec(const glm::vec3& vec) const
+  //   {
+  //     size_t res = 17;
+  //     res = res * 31 + std::hash<float>()(vec.x);
+  //     res = res * 31 + std::hash<float>()(vec.y);
+  //     res = res * 31 + std::hash<float>()(vec.z);
+  //     return res;
+  //   }
+
+  //   inline size_t operator()(const Ths::Vk::Vertex& v) const
+  //   {
+  //     size_t res = 17;
+  //     res = res * 31 + vec(v.pos);
+  //     res = res * 31 + vec(v.color);
+  //     res = res * 31 + vec(v.texCoord);
+  //     return res;
+  //   }
+  // };
 
   typedef struct VulkanContext
   {
@@ -93,49 +135,39 @@ namespace Ths::Vk
     uint32_t currentFrame = 0;
     bool framebufferResized = false;
 
-    const std::vector<Vertex> verticies = {
-      {{-0.5f, -0.5f, 0.25f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
-      {{0.5f, -0.5f, 0.25f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
-      {{0.5f, 0.5f, 0.25f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}},
-      {{-0.5f, 0.5f, 0.25f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}},
+    std::vector<Vertex> verticies;
+    std::vector<uint32_t> indices;
 
-      {{-0.5f, -0.5f, -0.25f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
-      {{0.5f, -0.5f, -0.25f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
-      {{0.5f, 0.5f, -0.25f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}},
-      {{-0.5f, 0.5f, -0.25f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}},
+    // const std::vector<Vertex> verticies = {
+    //   {{-0.5f, -0.5f, 0.5f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
+    //   {{0.5f, -0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
+    //   {{0.5f, 0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}},
+    //   {{-0.5f, 0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}},
 
-      // {{-0.5f, -0.5f, 0.5f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
-      // {{0.5f, -0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
-      // {{0.5f, 0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}},
-      // {{-0.5f, 0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}},
-
-      // {{-0.5f, -0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
-      // {{0.5f, -0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
-      // {{0.5f, 0.5f, -0.5f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}},
-      // {{-0.5f, 0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}},
-    };
-    const std::vector<uint32_t> indices = {
-      0, 1, 2,
-      2, 3, 0,
+    //   {{-0.5f, -0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
+    //   {{0.5f, -0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
+    //   {{0.5f, 0.5f, -0.5f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}},
+    //   {{-0.5f, 0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}},
+    // };
+    // const std::vector<uint32_t> indices = {
+    //   0, 1, 2,
+    //   2, 3, 0,
       
-      // 2, 1, 5,
-      // 5, 6, 2,
+    //   2, 1, 5,
+    //   5, 6, 2,
 
-      // 2, 6, 3,
-      // 6, 7, 3,
+    //   2, 6, 3,
+    //   6, 7, 3,
 
-      // 3, 7, 4,
-      // 3, 4, 0,
+    //   3, 7, 4,
+    //   3, 4, 0,
 
-      // 0, 4, 1,
-      // 4, 5, 1,
+    //   0, 4, 1,
+    //   4, 5, 1,
 
-      // 6, 5, 4,
-      // 4, 7, 6,
-
-      4, 5, 6,
-      6, 7, 4,
-    };
+    //   6, 5, 4,
+    //   4, 7, 6,
+    // };
     VkBuffer vertexBuffer;
     VkBuffer indexBuffer;
     VkDeviceMemory vertexBufferMemory;
@@ -167,7 +199,7 @@ namespace Ths::Vk
     {
       uint32_t arrSize = sizeof(QueueFamilyIndices)/sizeof(std::optional<uint32_t>);
       std::optional<uint32_t>* pThisArr = reinterpret_cast<std::optional<uint32_t>*>(this);
-      for (int i = 0; i < arrSize; i++)
+      for (uint32_t i = 0; i < arrSize; i++)
       {
         if (!pThisArr->has_value()) return false;
         pThisArr++;
@@ -196,6 +228,8 @@ namespace Ths::Vk
   // TODO: Change all VContext*/VulkanContext* to VContext&
 
   // Functions
+  bool loadModel(VContext* pContext);
+
   bool hasStencilComponent(VkFormat format);
   VkFormat findDepthFormat(VContext* pContext);
   VkFormat findSupportedFormat(VContext* pContext, const std::vector<VkFormat>& candidates, VkImageTiling tiling,
@@ -273,5 +307,45 @@ namespace Ths::Vk
   bool createVulkanInstance(VContext* pContext, uint32_t extensionCount, const char** ppExtensions,
     uint32_t layerCount, const char** ppLayers, const char* pAppName = "Test App", uint32_t appVersion = VK_MAKE_API_VERSION(1,0,0,0), bool debug = true);
 }
+
+template <>
+struct std::hash<Ths::Vk::Vertex>
+{
+  inline size_t vec(const glm::vec2& vec) const
+  {
+    size_t res = 17;
+    res = res * 31 + hash<float>()(vec.x);
+    res = res * 31 + hash<float>()(vec.y);
+    return res;
+  }
+
+  inline size_t vec(const glm::vec3& vec) const
+  {
+    size_t res = 17;
+    res = res * 31 + hash<float>()(vec.x);
+    res = res * 31 + hash<float>()(vec.y);
+    res = res * 31 + hash<float>()(vec.z);
+    return res;
+  }
+
+  size_t operator()(const Ths::Vk::Vertex& v) const
+  {
+    size_t res = 17;
+    res = res * 31 + vec(v.pos);
+    res = res * 31 + vec(v.color);
+    res = res * 31 + vec(v.texCoord);
+    return res;
+  }
+};
+
+template <>
+struct std::equal_to<Ths::Vk::Vertex>
+{
+  inline bool operator()(const Ths::Vk::Vertex& l, const Ths::Vk::Vertex& r) const
+  {
+    return std::hash<Ths::Vk::Vertex>()(l) == std::hash<Ths::Vk::Vertex>()(r);
+  }
+};
+
 
 #endif // __VULKAN_BASE_H__

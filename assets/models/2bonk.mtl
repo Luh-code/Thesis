@@ -1,0 +1,112 @@
+# Blender 3.3.1 MTL File: '2Bonk.blend'
+# www.blender.org
+
+newmtl PL_0000_Eye
+Ns 159.999985
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+illum 2
+map_Kd I:/Program Files (x86)/Steam/steamapps/common/NieRAutomata/mods/2Bonk-230-1-0-0-1649606356/data/pl/nier2blender_extracted/pl000d.dtt/textures/2fdb97d9.dds
+map_d I:/Program Files (x86)/Steam/steamapps/common/NieRAutomata/mods/2Bonk-230-1-0-0-1649606356/data/pl/nier2blender_extracted/pl000d.dtt/textures/2fdb97d9.dds
+map_Bump -bm 1.000000 I:/Program Files (x86)/Steam/steamapps/common/NieRAutomata/mods/2Bonk-230-1-0-0-1649606356/data/pl/nier2blender_extracted/pl000d.dtt/textures/34a222a2.dds
+
+newmtl W_Cloth
+Ns 39.999996
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+illum 2
+map_Kd I:/Program Files (x86)/Steam/steamapps/common/NieRAutomata/mods/2Bonk-230-1-0-0-1649606356/data/pl/nier2blender_extracted/pl000d.dtt/textures/541f36b6.dds
+map_d I:/Program Files (x86)/Steam/steamapps/common/NieRAutomata/mods/2Bonk-230-1-0-0-1649606356/data/pl/nier2blender_extracted/pl000d.dtt/textures/541f36b6.dds
+map_Bump -bm 1.000000 I:/Program Files (x86)/Steam/steamapps/common/NieRAutomata/mods/2Bonk-230-1-0-0-1649606356/data/pl/nier2blender_extracted/pl000d.dtt/textures/4f6683cd.dds
+
+newmtl W_Cloth_satin
+Ns 39.999996
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+illum 2
+map_Kd I:/Program Files (x86)/Steam/steamapps/common/NieRAutomata/mods/2Bonk-230-1-0-0-1649606356/data/pl/nier2blender_extracted/pl000d.dtt/textures/541f36b6.dds
+map_d I:/Program Files (x86)/Steam/steamapps/common/NieRAutomata/mods/2Bonk-230-1-0-0-1649606356/data/pl/nier2blender_extracted/pl000d.dtt/textures/541f36b6.dds
+map_Bump -bm 1.000000 I:/Program Files (x86)/Steam/steamapps/common/NieRAutomata/mods/2Bonk-230-1-0-0-1649606356/data/pl/nier2blender_extracted/pl000d.dtt/textures/4f6683cd.dds
+
+newmtl W_Cloth_tights
+Ns 39.999996
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+illum 2
+map_Kd I:/Program Files (x86)/Steam/steamapps/common/NieRAutomata/mods/2Bonk-230-1-0-0-1649606356/data/pl/nier2blender_extracted/pl000d.dtt/textures/541f36b6.dds
+map_d I:/Program Files (x86)/Steam/steamapps/common/NieRAutomata/mods/2Bonk-230-1-0-0-1649606356/data/pl/nier2blender_extracted/pl000d.dtt/textures/541f36b6.dds
+map_Bump -bm 1.000000 I:/Program Files (x86)/Steam/steamapps/common/NieRAutomata/mods/2Bonk-230-1-0-0-1649606356/data/pl/nier2blender_extracted/pl000d.dtt/textures/4f6683cd.dds
+
+newmtl W_Hair00
+Ns 10.000005
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+illum 2
+map_Kd I:/Program Files (x86)/Steam/steamapps/common/NieRAutomata/mods/2Bonk-230-1-0-0-1649606356/data/pl/nier2blender_extracted/pl000d.dtt/textures/4c971788.dds
+map_d I:/Program Files (x86)/Steam/steamapps/common/NieRAutomata/mods/2Bonk-230-1-0-0-1649606356/data/pl/nier2blender_extracted/pl000d.dtt/textures/4c971788.dds
+map_refl I:/Program Files (x86)/Steam/steamapps/common/NieRAutomata/mods/2Bonk-230-1-0-0-1649606356/data/pl/nier2blender_extracted/pl000d.dtt/textures/232362a9.dds
+map_Bump -bm 1.000000 I:/Program Files (x86)/Steam/steamapps/common/NieRAutomata/mods/2Bonk-230-1-0-0-1649606356/data/pl/nier2blender_extracted/pl000d.dtt/textures/41ec55b6.dds
+
+newmtl W_Hair02
+Ns 10.000005
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+illum 2
+map_Kd I:/Program Files (x86)/Steam/steamapps/common/NieRAutomata/mods/2Bonk-230-1-0-0-1649606356/data/pl/nier2blender_extracted/pl000d.dtt/textures/118f210a.dds
+map_d I:/Program Files (x86)/Steam/steamapps/common/NieRAutomata/mods/2Bonk-230-1-0-0-1649606356/data/pl/nier2blender_extracted/pl000d.dtt/textures/118f210a.dds
+map_refl I:/Program Files (x86)/Steam/steamapps/common/NieRAutomata/mods/2Bonk-230-1-0-0-1649606356/data/pl/nier2blender_extracted/pl000d.dtt/textures/57976458.dds
+map_Bump -bm 1.000000 I:/Program Files (x86)/Steam/steamapps/common/NieRAutomata/mods/2Bonk-230-1-0-0-1649606356/data/pl/nier2blender_extracted/pl000d.dtt/textures/0b22233a.dds
+
+newmtl W_HairEyelash
+Ns 10.000005
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+illum 2
+map_Kd I:/Program Files (x86)/Steam/steamapps/common/NieRAutomata/mods/2Bonk-230-1-0-0-1649606356/data/pl/nier2blender_extracted/pl000d.dtt/textures/4c971788.dds
+map_d I:/Program Files (x86)/Steam/steamapps/common/NieRAutomata/mods/2Bonk-230-1-0-0-1649606356/data/pl/nier2blender_extracted/pl000d.dtt/textures/4c971788.dds
+map_refl I:/Program Files (x86)/Steam/steamapps/common/NieRAutomata/mods/2Bonk-230-1-0-0-1649606356/data/pl/nier2blender_extracted/pl000d.dtt/textures/232362a9.dds
+map_Bump -bm 1.000000 I:/Program Files (x86)/Steam/steamapps/common/NieRAutomata/mods/2Bonk-230-1-0-0-1649606356/data/pl/nier2blender_extracted/pl000d.dtt/textures/41ec55b6.dds
+
+newmtl W_PBS
+Ns 39.999996
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+illum 2
+map_Kd I:/Program Files (x86)/Steam/steamapps/common/NieRAutomata/mods/2Bonk-230-1-0-0-1649606356/data/pl/nier2blender_extracted/pl000d.dtt/textures/541f36b6.dds
+map_d I:/Program Files (x86)/Steam/steamapps/common/NieRAutomata/mods/2Bonk-230-1-0-0-1649606356/data/pl/nier2blender_extracted/pl000d.dtt/textures/541f36b6.dds
+
+newmtl W_Skin
+Ns 39.999996
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+illum 2
+map_Kd I:/Program Files (x86)/Steam/steamapps/common/NieRAutomata/mods/2Bonk-230-1-0-0-1649606356/data/pl/nier2blender_extracted/pl000d.dtt/textures/2fdb97d9.dds
+map_d I:/Program Files (x86)/Steam/steamapps/common/NieRAutomata/mods/2Bonk-230-1-0-0-1649606356/data/pl/nier2blender_extracted/pl000d.dtt/textures/2fdb97d9.dds
+
+newmtl eyeshadow1
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+illum 2
+map_Kd I:/Program Files (x86)/Steam/steamapps/common/NieRAutomata/mods/2Bonk-230-1-0-0-1649606356/data/pl/nier2blender_extracted/pl000d.dtt/textures/2fdb97d9.dds
+map_d I:/Program Files (x86)/Steam/steamapps/common/NieRAutomata/mods/2Bonk-230-1-0-0-1649606356/data/pl/nier2blender_extracted/pl000d.dtt/textures/2fdb97d9.dds
