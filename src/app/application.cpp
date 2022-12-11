@@ -79,6 +79,7 @@ namespace Ths
     Ths::Vk::loadModel(vContext);
     Ths::Vk::createVertexBuffer(vContext);
     Ths::Vk::createIndexBuffer(vContext);
+    Ths::Vk::createColorResources(vContext);
     Ths::Vk::createDepthResources(vContext);
     Ths::Vk::createFramebuffers(vContext);
     Ths::Vk::createUniformBuffers(vContext);

@@ -41,7 +41,7 @@ namespace Ths::Vk
   bool createDepthResources(VContext* pContext)
   {
     VkFormat depthFormat = findDepthFormat(pContext);
-    if (!createImage(pContext, pContext->swapchainExtent.width, pContext->swapchainExtent.height, 1, depthFormat,
+    if (!createImage(pContext, pContext->swapchainExtent.width, pContext->swapchainExtent.height, 1, pContext->msaaSamples, depthFormat,
       VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
       pContext->depthImage, pContext->depthImageMemory))
     {

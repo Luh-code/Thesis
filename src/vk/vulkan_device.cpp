@@ -3,8 +3,27 @@
 
 namespace Ths::Vk
 {
+  VkSampleCountFlagBits getMaxUsableSampleCount(VContext* pContext)
+  {
+    VkPhysicalDeviceProperties physicalDeviceProperties;
+    vkGetPhysicalDeviceProperties(pContext->physicalDevice, &physicalDeviceProperties);
+
+    VkSampleCountFlags counts = physicalDeviceProperties.limits.framebufferColorSampleCounts & physicalDeviceProperties.limits.framebufferDepthSampleCounts;
+    return counts & VK_SAMPLE_COUNT_64_BIT ? VK_SAMPLE_COUNT_64_BIT :
+      counts & VK_SAMPLE_COUNT_32_BIT ? VK_SAMPLE_COUNT_32_BIT :
+      counts & VK_SAMPLE_COUNT_16_BIT ? VK_SAMPLE_COUNT_16_BIT :
+      counts & VK_SAMPLE_COUNT_8_BIT ? VK_SAMPLE_COUNT_8_BIT :
+      counts & VK_SAMPLE_COUNT_4_BIT ? VK_SAMPLE_COUNT_4_BIT :
+      counts & VK_SAMPLE_COUNT_2_BIT ? VK_SAMPLE_COUNT_2_BIT :
+      VK_SAMPLE_COUNT_1_BIT;
+  }
+
   void cleanupSwapChain(VulkanContext* pContext)
   {
+    vkDestroyImageView(pContext->device, pContext->colorImageView, nullptr);
+    vkDestroyImage(pContext->device, pContext->colorImage, nullptr);
+    vkFreeMemory(pContext->device, pContext->colorImageMemory, nullptr);
+
     vkDestroyImageView(pContext->device, pContext->depthImageView, nullptr);
     vkDestroyImage(pContext->device, pContext->depthImage, nullptr);
     vkFreeMemory(pContext->device, pContext->depthImageMemory, nullptr);
@@ -30,6 +49,7 @@ namespace Ths::Vk
 
     createSwapChain(pContext, win_width, win_height, imgs, preferredPresentMode, preferredFormat, preferredColorSpace);
     createImageViews(pContext);
+    createColorResources(pContext);
     createDepthResources(pContext);
     createFramebuffers(pContext);
     return true;
@@ -364,14 +384,15 @@ namespace Ths::Vk
       return false;
     }
     std::multimap<int, std::tuple<VkPhysicalDevice, const char*>> candidates;
-    for (std::vector<VkPhysicalDevice>::iterator i = devices.begin(); i != devices.end(); i++)
+    // for (std::vector<VkPhysicalDevice>::iterator i = devices.begin(); i != devices.end(); i++)
+    for (const auto& i : devices)
     {
       VkPhysicalDeviceProperties props;
       VkPhysicalDeviceFeatures features;
-      if (isPhysicalDeviceSuitable(*i, context->surface, &props, &features, pRequiredFeatures, pDeviceExtensions))
+      if (isPhysicalDeviceSuitable(i, context->surface, &props, &features, pRequiredFeatures, pDeviceExtensions))
       {
         uint32_t score = rateDeviceSuitability(&props, &features);
-        candidates.insert(std::make_pair(score, std::make_tuple(*i, props.deviceName)));
+        candidates.insert(std::make_pair(score, std::make_tuple(i, props.deviceName)));
         LOG_INFO("  \"", props.deviceName, "\" - suitable (", score, ")");
       }
       else LOG_INFO("  \"", props.deviceName, "\" - not suitable");
@@ -379,6 +400,12 @@ namespace Ths::Vk
     if (candidates.rbegin()->first > 0)
     {
       context->physicalDevice = std::get<0>(candidates.rbegin()->second);
+      VkSampleCountFlagBits maxSamples = getMaxUsableSampleCount(context);
+      if (context->msaaSamples > maxSamples)
+      {
+        LOG_WARN(context->msaaSamples, "x MSAA samples are not supported! Lowering to ", maxSamples, "x");
+        context->msaaSamples = maxSamples;
+      }
       LOG_INFO_IV("Selected GPU: \"", std::get<1>(candidates.rbegin()->second), "\"");
     }
     else

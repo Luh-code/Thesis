@@ -123,6 +123,11 @@ namespace Ths::Vk
     VkImage depthImage;
     VkDeviceMemory depthImageMemory;
     VkImageView depthImageView;
+
+    VkSampleCountFlagBits msaaSamples = VK_SAMPLE_COUNT_64_BIT;
+    VkImage colorImage;
+    VkDeviceMemory colorImageMemory;
+    VkImageView colorImageView;
   } VContext;
 
   typedef struct QueueFamilyIndices
@@ -164,6 +169,9 @@ namespace Ths::Vk
   // TODO: Change all VContext*/VulkanContext* to VContext&
 
   // Functions
+  void createColorResources(VContext* pContext);
+  VkSampleCountFlagBits getMaxUsableSampleCount(VContext* pContext);
+
   bool loadModel(VContext* pContext);
 
   bool hasStencilComponent(VkFormat format);
@@ -178,7 +186,8 @@ namespace Ths::Vk
   bool createTextureImageView(VContext* pContext);
   void copyBufferToImage(VContext* pContext, VkBuffer buffer, VkImage image, uint32_t w, uint32_t h);
   void transitionImageLayout(VContext* pContext, VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels);
-  bool createImage(VContext* pContext, uint32_t w, uint32_t h, uint32_t mipLevels, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage,
+  bool createImage(VContext* pContext, uint32_t w, uint32_t h, uint32_t mipLevels, VkSampleCountFlagBits numSamples,
+    VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage,
     VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory);
   bool generateMipmaps(VContext* pContext, VkImage image, VkFormat format, int32_t w, int32_t h, uint32_t mipLevels);
   bool createTextureImage(VContext* pContext);

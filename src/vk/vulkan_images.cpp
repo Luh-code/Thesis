@@ -3,6 +3,16 @@
 
 namespace Ths::Vk
 {
+  void createColorResources(VContext* pContext)
+  {
+    LOG_INIT("Color Resources");
+    VkFormat colorFormat = pContext->swapchainImageFormat;
+    createImage(pContext, pContext->swapchainExtent.width, pContext->swapchainExtent.height, 1, pContext->msaaSamples,
+      colorFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
+      VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, pContext->colorImage, pContext->colorImageMemory);
+    pContext->colorImageView = createImageView(pContext, pContext->colorImage, colorFormat, VK_IMAGE_ASPECT_COLOR_BIT, 1);
+    LOG_INIT_OK("Color Resources");
+  }
 
   bool createTextureSampler(VContext* pContext)
   {
@@ -169,7 +179,8 @@ namespace Ths::Vk
     endSingleTimeGraphicsCommands(pContext, commandBuffer);
   }
 
-  bool createImage(VContext* pContext, uint32_t w, uint32_t h, uint32_t mipLevels, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage,
+  bool createImage(VContext* pContext, uint32_t w, uint32_t h, uint32_t mipLevels, VkSampleCountFlagBits numSamples,
+    VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage,
     VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory)
   {
     VkImageCreateInfo imageInfo {VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO};
@@ -184,7 +195,7 @@ namespace Ths::Vk
     imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
     imageInfo.usage = usage;
     imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-    imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+    imageInfo.samples = numSamples;
     imageInfo.flags = 0;
 
     VKF(vkCreateImage(pContext->device, &imageInfo, nullptr, &image))
@@ -319,7 +330,7 @@ namespace Ths::Vk
     VkBuffer stagingBuffer;
     VkDeviceMemory stagingBufferMemory;
     
-    if (!createImage(pContext, w, h, pContext->mipLevels, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_SRC_BIT |
+    if (!createImage(pContext, w, h, pContext->mipLevels, VK_SAMPLE_COUNT_1_BIT, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_SRC_BIT |
       VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, pContext->textureImage, pContext->textureImageMemory))
       return false;
     
