@@ -348,9 +348,9 @@ namespace Ths::Vk
 
     // No multisampling for now
     VkPipelineMultisampleStateCreateInfo multisampling {VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO};
-    multisampling.sampleShadingEnable = VK_FALSE;
+    multisampling.sampleShadingEnable = VK_FALSE; // Enable for AA in textures
     multisampling.rasterizationSamples = pContext->msaaSamples;
-    multisampling.minSampleShading = 1.0f;
+    multisampling.minSampleShading = .2f;
     multisampling.pSampleMask = nullptr;
     multisampling.alphaToCoverageEnable = VK_FALSE;
     multisampling.alphaToOneEnable = VK_FALSE;

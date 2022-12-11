@@ -1,26 +1,24 @@
 # Diff Summary
 
-Date : 2022-11-20 12:12:36
+Date : 2022-12-11 14:42:44
 
 Directory d:\\Projects\\Thesis
 
-Total : 10 files,  175 codes, 2 comments, 27 blanks, all 204 lines
+Total : 6 files,  145 codes, -49 comments, 14 blanks, all 110 lines
 
 [Summary](results.md) / [Details](details.md) / Diff Summary / [Diff Details](diff-details.md)
 
 ## Languages
 | language | files | code | comment | blank | total |
 | :--- | ---: | ---: | ---: | ---: | ---: |
-| C++ | 9 | 170 | 2 | 26 | 198 |
-| GLSL | 1 | 5 | 0 | 1 | 6 |
+| C++ | 6 | 145 | -49 | 14 | 110 |
 
 ## Directories
 | path | files | code | comment | blank | total |
 | :--- | ---: | ---: | ---: | ---: | ---: |
-| . | 10 | 175 | 2 | 27 | 204 |
-| src | 10 | 175 | 2 | 27 | 204 |
-| src\\app | 2 | 28 | 1 | 8 | 37 |
-| src\\vk | 7 | 129 | 1 | 17 | 147 |
-| src\\vk\\shaders | 1 | 5 | 0 | 1 | 6 |
+| . | 6 | 145 | -49 | 14 | 110 |
+| src | 6 | 145 | -49 | 14 | 110 |
+| src\\app | 1 | 1 | 0 | 0 | 1 |
+| src\\vk | 5 | 144 | -49 | 14 | 109 |
 
 [Summary](results.md) / [Details](details.md) / Diff Summary / [Diff Details](diff-details.md)

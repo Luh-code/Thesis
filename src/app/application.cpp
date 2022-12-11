@@ -60,6 +60,7 @@ namespace Ths
     gpuReqirements.geometryShader = true;
     gpuReqirements.tessellationShader = true;
     gpuReqirements.samplerAnisotropy = true;
+    gpuReqirements.sampleRateShading = true;
     std::vector<const char*> deviceExtensions;
     deviceExtensions.push_back(VK_KHR_SWAPCHAIN_EXTENSION_NAME);
     Ths::Vk::selectPhysicalDevice(vContext, &gpuReqirements, &deviceExtensions);
