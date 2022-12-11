@@ -42,7 +42,8 @@ namespace Ths::Vk
 
     for (uint32_t i = 0; i < pContext->swapchainImages.size(); i++)
     {
-      pContext->swapchainImageViews[i] = createImageView(pContext, pContext->swapchainImages[i], pContext->swapchainImageFormat);
+      pContext->swapchainImageViews[i] = createImageView(pContext, pContext->swapchainImages[i],
+        pContext->swapchainImageFormat, VK_IMAGE_ASPECT_COLOR_BIT, 1);
       
       if (pContext->swapchainImageViews[i] == VK_NULL_HANDLE)
       {
@@ -265,7 +266,8 @@ namespace Ths::Vk
       {
         indices.graphicsFamily = i;
       }
-      else if (!indices.transferFamily.has_value() && (queueFamily.queueFlags & VK_QUEUE_TRANSFER_BIT) == VK_QUEUE_TRANSFER_BIT)
+      // else if (!indices.transferFamily.has_value() && (queueFamily.queueFlags & (VK_QUEUE_TRANSFER_BIT | VK_QUEUE_GRAPHICS_BIT)) == (VK_QUEUE_TRANSFER_BIT | VK_QUEUE_GRAPHICS_BIT))
+      else if (!indices.transferFamily.has_value() && (queueFamily.queueFlags & (VK_QUEUE_TRANSFER_BIT)) == (VK_QUEUE_TRANSFER_BIT))
       {
         indices.transferFamily = i;
       }

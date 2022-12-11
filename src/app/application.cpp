@@ -67,13 +67,13 @@ namespace Ths
     int width, height;
     SDL_Vulkan_GetDrawableSize(window, &width, &height);
     Ths::Vk::createSwapChain(vContext, width, height, 2);
-    Ths::Vk::createImageViews(vContext);
     Ths::Vk::createRenderPass(vContext, 0);
     Ths::Vk::createDescriptorSetLayout(vContext);
     Ths::Vk::createGraphicsPipeline(vContext);
     Ths::Vk::createCommandPools(vContext);
     Ths::Vk::createCommandBuffers(vContext);
     Ths::Vk::createTextureImage(vContext);
+    Ths::Vk::createImageViews(vContext);
     Ths::Vk::createTextureImageView(vContext);
     Ths::Vk::createTextureSampler(vContext);
     Ths::Vk::loadModel(vContext);
@@ -112,7 +112,7 @@ namespace Ths
     float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
     Ths::Vk::UniformBufferObject ubo {};
-    ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.5f, -0.7f, 1.0f));
+    ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
     ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
     float fov = 45.0f;
     ubo.proj = glm::perspective(glm::radians(fov), vContext->swapchainExtent.width / static_cast<float>(vContext->swapchainExtent.height),

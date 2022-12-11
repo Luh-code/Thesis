@@ -24,8 +24,9 @@ namespace Ths::Vk
   // static const std::string MODEL_PATH = "assets/models/2bonk.obj";
   // static const std::string TEXTURE_PATH = "assets/textures/2butterfly.png";
 
-  static const std::string MODEL_PATH = "assets/models/Obama.obj";
-  static const std::string TEXTURE_PATH = "assets/textures/Obama.png";
+  static const std::string BASE_PATH = "D:/Projects/Thesis/";
+  static const std::string MODEL_PATH = BASE_PATH + "assets/models/Viking.obj";
+  static const std::string TEXTURE_PATH = BASE_PATH + "assets/textures/Viking.png";
 
   typedef struct Vertex
   {
@@ -63,42 +64,7 @@ namespace Ths::Vk
 
       return bd;
     }
-
-    // inline size_t operator()()
-    // {
-    //   std::hash<Vertex> hasher {};
-    //   return hasher.operator(static_cast<const Vertex&>(*this);
-    // }
   } Vertex;
-
-  // struct VertexHasher
-  // {
-  //   inline size_t vec(const glm::vec2& vec) const
-  //   {
-  //     size_t res = 17;
-  //     res = res * 31 + std::hash<float>()(vec.x);
-  //     res = res * 31 + std::hash<float>()(vec.y);
-  //     return res;
-  //   }
-
-  //   inline size_t vec(const glm::vec3& vec) const
-  //   {
-  //     size_t res = 17;
-  //     res = res * 31 + std::hash<float>()(vec.x);
-  //     res = res * 31 + std::hash<float>()(vec.y);
-  //     res = res * 31 + std::hash<float>()(vec.z);
-  //     return res;
-  //   }
-
-  //   inline size_t operator()(const Ths::Vk::Vertex& v) const
-  //   {
-  //     size_t res = 17;
-  //     res = res * 31 + vec(v.pos);
-  //     res = res * 31 + vec(v.color);
-  //     res = res * 31 + vec(v.texCoord);
-  //     return res;
-  //   }
-  // };
 
   typedef struct VulkanContext
   {
@@ -137,37 +103,6 @@ namespace Ths::Vk
 
     std::vector<Vertex> verticies;
     std::vector<uint32_t> indices;
-
-    // const std::vector<Vertex> verticies = {
-    //   {{-0.5f, -0.5f, 0.5f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
-    //   {{0.5f, -0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
-    //   {{0.5f, 0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}},
-    //   {{-0.5f, 0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}},
-
-    //   {{-0.5f, -0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
-    //   {{0.5f, -0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
-    //   {{0.5f, 0.5f, -0.5f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}},
-    //   {{-0.5f, 0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}},
-    // };
-    // const std::vector<uint32_t> indices = {
-    //   0, 1, 2,
-    //   2, 3, 0,
-      
-    //   2, 1, 5,
-    //   5, 6, 2,
-
-    //   2, 6, 3,
-    //   6, 7, 3,
-
-    //   3, 7, 4,
-    //   3, 4, 0,
-
-    //   0, 4, 1,
-    //   4, 5, 1,
-
-    //   6, 5, 4,
-    //   4, 7, 6,
-    // };
     VkBuffer vertexBuffer;
     VkBuffer indexBuffer;
     VkDeviceMemory vertexBufferMemory;
@@ -179,6 +114,7 @@ namespace Ths::Vk
     VkDescriptorPool descriptorPool;
     std::vector<VkDescriptorSet> descriptorSets;
 
+    uint32_t mipLevels;
     VkImage textureImage;
     VkDeviceMemory textureImageMemory;
     VkImageView textureImageView;
@@ -237,12 +173,14 @@ namespace Ths::Vk
   bool createDepthResources(VContext* pContext);
 
   bool createTextureSampler(VContext* pContext);
-  VkImageView createImageView(VContext* pContext, VkImage image, VkFormat format, VkImageAspectFlags aspectFlags = VK_IMAGE_ASPECT_COLOR_BIT);
+  VkImageView createImageView(VContext* pContext, VkImage image, VkFormat format,
+    VkImageAspectFlags aspectFlags = VK_IMAGE_ASPECT_COLOR_BIT, uint32_t mipLevels = 1);
   bool createTextureImageView(VContext* pContext);
   void copyBufferToImage(VContext* pContext, VkBuffer buffer, VkImage image, uint32_t w, uint32_t h);
-  void transitionImageLayout(VContext* pContext, VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout);
-  bool createImage(VContext* pContext, uint32_t w, uint32_t h, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage,
+  void transitionImageLayout(VContext* pContext, VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels);
+  bool createImage(VContext* pContext, uint32_t w, uint32_t h, uint32_t mipLevels, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage,
     VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory);
+  bool generateMipmaps(VContext* pContext, VkImage image, VkFormat format, int32_t w, int32_t h, uint32_t mipLevels);
   bool createTextureImage(VContext* pContext);
 
   bool createDescriptorSets(VContext* pContext);

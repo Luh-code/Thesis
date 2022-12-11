@@ -41,7 +41,7 @@ namespace Ths::Vk
   bool createDepthResources(VContext* pContext)
   {
     VkFormat depthFormat = findDepthFormat(pContext);
-    if (!createImage(pContext, pContext->swapchainExtent.width, pContext->swapchainExtent.height, depthFormat,
+    if (!createImage(pContext, pContext->swapchainExtent.width, pContext->swapchainExtent.height, 1, depthFormat,
       VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
       pContext->depthImage, pContext->depthImageMemory))
     {
@@ -49,9 +49,9 @@ namespace Ths::Vk
       return false;
     }
     
-    pContext->depthImageView = createImageView(pContext, pContext->depthImage, depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT);
+    pContext->depthImageView = createImageView(pContext, pContext->depthImage, depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT, 1);
     
-    transitionImageLayout(pContext, pContext->depthImage, depthFormat, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
+    transitionImageLayout(pContext, pContext->depthImage, depthFormat, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, 1);
 
     return true;
   }

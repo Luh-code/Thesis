@@ -13,7 +13,8 @@ namespace Ths::Vk
     std::vector<tinyobj::material_t> materials;
     std::string warn, err;
 
-    std::string basedir = "assets/models/";
+    // std::string basedir = "assets/models/";
+    std::string basedir = BASE_PATH + "assets/models";
     if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, MODEL_PATH.c_str(), basedir.c_str(), true, true))
     {
       LOG_ERROR("An error occured whilst loading \"", MODEL_PATH, "\": \n\t", err);
