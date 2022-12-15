@@ -24,7 +24,8 @@ namespace Ths::Vk
   // static const std::string MODEL_PATH = "assets/models/2bonk.obj";
   // static const std::string TEXTURE_PATH = "assets/textures/2butterfly.png";
 
-  static const std::string BASE_PATH = "D:/Projects/Thesis/";
+  // static const std::string BASE_PATH = "D:/Projects/Thesis/";
+  static const std::string BASE_PATH = "";
   static const std::string MODEL_PATH = BASE_PATH + "assets/models/Viking.obj";
   static const std::string TEXTURE_PATH = BASE_PATH + "assets/textures/Viking.png";
 

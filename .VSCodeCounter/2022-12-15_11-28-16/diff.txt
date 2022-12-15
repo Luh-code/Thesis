@@ -1,0 +1,92 @@
+Date : 2022-12-15 11:28:16
+Directory : d:\dev\Thesis
+Total : 46 files,  490 codes, 12 comments, 107 blanks, all 609 lines
+
+Languages
++----------+------------+------------+------------+------------+------------+
+| language | files      | code       | comment    | blank      | total      |
++----------+------------+------------+------------+------------+------------+
+| C++      |         38 |        490 |         12 |        107 |        609 |
+| Markdown |          2 |          0 |          0 |          0 |          0 |
+| GLSL     |          4 |          0 |          0 |          0 |          0 |
+| Batch    |          2 |          0 |          0 |          0 |          0 |
++----------+------------+------------+------------+------------+------------+
+
+Directories
++-------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                  | files      | code       | comment    | blank      | total      |
++-------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                     |         46 |        490 |         12 |        107 |        609 |
+| ..                                                    |         22 |     -2,441 |       -106 |       -366 |     -2,913 |
+| ..\..                                                 |         22 |     -2,441 |       -106 |       -366 |     -2,913 |
+| ..\..\Projects                                        |         22 |     -2,441 |       -106 |       -366 |     -2,913 |
+| ..\..\Projects\Thesis                                 |         22 |     -2,441 |       -106 |       -366 |     -2,913 |
+| ..\..\Projects\Thesis\src                             |         20 |     -2,435 |       -106 |       -364 |     -2,905 |
+| ..\..\Projects\Thesis\src\app                         |          2 |       -307 |        -12 |        -47 |       -366 |
+| ..\..\Projects\Thesis\src\sdl                         |          2 |       -157 |          0 |        -19 |       -176 |
+| ..\..\Projects\Thesis\src\vk                          |         12 |     -1,918 |        -63 |       -280 |     -2,261 |
+| ..\..\Projects\Thesis\src\vk\shaders                  |          3 |        -29 |         -1 |         -8 |        -38 |
+| ..\..\Projects\Thesis\tests                           |          1 |         -5 |          0 |         -1 |         -6 |
+| ..\..\Projects\Thesis\tests\test1                     |          1 |         -5 |          0 |         -1 |         -6 |
+| src                                                   |         22 |      2,925 |        118 |        471 |      3,514 |
+| src\app                                               |          2 |        308 |         12 |         47 |        367 |
+| src\ecs                                               |          2 |        475 |          8 |         98 |        581 |
+| src\sdl                                               |          2 |        157 |          0 |         19 |        176 |
+| src\vk                                                |         12 |      1,919 |         63 |        280 |      2,262 |
+| src\vk\shaders                                        |          3 |         29 |          1 |          8 |         38 |
+| tests                                                 |          1 |          5 |          0 |          1 |          6 |
+| tests\test1                                           |          1 |          5 |          0 |          1 |          6 |
++-------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-------------------------------------------------------+----------+------------+------------+------------+------------+
+| filename                                              | language | code       | comment    | blank      | total      |
++-------------------------------------------------------+----------+------------+------------+------------+------------+
+| d:\Projects\Thesis\README.md                          | Markdown |         -1 |          0 |         -1 |         -2 |
+| d:\Projects\Thesis\src\app\application.cpp            | C++      |       -229 |         -7 |        -36 |       -272 |
+| d:\Projects\Thesis\src\app\application.h              | C++      |        -78 |         -5 |        -11 |        -94 |
+| d:\Projects\Thesis\src\main.cpp                       | C++      |        -13 |          0 |         -1 |        -14 |
+| d:\Projects\Thesis\src\memory_mger.h                  | C++      |         -6 |        -26 |         -9 |        -41 |
+| d:\Projects\Thesis\src\pch.h                          | C++      |        -28 |         -5 |         -5 |        -38 |
+| d:\Projects\Thesis\src\sdl\sdl_base.cpp               | C++      |       -135 |          0 |        -15 |       -150 |
+| d:\Projects\Thesis\src\sdl\sdl_base.h                 | C++      |        -22 |          0 |         -4 |        -26 |
+| d:\Projects\Thesis\src\thesis.h                       | C++      |         -6 |          0 |         -3 |         -9 |
+| d:\Projects\Thesis\src\vk\shaders\compile_shaders.bat | Batch    |         -3 |          0 |          0 |         -3 |
+| d:\Projects\Thesis\src\vk\shaders\triangle.frag       | GLSL     |         -9 |         -1 |         -4 |        -14 |
+| d:\Projects\Thesis\src\vk\shaders\triangle.vert       | GLSL     |        -17 |          0 |         -4 |        -21 |
+| d:\Projects\Thesis\src\vk\vulkan_base.h               | C++      |       -242 |        -10 |        -46 |       -298 |
+| d:\Projects\Thesis\src\vk\vulkan_commands.cpp         | C++      |       -165 |         -1 |        -25 |       -191 |
+| d:\Projects\Thesis\src\vk\vulkan_depth.cpp            | C++      |        -50 |          0 |         -8 |        -58 |
+| d:\Projects\Thesis\src\vk\vulkan_descriptors.cpp      | C++      |       -122 |         -1 |        -22 |       -145 |
+| d:\Projects\Thesis\src\vk\vulkan_device.cpp           | C++      |       -352 |         -3 |        -65 |       -420 |
+| d:\Projects\Thesis\src\vk\vulkan_images.cpp           | C++      |       -323 |        -11 |        -34 |       -368 |
+| d:\Projects\Thesis\src\vk\vulkan_instance.cpp         | C++      |       -195 |        -19 |        -17 |       -231 |
+| d:\Projects\Thesis\src\vk\vulkan_model.cpp            | C++      |        -52 |         -7 |         -7 |        -66 |
+| d:\Projects\Thesis\src\vk\vulkan_pipeline.cpp         | C++      |       -388 |        -10 |        -48 |       -446 |
+| d:\Projects\Thesis\tests\test1\Test.cpp               | C++      |         -5 |          0 |         -1 |         -6 |
+| d:\dev\Thesis\README.md                               | Markdown |          1 |          0 |          1 |          2 |
+| d:\dev\Thesis\src\app\application.cpp                 | C++      |        230 |          7 |         36 |        273 |
+| d:\dev\Thesis\src\app\application.h                   | C++      |         78 |          5 |         11 |         94 |
+| d:\dev\Thesis\src\ecs\ecs_base.hpp                    | C++      |        347 |          1 |         74 |        422 |
+| d:\dev\Thesis\src\ecs\ecs_base_old.h                  | C++      |        128 |          7 |         24 |        159 |
+| d:\dev\Thesis\src\main.cpp                            | C++      |         23 |          4 |         10 |         37 |
+| d:\dev\Thesis\src\memory_mger.h                       | C++      |          6 |         26 |          9 |         41 |
+| d:\dev\Thesis\src\pch.h                               | C++      |         31 |          5 |          5 |         41 |
+| d:\dev\Thesis\src\sdl\sdl_base.cpp                    | C++      |        135 |          0 |         15 |        150 |
+| d:\dev\Thesis\src\sdl\sdl_base.h                      | C++      |         22 |          0 |          4 |         26 |
+| d:\dev\Thesis\src\thesis.h                            | C++      |          6 |          0 |          3 |          9 |
+| d:\dev\Thesis\src\vk\shaders\compile_shaders.bat      | Batch    |          3 |          0 |          0 |          3 |
+| d:\dev\Thesis\src\vk\shaders\triangle.frag            | GLSL     |          9 |          1 |          4 |         14 |
+| d:\dev\Thesis\src\vk\shaders\triangle.vert            | GLSL     |         17 |          0 |          4 |         21 |
+| d:\dev\Thesis\src\vk\vulkan_base.h                    | C++      |        242 |         10 |         46 |        298 |
+| d:\dev\Thesis\src\vk\vulkan_commands.cpp              | C++      |        165 |          1 |         25 |        191 |
+| d:\dev\Thesis\src\vk\vulkan_depth.cpp                 | C++      |         50 |          0 |          8 |         58 |
+| d:\dev\Thesis\src\vk\vulkan_descriptors.cpp           | C++      |        122 |          1 |         22 |        145 |
+| d:\dev\Thesis\src\vk\vulkan_device.cpp                | C++      |        352 |          3 |         65 |        420 |
+| d:\dev\Thesis\src\vk\vulkan_images.cpp                | C++      |        324 |         11 |         34 |        369 |
+| d:\dev\Thesis\src\vk\vulkan_instance.cpp              | C++      |        195 |         19 |         17 |        231 |
+| d:\dev\Thesis\src\vk\vulkan_model.cpp                 | C++      |         52 |          7 |          7 |         66 |
+| d:\dev\Thesis\src\vk\vulkan_pipeline.cpp              | C++      |        388 |         10 |         48 |        446 |
+| d:\dev\Thesis\tests\test1\Test.cpp                    | C++      |          5 |          0 |          1 |          6 |
+| Total                                                 |          |        490 |         12 |        107 |        609 |
++-------------------------------------------------------+----------+------------+------------+------------+------------+

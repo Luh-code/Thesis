@@ -93,7 +93,8 @@ add_executable(thesis ${SOURCE})
 target_include_directories(thesis PUBLIC ${PROJECT_SOURCE_DIR}/dependencies/FlagEx/include
                                 ${PROJECT_SOURCE_DIR}/dependencies/Sheriff/include
                                 ${PROJECT_SOURCE_DIR}/dependencies/lhg/include
-                                ${PROJECT_SOURCE_DIR}/dependencies/stb
+                                # ${PROJECT_SOURCE_DIR}/dependencies/stb
+                                C:/stb
                                 ${PROJECT_SOURCE_DIR}/dependencies/tinyobjloader
                                 #${PROJECT_SOURCE_DIR}/dependencies/Vulkan/1.3.216.0/x86_64/include
                                 ${SDL2_INCLUDE_DIRS}

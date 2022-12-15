@@ -287,7 +287,8 @@ namespace Ths::Vk
         indices.graphicsFamily = i;
       }
       // else if (!indices.transferFamily.has_value() && (queueFamily.queueFlags & (VK_QUEUE_TRANSFER_BIT | VK_QUEUE_GRAPHICS_BIT)) == (VK_QUEUE_TRANSFER_BIT | VK_QUEUE_GRAPHICS_BIT))
-      else if (!indices.transferFamily.has_value() && (queueFamily.queueFlags & (VK_QUEUE_TRANSFER_BIT)) == (VK_QUEUE_TRANSFER_BIT))
+     if ((indices.graphicsFamily.has_value() && indices.graphicsFamily.value() != i) || queueFamilyCount > 2 &&
+        !indices.transferFamily.has_value() && (queueFamily.queueFlags & VK_QUEUE_TRANSFER_BIT) == VK_QUEUE_TRANSFER_BIT)
       {
         indices.transferFamily = i;
       }

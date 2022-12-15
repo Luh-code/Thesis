@@ -1,30 +1,31 @@
 # Summary
 
-Date : 2022-11-20 14:35:24
+Date : 2022-12-15 11:28:16
 
-Directory d:\\Projects\\Thesis
+Directory d:\\dev\\Thesis
 
-Total : 19 files,  1823 codes, 54 comments, 273 blanks, all 2150 lines
+Total : 24 files,  2931 codes, 118 comments, 473 blanks, all 3522 lines
 
 Summary / [Details](details.md) / [Diff Summary](diff.md) / [Diff Details](diff-details.md)
 
 ## Languages
 | language | files | code | comment | blank | total |
 | :--- | ---: | ---: | ---: | ---: | ---: |
-| C++ | 15 | 1,798 | 54 | 266 | 2,118 |
-| GLSL | 2 | 21 | 0 | 6 | 27 |
+| C++ | 20 | 2,901 | 117 | 464 | 3,482 |
+| GLSL | 2 | 26 | 1 | 8 | 35 |
 | Batch | 1 | 3 | 0 | 0 | 3 |
 | Markdown | 1 | 1 | 0 | 1 | 2 |
 
 ## Directories
 | path | files | code | comment | blank | total |
 | :--- | ---: | ---: | ---: | ---: | ---: |
-| . | 19 | 1,823 | 54 | 273 | 2,150 |
-| src | 17 | 1,817 | 54 | 271 | 2,142 |
-| src\\app | 2 | 290 | 12 | 45 | 347 |
+| . | 24 | 2,931 | 118 | 473 | 3,522 |
+| src | 22 | 2,925 | 118 | 471 | 3,514 |
+| src\\app | 2 | 308 | 12 | 47 | 367 |
+| src\\ecs | 2 | 475 | 8 | 98 | 581 |
 | src\\sdl | 2 | 157 | 0 | 19 | 176 |
-| src\\vk | 9 | 1,303 | 37 | 192 | 1,532 |
-| src\\vk\\shaders | 3 | 24 | 0 | 6 | 30 |
+| src\\vk | 12 | 1,919 | 63 | 280 | 2,262 |
+| src\\vk\\shaders | 3 | 29 | 1 | 8 | 38 |
 | tests | 1 | 5 | 0 | 1 | 6 |
 | tests\\test1 | 1 | 5 | 0 | 1 | 6 |
 

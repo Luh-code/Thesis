@@ -52,7 +52,8 @@ namespace Ths::Vk
     return true;
   }
 
-  VkImageView createImageView(VContext* pContext, VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, uint32_t mipLevels)
+  VkImageView createImageView(VContext* pContext, VkImage image, VkFormat format,
+    VkImageAspectFlags aspectFlags, uint32_t mipLevels)
   {
     VkImageViewCreateInfo createInfo {VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO};
     createInfo.image = image;
