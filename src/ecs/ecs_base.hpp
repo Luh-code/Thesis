@@ -161,7 +161,7 @@ namespace Ths::ecs
   private:
     std::unordered_map<const char*, ComponentType> mComponentTypes{};
 
-    std::unordered_map<const char*, IComponentArray*> mComponentArrays{}; // TODO: delete value
+    std::unordered_map<const char*, IComponentArray*> mComponentArrays{};
 
     ComponentType mNextComponentType{};
 
@@ -176,7 +176,10 @@ namespace Ths::ecs
         assert(true);
       }
 
-      return static_cast<ComponentArray<T>*>(mComponentArrays[typeName]);
+      // return static_cast<ComponentArray<T>*>(mComponentArrays[typeName]);
+      // ComponentArray<T>* temp = mComponentArrays[typeName];
+      // return temp;
+      return dynamic_cast<ComponentArray<T>*>(mComponentArrays[typeName]);
     }
   };
 
@@ -271,8 +274,8 @@ namespace Ths::ecs
         assert(true);
       }
 
-      auto system = new T();
-      mSystems.insert({typeName, system});
+      T* system = new T();
+      mSystems.insert({typeName, (System*)(system)}); // ? delete cast
       return system;
     }
 
