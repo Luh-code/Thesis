@@ -97,7 +97,7 @@ namespace Ths::ecs
     {
       const char* typeName = typeid(T).name();
 
-      if (mComponentTypes.find(typeName) == mComponentTypes.end())
+      if (mComponentTypes.find(typeName) != mComponentTypes.end())
       {
         LOG_ERROR("Tried to register already registered component type - not registering anything");
         return;
@@ -105,7 +105,7 @@ namespace Ths::ecs
 
       mComponentTypes.insert({typeName, mNextComponentType});
 
-      mComponentArrays.insert({typeName, new ComponentArray<T>()});
+      mComponentArrays.insert({typeName, reinterpret_cast<IComponentArray *>(new ComponentArray<T>())});
 
       ++mNextComponentType;
     }
@@ -115,10 +115,10 @@ namespace Ths::ecs
     {
       const char* typeName = typeid(T).name();
 
-      if (mComponentTypes.find(typeName) != mComponentTypes.end())
+      if (mComponentTypes.find(typeName) == mComponentTypes.end())
       {
-        LOG_ERROR("Tried using non-registered component");
-        assert(true);
+        LOG_ERROR("Tried to access unregistered component!");
+        assert(false);
       }
 
       return mComponentTypes[typeName];
@@ -170,16 +170,16 @@ namespace Ths::ecs
     {
       const char* typeName = typeid(T).name();
 
-      if(mComponentTypes.find(typeName) != mComponentTypes.end())
+      if(mComponentTypes.find(typeName) == mComponentTypes.end())
       {
         LOG_ERROR("Tried to use unregistered component!");
-        assert(true);
+        assert(false);
       }
 
       // return static_cast<ComponentArray<T>*>(mComponentArrays[typeName]);
       // ComponentArray<T>* temp = mComponentArrays[typeName];
       // return temp;
-      return dynamic_cast<ComponentArray<T>*>(mComponentArrays[typeName]);
+      return reinterpret_cast<ComponentArray<T>*>(mComponentArrays[typeName]);
     }
   };
 
@@ -268,10 +268,10 @@ namespace Ths::ecs
     {
       const char* typeName = typeid(T).name();
 
-      if (mSystems.find(typeName) == mSystems.end())
+      if (mSystems.find(typeName) != mSystems.end())
       {
         LOG_ERROR("Tried registering a system multiple times!");
-        assert(true);
+        assert(false);
       }
 
       T* system = new T();
