@@ -3,7 +3,7 @@
 
 #include "../pch.h"
 
-// ecs build from Austin Morlans Tutorial (https://austinmorlan.com/posts/entity_component_system/) & modded
+// ecs built from Austin Morlan's Tutorial (https://austinmorlan.com/posts/entity_component_system/) & modded
 
 namespace Ths::ecs
 {
@@ -255,11 +255,6 @@ namespace Ths::ecs
   {
   public:
     std::set<Entity> mEntities;
-  };
-
-  class TestSystem : System
-  {
-
   };
 
   class SystemManager
