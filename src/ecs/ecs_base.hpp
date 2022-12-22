@@ -3,6 +3,8 @@
 
 #include "../pch.h"
 
+// ecs build from Austin Morlans Tutorial (https://austinmorlan.com/posts/entity_component_system/) & modded
+
 namespace Ths::ecs
 {
   using Entity = uint32_t;
