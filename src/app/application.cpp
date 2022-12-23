@@ -89,23 +89,13 @@ namespace Ths
     SDL_Vulkan_GetDrawableSize(window, &width, &height);
     Ths::Vk::createSwapChain(vContext, width, height, 2);
     Ths::Vk::createRenderPass(vContext, 0);
-    // Ths::Vk::createDescriptorSetLayout(vContext);
-    // Ths::Vk::createGraphicsPipeline(vContext);
-    Ths::Vk::createCommandPools(vContext); // ! problematic
+    Ths::Vk::createCommandPools(vContext);
     Ths::Vk::createCommandBuffers(vContext);
-    // Ths::Vk::createTextureImage(vContext);
     Ths::Vk::createImageViews(vContext);
-    // Ths::Vk::createTextureImageView(vContext);
-    // Ths::Vk::createTextureSampler(vContext);
-    // Ths::Vk::loadModel(vContext);
-    // Ths::Vk::createVertexBuffer(vContext);
-    // Ths::Vk::createIndexBuffer(vContext);
     Ths::Vk::createColorResources(vContext);
     Ths::Vk::createDepthResources(vContext);
     Ths::Vk::createFramebuffers(vContext);
     Ths::Vk::createUniformBuffers(vContext);
-    // Ths::Vk::createDescriptorPool(vContext);
-    // Ths::Vk::createDescriptorSets(vContext);
     Ths::Vk::createSyncObjects(vContext);
   }
   
