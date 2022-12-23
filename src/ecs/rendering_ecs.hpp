@@ -40,13 +40,6 @@ namespace Ths::ecs
         Ths::Vk::createDescriptorSets(pContext, object);
 
         Ths::Vk::QueueFamilyIndices queueFamilyIndices = Ths::Vk::findQueueFamilies(pContext->physicalDevice, pContext->surface);
-    
-        VkCommandPoolCreateInfo poolInfo {VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO};
-        poolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
-        poolInfo.queueFamilyIndex = queueFamilyIndices.graphicsFamily.value();
-
-        // Ths::Vk::createCommandPool(pContext, poolInfo, &object.commandPool);
-        // Ths::Vk::createCommandBuffers(pContext, object);
       }
     }
 
@@ -79,31 +72,6 @@ namespace Ths::ecs
         vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(object.mesh->indices.size()), 1, 0, 0, 0);
       }
     }
-
-    // inline void recordBuffers(uint32_t imageIndex)
-    // {
-    //   for(const auto& e : mEntities)
-    //   {
-    //     auto& object = crd->getComponent<Ths::Vk::OContext>(e);
-    //     auto& model = crd->getComponent<Ths::Vk::Mesh>(e);
-
-    //     vkResetCommandBuffer(object.commandBuffers[imageIndex], 0);
-    //     Ths::Vk::recordCommandBuffer(pContext, object, object.commandBuffers[imageIndex], imageIndex);
-    //   }
-    // }
-
-    // inline std::vector<VkCommandBuffer> getCommandBuffers(uint32_t imageIndex)
-    // {
-    //   std::vector<VkCommandBuffer> commandBuffers{mEntities.size()};
-    //   size_t i = 0;
-    //   for(auto const& e : mEntities)
-    //   {
-    //     auto& object = crd->getComponent<Ths::Vk::OContext>(e);
-    //     commandBuffers[i] = object.commandBuffers[imageIndex];
-    //     ++i;
-    //   }
-    //   return commandBuffers;
-    // }
 
     inline void destroyAllVkObjects()
     {

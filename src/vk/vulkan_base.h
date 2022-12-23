@@ -231,14 +231,10 @@ namespace Ths::Vk
     VkDeviceMemory vertexBufferMemory;
     VkBuffer indexBuffer;
     VkDeviceMemory indexBufferMemory;
-
-    // std::vector<VkCommandBuffer> commandBuffers;
-    // VkCommandPool commandPool;
     
     inline void destroy(VContext* pContext)
     {
       vkDestroyDescriptorSetLayout(pContext->device, descriptorSetLayout, nullptr);
-      // vkFreeDescriptorSets(pContext->device, descriptorPool, static_cast<uint32_t>(descriptorSets.size()), descriptorSets.data());
       vkDestroyDescriptorPool(pContext->device, descriptorPool, nullptr);
       
       vkDestroyImageView(pContext->device, textureImageView, nullptr);
@@ -251,9 +247,6 @@ namespace Ths::Vk
       vkFreeMemory(pContext->device, vertexBufferMemory, nullptr);
       vkDestroyBuffer(pContext->device, indexBuffer, nullptr);
       vkFreeMemory(pContext->device, indexBufferMemory, nullptr);
-
-      // vkFreeCommandBuffers(pContext->device, commandPool, static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
-      // vkDestroyCommandPool(pContext->device, commandPool, nullptr);
     }
   } OContext;
 
@@ -304,9 +297,7 @@ namespace Ths::Vk
   bool createSyncObjects(VContext* pContext);
   bool beginCommandBuffer(VContext* pContext, VkCommandBuffer commandBuffer, uint32_t imageIndex);
   bool endCommandBuffer(VContext* pContext, VkCommandBuffer commandBuffer, uint32_t imageIndex);
-  // bool recordCommandBuffer(VContext* pContext, OContext& object, VkCommandBuffer commandBuffer, uint32_t imageIndex);
   bool createCommandBuffers(VContext* pContext);
-  // bool createCommandBuffers(VContext* pContext, OContext& object);
   VkResult createCommandPool(VContext* pContext, VkCommandPoolCreateInfo& poolInfo, VkCommandPool* commandPool);
   bool createCommandPools(VContext* pContext);
 
