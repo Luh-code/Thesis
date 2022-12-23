@@ -18,7 +18,7 @@ namespace Ths::ecs
   class IComponentArray
   {
   public:
-    virtual ~IComponentArray() = default;
+    //virtual ~IComponentArray() = default;
     virtual void entityDestroyed(Entity entity) = 0;
   };
 
@@ -26,9 +26,13 @@ namespace Ths::ecs
   class ComponentArray : IComponentArray
   {
   public:
+    // inline ComponentArray()
+    //  : mComponentArray(std::array<T, MAX_ENTITIES>{})
+    // {};
+
     inline void insertData(Entity entity, T component)
     {
-      if (mEntityToIndexMap.find(entity) == mEntityToIndexMap.end())
+      if (mEntityToIndexMap.find(entity) != mEntityToIndexMap.end())
       {
         LOG_ERROR("Tried adding same component to entity multiple times - adding nothing");
         return;
@@ -43,9 +47,9 @@ namespace Ths::ecs
 
     inline void removeData(Entity entity)
     {
-      if (mEntityToIndexMap.find(entity) != mEntityToIndexMap.end())
+      if (mEntityToIndexMap.find(entity) == mEntityToIndexMap.end())
       {
-        LOG_ERROR("Tried removing non-exitent entity - removing nothing");
+        LOG_ERROR("Tried removing non-existent entity - removing nothing");
         return;
       }
 
@@ -65,10 +69,10 @@ namespace Ths::ecs
 
     inline T& getData(Entity entity)
     {
-      if (mEntityToIndexMap.find(entity) != mEntityToIndexMap.end())
+      if (mEntityToIndexMap.find(entity) == mEntityToIndexMap.end())
       {
         LOG_ERROR("Tried to retrieve data of non-existent entity");
-        assert(true);
+        assert(false);
       }
 
       return mComponentArray[mEntityToIndexMap[entity]];
@@ -82,11 +86,11 @@ namespace Ths::ecs
       }
     }
   private:
-    std::array<T, MAX_ENTITIES> mComponentArray;
+    std::array<T, MAX_ENTITIES> mComponentArray{};
 
-    std::unordered_map<Entity, size_t> mEntityToIndexMap;
+    std::unordered_map<Entity, size_t> mEntityToIndexMap{};
 
-    std::unordered_map<size_t, Entity> mIndexToEntityMap;
+    std::unordered_map<size_t, Entity> mIndexToEntityMap{};
 
     size_t mSize;
   };
@@ -135,7 +139,7 @@ namespace Ths::ecs
     template<typename T>
     inline void removeComponent(Entity entity)
     {
-      getComponentArray<T>->removeData(entity);
+      getComponentArray<T>()->removeData(entity);
     }
 
     template<typename T>
@@ -201,7 +205,7 @@ namespace Ths::ecs
       if (mLivingEntityCount >= MAX_ENTITIES)
       {
         LOG_ERROR("Tried to create new entity, when no more entities are available");
-        assert(true);
+        assert(false);
       }
       Entity id = mAvailableEntities.front();
       mAvailableEntities.pop();
@@ -260,8 +264,8 @@ namespace Ths::ecs
   class SystemManager
   {
   public:
-    template<typename T>
-    inline T* registerSystem()
+    template<typename T, typename... Args>
+    inline T* registerSystem(Args... args)
     {
       const char* typeName = typeid(T).name();
 
@@ -271,7 +275,7 @@ namespace Ths::ecs
         assert(false);
       }
 
-      T* system = new T();
+      T* system = new T(args...);
       mSystems.insert({typeName, (System*)(system)}); // ? delete cast
       return system;
     }
@@ -280,7 +284,7 @@ namespace Ths::ecs
     inline void setSignature(Signature signature)
     {
       const char* typeName = typeid(T).name();
-      if (mSystems.find(typeName) != mSystems.end())
+      if (mSystems.find(typeName) == mSystems.end())
       {
         LOG_ERROR("Tried setting Signature for unregistered System - setting nothing");
         return;
@@ -394,10 +398,10 @@ namespace Ths::ecs
       return pComponentManager->getComponentType<T>();
     }
 
-    template<typename T>
-    inline T* registerSystem()
+    template<typename T, typename... Args>
+    inline T* registerSystem(Args... args)
     {
-      return pSystemManager->registerSystem<T>();
+      return pSystemManager->registerSystem<T>(args...);
     }
 
     template<typename T>

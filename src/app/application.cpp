@@ -35,6 +35,24 @@ namespace Ths
   
 // SDLApp
 
+  void SDLApp::initEcs()
+  {
+    entities = std::vector<Ths::ecs::Entity>(Ths::ecs::MAX_ENTITIES);
+    crd.init();
+
+    crd.registerComponent<Ths::Vk::OContext>();
+    crd.registerComponent<Ths::Vk::Mesh>();
+    crd.registerComponent<Ths::Vk::Material>();
+    
+    renderSystem = crd.registerSystem<Ths::ecs::RenderSystem>(vContext, &crd);
+
+    Ths::ecs::Signature renderSystemSignature;
+    renderSystemSignature.set(crd.getComponentType<Ths::Vk::OContext>());
+    renderSystemSignature.set(crd.getComponentType<Ths::Vk::Mesh>());
+    renderSystemSignature.set(crd.getComponentType<Ths::Vk::Material>());
+    crd.setSystemSignature<Ths::ecs::RenderSystem>(renderSystemSignature);
+  }
+
   void SDLApp::initWindow(const char* title, uint32_t w, uint32_t h, uint32_t dx, uint32_t dy)
   {
     if (!Ths::SDL::sdl_initialized) Ths::SDL::initSDLVid();
@@ -69,23 +87,23 @@ namespace Ths
     SDL_Vulkan_GetDrawableSize(window, &width, &height);
     Ths::Vk::createSwapChain(vContext, width, height, 2);
     Ths::Vk::createRenderPass(vContext, 0);
-    Ths::Vk::createDescriptorSetLayout(vContext);
-    Ths::Vk::createGraphicsPipeline(vContext);
-    Ths::Vk::createCommandPools(vContext);
-    Ths::Vk::createCommandBuffers(vContext);
-    Ths::Vk::createTextureImage(vContext);
+    // Ths::Vk::createDescriptorSetLayout(vContext);
+    // Ths::Vk::createGraphicsPipeline(vContext);
+    Ths::Vk::createCommandPools(vContext); // ! problematic
+    // Ths::Vk::createCommandBuffers(vContext);
+    // Ths::Vk::createTextureImage(vContext);
     Ths::Vk::createImageViews(vContext);
-    Ths::Vk::createTextureImageView(vContext);
-    Ths::Vk::createTextureSampler(vContext);
-    Ths::Vk::loadModel(vContext);
-    Ths::Vk::createVertexBuffer(vContext);
-    Ths::Vk::createIndexBuffer(vContext);
+    // Ths::Vk::createTextureImageView(vContext);
+    // Ths::Vk::createTextureSampler(vContext);
+    // Ths::Vk::loadModel(vContext);
+    // Ths::Vk::createVertexBuffer(vContext);
+    // Ths::Vk::createIndexBuffer(vContext);
     Ths::Vk::createColorResources(vContext);
     Ths::Vk::createDepthResources(vContext);
     Ths::Vk::createFramebuffers(vContext);
     Ths::Vk::createUniformBuffers(vContext);
-    Ths::Vk::createDescriptorPool(vContext);
-    Ths::Vk::createDescriptorSets(vContext);
+    // Ths::Vk::createDescriptorPool(vContext);
+    // Ths::Vk::createDescriptorSets(vContext);
     Ths::Vk::createSyncObjects(vContext);
   }
   
@@ -148,8 +166,10 @@ namespace Ths
     
     updateUniformBuffer();
 
-    vkResetCommandBuffer(vContext->commandBuffers[vContext->currentFrame], 0);
-    Ths::Vk::recordCommandBuffer(vContext, vContext->commandBuffers[vContext->currentFrame], imageIndex);
+    renderSystem->recordBuffers(imageIndex);
+
+    // vkResetCommandBuffer(vContext->commandBuffers[vContext->currentFrame], 0);
+    // Ths::Vk::recordCommandBuffer(vContext, vContext->commandBuffers[vContext->currentFrame], imageIndex);
 
 
     VkSubmitInfo submitInfo {VK_STRUCTURE_TYPE_SUBMIT_INFO};
@@ -158,8 +178,10 @@ namespace Ths
     submitInfo.waitSemaphoreCount = 1;
     submitInfo.pWaitSemaphores = waitSemaphores;
     submitInfo.pWaitDstStageMask = waitStages;
-    submitInfo.commandBufferCount = 1;
-    submitInfo.pCommandBuffers = &vContext->commandBuffers[vContext->currentFrame];
+    std::vector<VkCommandBuffer> commandBuffers = renderSystem->getCommandBuffers(imageIndex);
+    submitInfo.commandBufferCount = static_cast<uint32_t>(commandBuffers.size());
+    submitInfo.pCommandBuffers = commandBuffers.data();
+    // submitInfo.pCommandBuffers = &vContext->commandBuffers[vContext->currentFrame];
 
     VkSemaphore signalSemaphores[] = {vContext->renderFinishedSemaphores[vContext->currentFrame]};
     submitInfo.signalSemaphoreCount = 1;
@@ -218,11 +240,13 @@ namespace Ths
     // Delete Vk stuff
     Ths::Vk::cleanupSwapChain(vContext);
 
-    vkDestroySampler(vContext->device, vContext->textureSampler, nullptr);
-    vkDestroyImageView(vContext->device, vContext->textureImageView, nullptr);
+    renderSystem->destroyAllVkObjects();
 
-    vkDestroyImage(vContext->device, vContext->textureImage, nullptr);
-    vkFreeMemory(vContext->device, vContext->textureImageMemory, nullptr);
+    // vkDestroySampler(vContext->device, vContext->textureSampler, nullptr);
+    // vkDestroyImageView(vContext->device, vContext->textureImageView, nullptr);
+
+    // vkDestroyImage(vContext->device, vContext->textureImage, nullptr);
+    // vkFreeMemory(vContext->device, vContext->textureImageMemory, nullptr);
 
     for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
     {
@@ -230,15 +254,15 @@ namespace Ths
       vkFreeMemory(vContext->device, vContext->uniformBuffersMemory[i], nullptr);
     }
 
-    vkDestroyDescriptorPool(vContext->device, vContext->descriptorPool, nullptr);
+    // vkDestroyDescriptorPool(vContext->device, vContext->descriptorPool, nullptr);
 
-    vkDestroyDescriptorSetLayout(vContext->device, vContext->descriptorSetLayout, nullptr);
+    // vkDestroyDescriptorSetLayout(vContext->device, vContext->descriptorSetLayout, nullptr);
 
-    vkDestroyBuffer(vContext->device, vContext->indexBuffer, nullptr);
-    vkFreeMemory(vContext->device, vContext->indexBufferMemory, nullptr);
+    // vkDestroyBuffer(vContext->device, vContext->indexBuffer, nullptr);
+    // vkFreeMemory(vContext->device, vContext->indexBufferMemory, nullptr);
 
-    vkDestroyBuffer(vContext->device, vContext->vertexBuffer, nullptr);
-    vkFreeMemory(vContext->device, vContext->vertexBufferMemory, nullptr);
+    // vkDestroyBuffer(vContext->device, vContext->vertexBuffer, nullptr);
+    // vkFreeMemory(vContext->device, vContext->vertexBufferMemory, nullptr);
 
     for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
     {
@@ -248,8 +272,8 @@ namespace Ths
     }
     vkDestroyCommandPool(vContext->device, vContext->transferPool, nullptr);
     vkDestroyCommandPool(vContext->device, vContext->commandPool, nullptr);
-    vkDestroyPipeline(vContext->device, vContext->graphicsPipeline, nullptr);
-    vkDestroyPipelineLayout(vContext->device, vContext->pipelineLayout, nullptr);
+    // vkDestroyPipeline(vContext->device, vContext->graphicsPipeline, nullptr);
+    // vkDestroyPipelineLayout(vContext->device, vContext->pipelineLayout, nullptr);
     for (auto renderPass : vContext->renderPasses)
     {
       vkDestroyRenderPass(vContext->device, renderPass, nullptr);

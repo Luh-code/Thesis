@@ -4,6 +4,8 @@
 #include "../sdl/sdl_base.h"
 #include "../vk/vulkan_base.h"
 #include "../memory_mger.h"
+#include "../ecs/ecs_base.hpp"
+#include "../ecs/rendering_ecs.hpp"
 
 namespace Ths
 {
@@ -24,12 +26,14 @@ namespace Ths
   class App: public BaseApp
   {
   public:
+    Ths::ecs::Coordinator crd{};
+    std::vector<Ths::ecs::Entity> entities;
 
     /*inline App(std::string name, uint32_t version)
      : BaseApp::name(name.c_str()), version(version) {}
     App(const char* name, uint32_t version)
      : BaseApp::name(name), version(version) {}*/
-
+    virtual void initEcs() = 0;
     virtual inline void run()
     {
       mainLoop([]() -> bool {return true;});
@@ -66,17 +70,21 @@ namespace Ths
   public:
     SDL_Window* window;
 
+    Ths::ecs::RenderSystem* renderSystem;
+
     virtual inline void run()
     {
       LOG_INIT("SDL App \"", name, "\"");
       initWindow(name, 800, 600);
       initVulkan();
+      renderSystem->initEntities();
       LOG_INIT_OK("SDL App \"", name, "\"");
       mainLoop([]() -> bool {return true;});
       LOG_DEST("SDL App \"", name, "\"");
       cleanup();
       LOG_DEST_OK("SDL App \"", name, "\"");
     }
+    virtual void initEcs() override;
     virtual void initWindow(const char* title, uint32_t w, uint32_t h, uint32_t dx = SDL_WINDOWPOS_CENTERED, uint32_t dy = SDL_WINDOWPOS_CENTERED);
     virtual void initVulkan() override;
     virtual void safeRecreateSwapChain(uint32_t imgs,

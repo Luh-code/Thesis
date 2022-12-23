@@ -6,7 +6,7 @@
 
 namespace Ths::Vk
 {
-  bool loadModel(VContext* pContext)
+  bool loadModel(VContext* pContext, OContext& object, const char* modelpath, const char* basedir)
   {
     tinyobj::attrib_t attrib;
     std::vector<tinyobj::shape_t> shapes;
@@ -14,10 +14,14 @@ namespace Ths::Vk
     std::string warn, err;
 
     // std::string basedir = "assets/models/";
-    std::string basedir = BASE_PATH + "assets/models";
-    if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, MODEL_PATH.c_str(), basedir.c_str(), true, true))
+    // std::string basedir = BASE_PATH + "assets/models";
+    // if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, MODEL_PATH.c_str(), basedir.c_str(), true, true))
+    std::string compoundPath;
+    compoundPath += basedir;
+    compoundPath += modelpath;
+    if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, compoundPath.c_str(), basedir, true, true))
     {
-      LOG_ERROR("An error occured whilst loading \"", MODEL_PATH, "\": \n\t", err);
+      LOG_ERROR("An error occured whilst loading \"", modelpath, "\": \n\t", err);
       return false;
     }
     if (warn != "")
@@ -51,16 +55,16 @@ namespace Ths::Vk
 
         if (uniqueVertices.count(vertex) == 0)
         {
-          uniqueVertices[vertex] = static_cast<uint32_t>(pContext->verticies.size());
-          pContext->verticies.push_back(vertex);
+          uniqueVertices[vertex] = static_cast<uint32_t>(object.mesh->verticies.size());
+          object.mesh->verticies.push_back(vertex);
         }
 
-        pContext->indices.push_back(uniqueVertices[vertex]);
+        object.mesh->indices.push_back(uniqueVertices[vertex]);
         i++;
         // if (i%3 == 0) LOG_DEBUG(pContext->indices[i-1], ", ", pContext->indices[i-2], ", ", pContext->indices[i-3]);
       }
     }
-    LOG_DEBUG("Loaded ", pContext->verticies.size(), " vertices - ", pContext->indices.size()/3, " tris (", pContext->indices.size(), " idc)!");
+    LOG_DEBUG("Loaded ", object.mesh->verticies.size(), " vertices - ", object.mesh->indices.size()/3, " tris (", object.mesh->indices.size(), " idc)!");
     return true;
   }
 }

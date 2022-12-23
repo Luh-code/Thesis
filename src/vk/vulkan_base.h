@@ -35,7 +35,7 @@ namespace Ths::Vk
     glm::vec3 color;
     glm::vec2 texCoord;
 
-    static std::array<VkVertexInputAttributeDescription, 3> getAttributeDescriptions()
+    static inline std::array<VkVertexInputAttributeDescription, 3> getAttributeDescriptions()
     {
       std::array<VkVertexInputAttributeDescription, 3> ad {};
       ad[0].binding = 0;
@@ -56,7 +56,7 @@ namespace Ths::Vk
       return ad;
     }
 
-    static VkVertexInputBindingDescription getBindingDescription()
+    static inline VkVertexInputBindingDescription getBindingDescription()
     {
       VkVertexInputBindingDescription bd {};
       bd.binding = 0;
@@ -167,13 +167,103 @@ namespace Ths::Vk
     glm::mat4 proj;
   } UniformBufferObject;
 
+  typedef struct Mesh
+  {
+    const char* basepath;
+    const char* path;
+    std::vector<Ths::Vk::Vertex> verticies;
+    std::vector<uint32_t> indices;
+  } Mesh;
+
+  typedef struct Shader
+  {
+    const size_t size;
+    const uint32_t* code;
+
+    inline Shader(const uint32_t* code, size_t size)
+     : size(size), code(code)
+    { }
+
+    inline Shader(std::vector<uint32_t> code)
+     : size(code.size()), code(code.data())
+    { }
+  } Shader;
+
+  typedef struct Material
+  {
+    const char* path;
+    VkImage textureImage;
+    VkDeviceMemory textureImageMemory;
+
+    Shader* vertexShader;
+    Shader* fragmentShader;
+
+    // inline Material(Shader vertexShader, Shader fragmentShader)
+    //  : vertexShader(vertexShader), fragmentShader(fragmentShader)
+    // {}
+
+    inline void destroy(VContext* pContext)
+    {
+      vkDestroyImage(pContext->device, textureImage, nullptr);
+      vkFreeMemory(pContext->device, textureImageMemory, nullptr);
+
+      delete vertexShader;
+      delete fragmentShader;
+    }
+  } Material;
+
+  typedef struct ObjectContext
+  {
+    Material* material;
+    Mesh* mesh;
+
+    VkDescriptorSetLayout descriptorSetLayout;
+    VkDescriptorPool descriptorPool;
+    std::vector<VkDescriptorSet> descriptorSets;
+    
+    VkImageView textureImageView;
+    VkSampler textureSampler;
+
+    VkPipelineLayout pipelineLayout;
+    VkPipeline graphicsPipeline;
+
+    VkBuffer vertexBuffer;
+    VkDeviceMemory vertexBufferMemory;
+    VkBuffer indexBuffer;
+    VkDeviceMemory indexBufferMemory;
+
+    std::vector<VkCommandBuffer> commandBuffers;
+    VkCommandPool commandPool;
+    
+    inline void destroy(VContext* pContext)
+    {
+      vkDestroyDescriptorSetLayout(pContext->device, descriptorSetLayout, nullptr);
+      // vkFreeDescriptorSets(pContext->device, descriptorPool, static_cast<uint32_t>(descriptorSets.size()), descriptorSets.data());
+      vkDestroyDescriptorPool(pContext->device, descriptorPool, nullptr);
+      
+      vkDestroyImageView(pContext->device, textureImageView, nullptr);
+      vkDestroySampler(pContext->device, textureSampler, nullptr);
+
+      vkDestroyPipelineLayout(pContext->device, pipelineLayout, nullptr);
+      vkDestroyPipeline(pContext->device, graphicsPipeline, nullptr);
+
+      vkDestroyBuffer(pContext->device, vertexBuffer, nullptr);
+      vkFreeMemory(pContext->device, vertexBufferMemory, nullptr);
+      vkDestroyBuffer(pContext->device, indexBuffer, nullptr);
+      vkFreeMemory(pContext->device, indexBufferMemory, nullptr);
+
+      vkFreeCommandBuffers(pContext->device, commandPool, static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
+      vkDestroyCommandPool(pContext->device, commandPool, nullptr);
+    }
+  } OContext;
+
   // TODO: Change all VContext*/VulkanContext* to VContext&
 
   // Functions
   void createColorResources(VContext* pContext);
   VkSampleCountFlagBits getMaxUsableSampleCount(VContext* pContext);
 
-  bool loadModel(VContext* pContext);
+  bool loadModel(VContext* pContext, OContext& object, const char* modelpath, const char* basedir);
 
   bool hasStencilComponent(VkFormat format);
   VkFormat findDepthFormat(VContext* pContext);
@@ -181,22 +271,22 @@ namespace Ths::Vk
     VkFormatFeatureFlags features);
   bool createDepthResources(VContext* pContext);
 
-  bool createTextureSampler(VContext* pContext);
+  bool createTextureSampler(VContext* pContext, OContext& object);
   VkImageView createImageView(VContext* pContext, VkImage image, VkFormat format,
     VkImageAspectFlags aspectFlags = VK_IMAGE_ASPECT_COLOR_BIT, uint32_t mipLevels = 1);
-  bool createTextureImageView(VContext* pContext);
+  bool createTextureImageView(VContext* pContext, OContext& object);
   void copyBufferToImage(VContext* pContext, VkBuffer buffer, VkImage image, uint32_t w, uint32_t h);
   void transitionImageLayout(VContext* pContext, VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels);
   bool createImage(VContext* pContext, uint32_t w, uint32_t h, uint32_t mipLevels, VkSampleCountFlagBits numSamples,
     VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage,
     VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory);
   bool generateMipmaps(VContext* pContext, VkImage image, VkFormat format, int32_t w, int32_t h, uint32_t mipLevels);
-  bool createTextureImage(VContext* pContext);
+  bool createTextureImage(VContext* pContext, OContext& object, const char* filename);
 
-  bool createDescriptorSets(VContext* pContext);
-  bool createDescriptorPool(VContext* pContext);
+  bool createDescriptorSets(VContext* pContext, OContext& object);
+  bool createDescriptorPool(VContext* pContext, OContext& object);
   bool createUniformBuffers(VContext* pContext);
-  bool createDescriptorSetLayout(VContext* pContext);
+  bool createDescriptorSetLayout(VContext* pContext, OContext& object);
 
   VkCommandBuffer beginSingleTimeGraphicsCommands(VContext* pContext);
   void endSingleTimeGraphicsCommands(VContext* pContext, VkCommandBuffer& commandBuffer);
@@ -205,20 +295,22 @@ namespace Ths::Vk
   VkCommandBuffer beginSingleTimeCommands(VContext* pContext, VkCommandPool pool);
   void endSingleTimeCommands(VContext* pContext, VkCommandBuffer& commandBuffer, VkCommandPool pool, VkQueue queue);
   bool createSyncObjects(VContext* pContext);
-  bool recordCommandBuffer(VContext* pContext, VkCommandBuffer commandBuffer, uint32_t imageIndex);
-  bool createCommandBuffers(VContext* pContext);
+  bool recordCommandBuffer(VContext* pContext, OContext& object, VkCommandBuffer commandBuffer, uint32_t imageIndex);
+  bool createCommandBuffers(VContext* pContext, OContext& object);
+  VkResult createCommandPool(VContext* pContext, VkCommandPoolCreateInfo& poolInfo, VkCommandPool* commandPool);
   bool createCommandPools(VContext* pContext);
 
   int findMemoryType(VContext* pContext, uint32_t typeFilter, VkMemoryPropertyFlags properties);
   void copyBuffer(VContext* pContext, VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
   bool createBuffer(VContext* pContext, VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
-  bool createIndexBuffer(VContext* pContext);
-  bool createVertexBuffer(VContext* pContext);
+  bool createIndexBuffer(VContext* pContext, OContext& object);
+  bool createVertexBuffer(VContext* pContext, OContext& object);
   bool createFramebuffers(VContext* pContext);
   bool createRenderPass(VContext* pContext, uint32_t idx);
-  VkShaderModule createShaderModule(VulkanContext* pContext, const std::vector<char>& code);
-  static std::vector<char> readFile(const std::string& filename);
-  bool createGraphicsPipeline(VulkanContext* pContext);
+  VkShaderModule createShaderModule(VulkanContext* pContext, const std::vector<char> code);
+  VkShaderModule createShaderModule(VulkanContext* pContext, const Shader& shader);
+  std::vector<char> readFile(const std::string& filename);
+  bool createGraphicsPipeline(VulkanContext* pContext, OContext& object);
 
   void cleanupSwapChain(VulkanContext* pContext);
   bool recreateSwapChain(VulkanContext* pContext, uint32_t win_width, uint32_t win_height, uint32_t imgs,

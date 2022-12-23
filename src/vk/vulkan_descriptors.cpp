@@ -3,17 +3,17 @@
 
 namespace Ths::Vk
 {
-  bool createDescriptorSets(VContext* pContext)
+  bool createDescriptorSets(VContext* pContext, OContext& object)
   {
     LOG_ING("allocat", "Descriptor Sets");
-    std::vector<VkDescriptorSetLayout> layouts(MAX_FRAMES_IN_FLIGHT, pContext->descriptorSetLayout);
+    std::vector<VkDescriptorSetLayout> layouts(MAX_FRAMES_IN_FLIGHT, object.descriptorSetLayout);
     VkDescriptorSetAllocateInfo allocInfo {VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO};
-    allocInfo.descriptorPool = pContext->descriptorPool;
+    allocInfo.descriptorPool = object.descriptorPool;
     allocInfo.descriptorSetCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
     allocInfo.pSetLayouts = layouts.data();
 
-    pContext->descriptorSets.resize(MAX_FRAMES_IN_FLIGHT);
-    VKF(vkAllocateDescriptorSets(pContext->device, &allocInfo, pContext->descriptorSets.data()))
+    object.descriptorSets.resize(MAX_FRAMES_IN_FLIGHT);
+    VKF(vkAllocateDescriptorSets(pContext->device, &allocInfo, object.descriptorSets.data()))
     {
       LOG_ERROR("An error occured whilst allocating Descriptor Sets: ", res);
       LOG_ING_AB("allocat", "Descriptor Sets");
@@ -29,12 +29,12 @@ namespace Ths::Vk
 
       VkDescriptorImageInfo imageInfo {};
       imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-      imageInfo.imageView = pContext->textureImageView;
-      imageInfo.sampler = pContext->textureSampler;
+      imageInfo.imageView = object.textureImageView;
+      imageInfo.sampler = object.textureSampler;
 
-      std::array<VkWriteDescriptorSet, 2> descriptorWrites {};// {VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET};
+      std::array<VkWriteDescriptorSet, 2> descriptorWrites {};
       descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-      descriptorWrites[0].dstSet = pContext->descriptorSets[i];
+      descriptorWrites[0].dstSet = object.descriptorSets[i];
       descriptorWrites[0].dstBinding = 0;
       descriptorWrites[0].dstArrayElement = 0;
       descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
@@ -44,7 +44,7 @@ namespace Ths::Vk
       descriptorWrites[0].pTexelBufferView = nullptr;
 
       descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-      descriptorWrites[1].dstSet = pContext->descriptorSets[i];
+      descriptorWrites[1].dstSet = object.descriptorSets[i];
       descriptorWrites[1].dstBinding = 1;
       descriptorWrites[1].dstArrayElement = 0;
       descriptorWrites[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
@@ -60,7 +60,7 @@ namespace Ths::Vk
     return true;
   }
 
-  bool createDescriptorPool(VContext* pContext)
+  bool createDescriptorPool(VContext* pContext, OContext& object)
   {
     LOG_INIT("Descriptor Pool");
     VkDescriptorPoolSize poolSize {};
@@ -82,7 +82,7 @@ namespace Ths::Vk
     poolInfo.maxSets = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
     poolInfo.flags = 0; // Change to VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT when sets are going to be changed after creation
     
-    VKF(vkCreateDescriptorPool(pContext->device, &poolInfo, nullptr, &pContext->descriptorPool))
+    VKF(vkCreateDescriptorPool(pContext->device, &poolInfo, nullptr, &object.descriptorPool))
     {
       LOG_ERROR("An error occured whilst creating Descriptor Pool: ", res);
       LOG_INIT_AB("Descriptor Pool");
@@ -111,7 +111,7 @@ namespace Ths::Vk
     return true;
   }
 
-  bool createDescriptorSetLayout(VContext* pContext)
+  bool createDescriptorSetLayout(VContext* pContext, OContext& object)
   {
     LOG_INIT("Descriptor Set Layout");
     VkDescriptorSetLayoutBinding uboLayoutBinding {};
@@ -133,7 +133,7 @@ namespace Ths::Vk
     layoutInfo.bindingCount = static_cast<uint32_t>(layouts.size());
     layoutInfo.pBindings = layouts.data();
 
-    VKF(vkCreateDescriptorSetLayout(pContext->device, &layoutInfo, nullptr, &pContext->descriptorSetLayout))
+    VKF(vkCreateDescriptorSetLayout(pContext->device, &layoutInfo, nullptr, &object.descriptorSetLayout))
     {
       LOG_ERROR("An error occured whilst creating DescriptorSetLayout: ", res);
       LOG_INIT_AB("Descriptor Set Layout");
