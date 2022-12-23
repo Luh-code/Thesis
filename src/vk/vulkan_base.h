@@ -232,8 +232,8 @@ namespace Ths::Vk
     VkBuffer indexBuffer;
     VkDeviceMemory indexBufferMemory;
 
-    std::vector<VkCommandBuffer> commandBuffers;
-    VkCommandPool commandPool;
+    // std::vector<VkCommandBuffer> commandBuffers;
+    // VkCommandPool commandPool;
     
     inline void destroy(VContext* pContext)
     {
@@ -252,10 +252,17 @@ namespace Ths::Vk
       vkDestroyBuffer(pContext->device, indexBuffer, nullptr);
       vkFreeMemory(pContext->device, indexBufferMemory, nullptr);
 
-      vkFreeCommandBuffers(pContext->device, commandPool, static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
-      vkDestroyCommandPool(pContext->device, commandPool, nullptr);
+      // vkFreeCommandBuffers(pContext->device, commandPool, static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
+      // vkDestroyCommandPool(pContext->device, commandPool, nullptr);
     }
   } OContext;
+
+  typedef struct Transform
+  {
+    glm::vec3 positon;
+    glm::vec3 rotation;
+    glm::vec3 scale;
+  } Transform;
 
   // TODO: Change all VContext*/VulkanContext* to VContext&
 
@@ -295,8 +302,11 @@ namespace Ths::Vk
   VkCommandBuffer beginSingleTimeCommands(VContext* pContext, VkCommandPool pool);
   void endSingleTimeCommands(VContext* pContext, VkCommandBuffer& commandBuffer, VkCommandPool pool, VkQueue queue);
   bool createSyncObjects(VContext* pContext);
-  bool recordCommandBuffer(VContext* pContext, OContext& object, VkCommandBuffer commandBuffer, uint32_t imageIndex);
-  bool createCommandBuffers(VContext* pContext, OContext& object);
+  bool beginCommandBuffer(VContext* pContext, VkCommandBuffer commandBuffer, uint32_t imageIndex);
+  bool endCommandBuffer(VContext* pContext, VkCommandBuffer commandBuffer, uint32_t imageIndex);
+  // bool recordCommandBuffer(VContext* pContext, OContext& object, VkCommandBuffer commandBuffer, uint32_t imageIndex);
+  bool createCommandBuffers(VContext* pContext);
+  // bool createCommandBuffers(VContext* pContext, OContext& object);
   VkResult createCommandPool(VContext* pContext, VkCommandPoolCreateInfo& poolInfo, VkCommandPool* commandPool);
   bool createCommandPools(VContext* pContext);
 

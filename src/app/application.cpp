@@ -43,6 +43,7 @@ namespace Ths
     crd.registerComponent<Ths::Vk::OContext>();
     crd.registerComponent<Ths::Vk::Mesh>();
     crd.registerComponent<Ths::Vk::Material>();
+    // crd.registerComponent<Ths::Vk::Transform>();
     
     renderSystem = crd.registerSystem<Ths::ecs::RenderSystem>(vContext, &crd);
 
@@ -50,6 +51,7 @@ namespace Ths
     renderSystemSignature.set(crd.getComponentType<Ths::Vk::OContext>());
     renderSystemSignature.set(crd.getComponentType<Ths::Vk::Mesh>());
     renderSystemSignature.set(crd.getComponentType<Ths::Vk::Material>());
+    // renderSystemSignature.set(crd.getComponentType<Ths::Vk::Transform>());
     crd.setSystemSignature<Ths::ecs::RenderSystem>(renderSystemSignature);
   }
 
@@ -90,7 +92,7 @@ namespace Ths
     // Ths::Vk::createDescriptorSetLayout(vContext);
     // Ths::Vk::createGraphicsPipeline(vContext);
     Ths::Vk::createCommandPools(vContext); // ! problematic
-    // Ths::Vk::createCommandBuffers(vContext);
+    Ths::Vk::createCommandBuffers(vContext);
     // Ths::Vk::createTextureImage(vContext);
     Ths::Vk::createImageViews(vContext);
     // Ths::Vk::createTextureImageView(vContext);
@@ -166,11 +168,12 @@ namespace Ths
     
     updateUniformBuffer();
 
-    renderSystem->recordBuffers(imageIndex);
+    // renderSystem->recordBuffers(imageIndex);
 
-    // vkResetCommandBuffer(vContext->commandBuffers[vContext->currentFrame], 0);
-    // Ths::Vk::recordCommandBuffer(vContext, vContext->commandBuffers[vContext->currentFrame], imageIndex);
-
+    vkResetCommandBuffer(vContext->commandBuffers[vContext->currentFrame], 0);
+    Ths::Vk::beginCommandBuffer(vContext, vContext->commandBuffers[vContext->currentFrame], imageIndex);
+    renderSystem->recordBuffer(imageIndex, vContext->commandBuffers[vContext->currentFrame]);
+    Ths::Vk::endCommandBuffer(vContext, vContext->commandBuffers[vContext->currentFrame], imageIndex);
 
     VkSubmitInfo submitInfo {VK_STRUCTURE_TYPE_SUBMIT_INFO};
     VkSemaphore waitSemaphores[] = {vContext->imageAvailableSemaphores[vContext->currentFrame]};
@@ -178,7 +181,8 @@ namespace Ths
     submitInfo.waitSemaphoreCount = 1;
     submitInfo.pWaitSemaphores = waitSemaphores;
     submitInfo.pWaitDstStageMask = waitStages;
-    std::vector<VkCommandBuffer> commandBuffers = renderSystem->getCommandBuffers(imageIndex);
+    std::vector<VkCommandBuffer> commandBuffers(1);// = renderSystem->getCommandBuffers(imageIndex);
+    commandBuffers[0] = vContext->commandBuffers[vContext->currentFrame];
     submitInfo.commandBufferCount = static_cast<uint32_t>(commandBuffers.size());
     submitInfo.pCommandBuffers = commandBuffers.data();
     // submitInfo.pCommandBuffers = &vContext->commandBuffers[vContext->currentFrame];

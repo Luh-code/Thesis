@@ -82,6 +82,48 @@ namespace Ths::Vk
     return true;
   }
 
+  bool beginCommandBuffer(VContext* pContext, VkCommandBuffer commandBuffer, uint32_t imageIndex)
+  {
+    VkCommandBufferBeginInfo beginInfo {VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO};
+    beginInfo.flags = 0;
+    beginInfo.pInheritanceInfo = nullptr;
+
+    VKF(vkBeginCommandBuffer(commandBuffer, &beginInfo))
+    {
+      LOG_ERROR("An error occured whilst beginning command buffer: ", res);
+      return false;
+    }
+
+    VkRenderPassBeginInfo renderPassInfo {VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO};
+    renderPassInfo.renderPass = pContext->renderPasses[0];
+    renderPassInfo.framebuffer = pContext->swapchainFramebuffers[imageIndex]; // ????
+    
+    renderPassInfo.renderArea.offset = {0, 0};
+    renderPassInfo.renderArea.extent = pContext->swapchainExtent;
+    
+    std::array<VkClearValue, 2> clearColors;
+    clearColors[0].color = {{0.0f, 0.0f, 0.0f, 1.0f}};
+    clearColors[1].depthStencil = {1.0f, 0};
+    renderPassInfo.clearValueCount = static_cast<uint32_t>(clearColors.size());
+    renderPassInfo.pClearValues = clearColors.data();
+
+    vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+    return true;
+  }
+
+  bool endCommandBuffer(VContext* pContext, VkCommandBuffer commandBuffer, uint32_t imageIndex)
+  {
+    vkCmdEndRenderPass(commandBuffer);
+
+    VKF(vkEndCommandBuffer(commandBuffer))
+    {
+      LOG_ERROR("An error occured whilst ending command buffer: ", res);
+      return false;
+    }
+
+    return true;
+  }
+
   bool recordCommandBuffer(VContext* pContext, OContext& object, VkCommandBuffer commandBuffer, uint32_t imageIndex)
   {
     VkCommandBufferBeginInfo beginInfo {VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO};
@@ -127,7 +169,7 @@ namespace Ths::Vk
     vkCmdBindIndexBuffer(commandBuffer, object.indexBuffer, 0, VK_INDEX_TYPE_UINT32);
     vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, object.pipelineLayout, 0, 1, &object.descriptorSets[pContext->currentFrame], 0, nullptr);
     vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(object.mesh->indices.size()), 1, 0, 0, 0);
-    //vkCmdDraw(commandBuffer, static_cast<uint32_t>(pContext->verticies.size()), 1, 0, 0);
+    vkCmdDraw(commandBuffer, static_cast<uint32_t>(pContext->verticies.size()), 1, 0, 0);
     vkCmdEndRenderPass(commandBuffer);
 
     VKF(vkEndCommandBuffer(commandBuffer))
@@ -196,16 +238,16 @@ namespace Ths::Vk
   //   return true;
   // }
 
-  bool createCommandBuffers(VContext* pContext, OContext& object)
+  bool createCommandBuffers(VContext* pContext)
   {
     LOG_INIT("Command Buffer");
-    object.commandBuffers.resize(MAX_FRAMES_IN_FLIGHT);
+    pContext->commandBuffers.resize(MAX_FRAMES_IN_FLIGHT);
     VkCommandBufferAllocateInfo allocInfo {VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO};
-    allocInfo.commandPool = object.commandPool;
+    allocInfo.commandPool = pContext->commandPool;
     allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-    allocInfo.commandBufferCount = static_cast<uint32_t>(object.commandBuffers.size());
+    allocInfo.commandBufferCount = static_cast<uint32_t>(pContext->commandBuffers.size());
 
-    VKF(vkAllocateCommandBuffers(pContext->device, &allocInfo, object.commandBuffers.data()))
+    VKF(vkAllocateCommandBuffers(pContext->device, &allocInfo, pContext->commandBuffers.data()))
     {
       LOG_ERROR("An error occured whilst creating command buffers: ", res);
       LOG_INIT_AB("Command Buffer");
@@ -214,6 +256,25 @@ namespace Ths::Vk
     LOG_INIT_OK("Command Buffer");
     return false;
   }
+
+  // bool createCommandBuffers(VContext* pContext, OContext& object)
+  // {
+  //   LOG_INIT("Command Buffer");
+  //   object.commandBuffers.resize(MAX_FRAMES_IN_FLIGHT);
+  //   VkCommandBufferAllocateInfo allocInfo {VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO};
+  //   allocInfo.commandPool = object.commandPool;
+  //   allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+  //   allocInfo.commandBufferCount = static_cast<uint32_t>(object.commandBuffers.size());
+
+  //   VKF(vkAllocateCommandBuffers(pContext->device, &allocInfo, object.commandBuffers.data()))
+  //   {
+  //     LOG_ERROR("An error occured whilst creating command buffers: ", res);
+  //     LOG_INIT_AB("Command Buffer");
+  //     return false;
+  //   }
+  //   LOG_INIT_OK("Command Buffer");
+  //   return false;
+  // }
 
   VkResult createCommandPool(VContext* pContext, VkCommandPoolCreateInfo& poolInfo, VkCommandPool* commandPool)
   {
