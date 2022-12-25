@@ -237,16 +237,7 @@ namespace Ths::Vk
 
   VkShaderModule createShaderModule(VulkanContext* pContext, const Shader& shader)
   {
-    VkShaderModuleCreateInfo createInfo {VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO};
-    createInfo.codeSize = shader.size;
-    createInfo.pCode = reinterpret_cast<const uint32_t*>(shader.code);
-
-    VkShaderModule shaderModule;
-    VKF(vkCreateShaderModule(pContext->device, &createInfo, nullptr, &shaderModule))
-    {
-      LOG_ERROR("An error occured whilst creating a VkShaderModule!");
-    }
-    return shaderModule;
+    return createShaderModule(pContext, shader.code);
   }
 
   VkShaderModule createShaderModule(VulkanContext* pContext, const std::vector<char> code)
@@ -287,24 +278,15 @@ namespace Ths::Vk
   bool createGraphicsPipeline(VulkanContext* pContext, OContext& object)
   {
     LOG_INIT("Graphics Pipeline");
-    auto vertShaderCode = readFile("D:/Projects/Thesis/src/vk/shaders/vert.spv");
-    auto fragShaderCode = readFile("D:/Projects/Thesis/src/vk/shaders/frag.spv");
-    // if (object.material->vertexShader->size == 0 || object.material->fragmentShader->size == 0)
-    // {
-    //   LOG_ERROR("An error occured whilst loading shaders!");
-    //   LOG_INIT_AB("Graphics Pipeline");
-    //   return false;
-    // }
-
-    if (vertShaderCode.size() == 0 || fragShaderCode.size() == 0)
+    if (object.material->vertexShader->code.size() == 0 || object.material->fragmentShader->code.size() == 0)
     {
       LOG_ERROR("An error occured whilst loading shaders!");
       LOG_INIT_AB("Graphics Pipeline");
       return false;
     }
 
-    VkShaderModule vertModule = createShaderModule(pContext, vertShaderCode);
-    VkShaderModule fragModule = createShaderModule(pContext, fragShaderCode);
+    VkShaderModule vertModule = createShaderModule(pContext, *object.material->vertexShader);
+    VkShaderModule fragModule = createShaderModule(pContext, *object.material->fragmentShader);
 
     VkPipelineShaderStageCreateInfo vertShaderStageInfo {VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO};
     vertShaderStageInfo.stage = VK_SHADER_STAGE_VERTEX_BIT;

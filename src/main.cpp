@@ -24,6 +24,12 @@ int main()
   });
   crd.addComponent(entities[0], Ths::Vk::Material{
     .path = "D:/Projects/Thesis/assets/textures/viking.png",
+    .vertexShader = new Ths::Vk::Shader{
+      Ths::Vk::readFile("D:/Projects/Thesis/src/vk/shaders/vert.spv")
+    },
+    .fragmentShader = new Ths::Vk::Shader{
+      Ths::Vk::readFile("D:/Projects/Thesis/src/vk/shaders/frag.spv")
+    },
   });
   crd.addComponent(entities[0], Ths::Vk::OContext{
     .material = &crd.getComponent<Ths::Vk::Material>(entities[0]),
@@ -41,6 +47,12 @@ int main()
   });
   crd.addComponent(entities[1], Ths::Vk::Material{
     .path = "D:/Projects/Thesis/assets/textures/AK47.png",
+    .vertexShader = new Ths::Vk::Shader{
+      Ths::Vk::readFile("D:/Projects/Thesis/src/vk/shaders/vert.spv")
+    },
+    .fragmentShader = new Ths::Vk::Shader{
+      Ths::Vk::readFile("D:/Projects/Thesis/src/vk/shaders/frag.spv")
+    },
   });
   crd.addComponent(entities[1], Ths::Vk::OContext{
     .material = &crd.getComponent<Ths::Vk::Material>(entities[1]),

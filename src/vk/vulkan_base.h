@@ -157,6 +157,12 @@ namespace Ths::Vk
     std::vector<VkPresentModeKHR> presentModes;
   } SwapChainSupportDetails;
 
+  typedef struct MeshPushConstants
+  {
+    glm::vec4 data;
+    glm::vec4 render_matrix;
+  } MeshPushConstants;
+
   typedef struct UniformBufferObject
   {
     /*
@@ -177,16 +183,20 @@ namespace Ths::Vk
 
   typedef struct Shader
   {
-    const size_t size;
-    const uint32_t* code;
+    std::vector<char> code;
 
-    inline Shader(const uint32_t* code, size_t size)
-     : size(size), code(code)
-    { }
+    inline Shader(char* code, size_t size)
+    {
+      this->code = std::vector(
+        code,
+        code+size
+      );
+    }
 
-    inline Shader(std::vector<uint32_t> code)
-     : size(code.size()), code(code.data())
-    { }
+    inline Shader(std::vector<char> code)
+    {
+      this->code = code;
+    }
   } Shader;
 
   typedef struct Material
