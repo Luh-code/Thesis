@@ -157,12 +157,6 @@ namespace Ths::Vk
     std::vector<VkPresentModeKHR> presentModes;
   } SwapChainSupportDetails;
 
-  typedef struct MeshPushConstants
-  {
-    glm::vec4 data;
-    glm::vec4 render_matrix;
-  } MeshPushConstants;
-
   typedef struct UniformBufferObject
   {
     /*
@@ -266,6 +260,12 @@ namespace Ths::Vk
     glm::vec3 rotation;
     glm::vec3 scale;
   } Transform;
+
+  typedef struct MeshPushConstants
+  {
+    glm::vec4 data;
+    glm::mat4 render_matrix;
+  } MeshPushConstants;
 
   // TODO: Change all VContext*/VulkanContext* to VContext&
 
