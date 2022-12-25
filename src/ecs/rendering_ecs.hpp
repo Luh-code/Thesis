@@ -17,6 +17,18 @@ namespace Ths::ecs
      : pContext(pContext), crd(crd)
     { }
 
+    inline void entityRegistered(Entity entity) override
+    {
+      auto& object = crd->getComponent<Ths::Vk::OContext>(entity);
+      auto& mesh = crd->getComponent<Ths::Vk::Mesh>(entity);
+      auto& material = crd->getComponent<Ths::Vk::Material>(entity);
+      auto& transform = crd->getComponent<Ths::Vk::Transform>(entity);
+
+      object.material = &material;
+      object.mesh = &mesh;
+      object.transform = &transform;
+    }
+
     inline void initEntities()
     {
       for(const auto& e : mEntities)
@@ -39,7 +51,7 @@ namespace Ths::ecs
         Ths::Vk::createDescriptorPool(pContext, object);
         Ths::Vk::createDescriptorSets(pContext, object);
 
-        Ths::Vk::QueueFamilyIndices queueFamilyIndices = Ths::Vk::findQueueFamilies(pContext->physicalDevice, pContext->surface);
+        // Ths::Vk::QueueFamilyIndices queueFamilyIndices = Ths::Vk::findQueueFamilies(pContext->physicalDevice, pContext->surface);
       }
     }
 
@@ -78,15 +90,16 @@ namespace Ths::ecs
         auto currentTime = std::chrono::high_resolution_clock::now();
         float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
         
-        glm::mat4 model = glm::translate(glm::mat4(1.0f), transform.translation);
+        glm::mat4 model = glm::mat4(1.0f);
+        model *= glm::vec4(transform.scale, 1.0f);
+        model = glm::translate(model, transform.translation*(1.0f/transform.scale));
+        model = glm::rotate(model, time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
         model = glm::rotate(model, transform.rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
         model = glm::rotate(model, transform.rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
         model = glm::rotate(model, transform.rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
-        model *= glm::vec4(transform.scale, 1.0f);
-        model = glm::rotate(model, time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
         
         glm::vec3 cameraTranslation = {2.8f, 2.8f, 2.0f};
-        glm::vec3 lookAtTranslation = {0.0f, 0.0f, 0.0f};
+        glm::vec3 lookAtTranslation = {0.0f, 0.0f, 0.5f};
         glm::vec3 upDirection {0.0f, 0.0f, 1.0f};
         glm::mat4 view = glm::lookAt(cameraTranslation, lookAtTranslation, upDirection);
 

@@ -167,12 +167,27 @@ namespace Ths::Vk
     glm::mat4 proj;
   } UniformBufferObject;
 
+  typedef struct Transform
+  {
+    glm::vec3 translation;
+    glm::vec3 rotation;
+    glm::vec3 scale;
+  } Transform;
+
+  typedef struct MeshPushConstants
+  {
+    glm::vec4 data;
+    glm::mat4 render_matrix;
+  } MeshPushConstants;
+
   typedef struct Mesh
   {
     const char* basepath;
     const char* path;
     std::vector<Ths::Vk::Vertex> verticies;
     std::vector<uint32_t> indices;
+
+    void applyTransform(Transform t) = delete;
   } Mesh;
 
   typedef struct Shader
@@ -218,8 +233,9 @@ namespace Ths::Vk
 
   typedef struct ObjectContext
   {
-    Material* material;
-    Mesh* mesh;
+    Material* material; // ? Change to ref
+    Mesh* mesh; // ? Change to ref
+    Transform* transform; // ? Change to ref
 
     VkDescriptorSetLayout descriptorSetLayout;
     VkDescriptorPool descriptorPool;
@@ -253,19 +269,6 @@ namespace Ths::Vk
       vkFreeMemory(pContext->device, indexBufferMemory, nullptr);
     }
   } OContext;
-
-  typedef struct Transform
-  {
-    glm::vec3 translation;
-    glm::vec3 rotation;
-    glm::vec3 scale;
-  } Transform;
-
-  typedef struct MeshPushConstants
-  {
-    glm::vec4 data;
-    glm::mat4 render_matrix;
-  } MeshPushConstants;
 
   // TODO: Change all VContext*/VulkanContext* to VContext&
 

@@ -259,6 +259,16 @@ namespace Ths::ecs
   {
   public:
     std::set<Entity> mEntities;
+
+    virtual void entityRegistered(Entity entity)
+    {
+
+    }
+
+    virtual void entityErased(Entity entity)
+    {
+
+    }
   };
 
   class SystemManager
@@ -314,10 +324,12 @@ namespace Ths::ecs
         if ((signature & systemSignature) == systemSignature)
         {
           system->mEntities.insert(entity);
+          system->entityRegistered(entity);
         }
         else
         {
           system->mEntities.erase(entity);
+          system->entityErased(entity);
         }
       }
     }

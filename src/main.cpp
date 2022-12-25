@@ -32,22 +32,19 @@ int main()
       Ths::Vk::readFile("D:/Projects/Thesis/src/vk/shaders/frag.spv")
     },
   });
-  crd.addComponent(entities[0], Ths::Vk::OContext{
-    .material = &crd.getComponent<Ths::Vk::Material>(entities[0]),
-    .mesh = &crd.getComponent<Ths::Vk::Mesh>(entities[0]),
-  });
   crd.addComponent(entities[0], Ths::Vk::Transform{
     .translation = glm::vec3{1.0f, -1.0f, 0.0f},
-    .rotation = glm::vec3{0.0f, 0.0f, 0.0f},
+    .rotation = glm::vec3{0.0f, 0.0f, glm::radians(270.0f)},
     .scale = glm::vec3{1.0f, 1.0f, 1.0f},
   });
+  crd.addComponent(entities[0], Ths::Vk::OContext{});
   
   crd.addComponent(entities[1], Ths::Vk::Mesh{
     .basepath = "D:/Projects/Thesis/assets/models/",
-    .path = "viking.obj",
+    .path = "Neck_Mech_Walker_by_3DHaupt-(Wavefront OBJ).obj",
   });
   crd.addComponent(entities[1], Ths::Vk::Material{
-    .path = "D:/Projects/Thesis/assets/textures/viking.png",
+    .path = "D:/Projects/Thesis/assets/textures/walker_color.jpg",
     .vertexShader = new Ths::Vk::Shader{
       Ths::Vk::readFile("D:/Projects/Thesis/src/vk/shaders/vert.spv")
     },
@@ -55,15 +52,12 @@ int main()
       Ths::Vk::readFile("D:/Projects/Thesis/src/vk/shaders/frag.spv")
     },
   });
-  crd.addComponent(entities[1], Ths::Vk::OContext{
-    .material = &crd.getComponent<Ths::Vk::Material>(entities[1]),
-    .mesh = &crd.getComponent<Ths::Vk::Mesh>(entities[1]),
-  });
   crd.addComponent(entities[1], Ths::Vk::Transform{
     .translation = glm::vec3{-1.0f, 1.0f, 0.0f},
-    .rotation = glm::vec3{0.0f, 0.0f, 0.0f},
-    .scale = glm::vec3{1.0f, 1.0f, 1.0f},
+    .rotation = glm::vec3{glm::radians(90.0f), 0.0f, 0.0f},
+    .scale = glm::vec3{0.2f, 0.2f, 0.2f},
   });
+  crd.addComponent(entities[1], Ths::Vk::OContext{});
 
   crd.addComponent(entities[2], Ths::Vk::Mesh{
     .basepath = "D:/Projects/Thesis/assets/models/",
@@ -78,15 +72,12 @@ int main()
       Ths::Vk::readFile("D:/Projects/Thesis/src/vk/shaders/frag.spv")
     },
   });
-  crd.addComponent(entities[2], Ths::Vk::OContext{
-    .material = &crd.getComponent<Ths::Vk::Material>(entities[2]),
-    .mesh = &crd.getComponent<Ths::Vk::Mesh>(entities[2]),
-  });
   crd.addComponent(entities[2], Ths::Vk::Transform{
     .translation = glm::vec3{0.0f, 0.0f, 0.0f},
     .rotation = glm::vec3{0.0f, 0.0f, 0.0f},
-    .scale = glm::vec3{65.0f, 65.0f, 65.0f},
+    .scale = glm::vec3{50.0f, 50.0f, 50.0f},
   });
+  crd.addComponent(entities[2], Ths::Vk::OContext{});
 
   app->name = "Test App";
   app->version = VK_MAKE_API_VERSION(1,0,0,0);
