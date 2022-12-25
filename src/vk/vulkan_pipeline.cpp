@@ -405,8 +405,15 @@ namespace Ths::Vk
     VkPipelineLayoutCreateInfo pipelineLayoutInfo {VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO};
     pipelineLayoutInfo.setLayoutCount = 1;
     pipelineLayoutInfo.pSetLayouts = &object.descriptorSetLayout;
-    pipelineLayoutInfo.pushConstantRangeCount = 0;
-    pipelineLayoutInfo.pPushConstantRanges = nullptr;
+
+    // Push constants
+    VkPushConstantRange pushConstant;
+    pushConstant.offset = 0;
+    pushConstant.size = sizeof(MeshPushConstants);
+    pushConstant.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+
+    pipelineLayoutInfo.pushConstantRangeCount = 1;
+    pipelineLayoutInfo.pPushConstantRanges = &pushConstant;
 
     VKF(vkCreatePipelineLayout(pContext->device, &pipelineLayoutInfo, nullptr, &object.pipelineLayout))
     {

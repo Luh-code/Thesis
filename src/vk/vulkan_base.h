@@ -256,7 +256,7 @@ namespace Ths::Vk
 
   typedef struct Transform
   {
-    glm::vec3 positon;
+    glm::vec3 translation;
     glm::vec3 rotation;
     glm::vec3 scale;
   } Transform;

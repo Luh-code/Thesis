@@ -43,7 +43,7 @@ namespace Ths
     crd.registerComponent<Ths::Vk::OContext>();
     crd.registerComponent<Ths::Vk::Mesh>();
     crd.registerComponent<Ths::Vk::Material>();
-    // crd.registerComponent<Ths::Vk::Transform>();
+    crd.registerComponent<Ths::Vk::Transform>();
     
     renderSystem = crd.registerSystem<Ths::ecs::RenderSystem>(vContext, &crd);
 
@@ -51,7 +51,7 @@ namespace Ths
     renderSystemSignature.set(crd.getComponentType<Ths::Vk::OContext>());
     renderSystemSignature.set(crd.getComponentType<Ths::Vk::Mesh>());
     renderSystemSignature.set(crd.getComponentType<Ths::Vk::Material>());
-    // renderSystemSignature.set(crd.getComponentType<Ths::Vk::Transform>());
+    renderSystemSignature.set(crd.getComponentType<Ths::Vk::Transform>());
     crd.setSystemSignature<Ths::ecs::RenderSystem>(renderSystemSignature);
   }
 
