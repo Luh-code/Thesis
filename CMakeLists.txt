@@ -50,7 +50,7 @@ if (WIN32)
     if (COMPILE_SDL_LOCALLY)
         make_sdl_locally()
     else (COMPILE_SDL_LOCALLY)
-        set(SDL2_INCLUDE_DIRS ${Vulkan_PATH}/Include)
+        set(SDL2_INCLUDE_DIRS ${Vulkan_PATH}/Include/SDL2)
         set(SDL2_LIBRARIES ${Vulkan_PATH}/Lib/SDL2.lib)
     endif (COMPILE_SDL_LOCALLY)
 endif (WIN32)
@@ -85,9 +85,16 @@ set(SOURCE ${PROJECT_SOURCE_DIR}/src/main.cpp
             ${PROJECT_SOURCE_DIR}/src/vk/vulkan_images.cpp
             ${PROJECT_SOURCE_DIR}/src/vk/vulkan_depth.cpp
             ${PROJECT_SOURCE_DIR}/src/vk/vulkan_model.cpp)
+set(IMGUI_FILES ${PROJECT_SOURCE_DIR}/dependencies/imgui/imgui.cpp
+            ${PROJECT_SOURCE_DIR}/dependencies/imgui/imgui_demo.cpp
+            ${PROJECT_SOURCE_DIR}/dependencies/imgui/imgui_draw.cpp
+            ${PROJECT_SOURCE_DIR}/dependencies/imgui/imgui_tables.cpp
+            ${PROJECT_SOURCE_DIR}/dependencies/imgui/imgui_widgets.cpp
+            ${PROJECT_SOURCE_DIR}/dependencies/imgui/backends/imgui_impl_sdl.cpp
+            ${PROJECT_SOURCE_DIR}/dependencies/imgui/backends/imgui_impl_vulkan.cpp)
 
 # Create Thesis as executable
-add_executable(thesis ${SOURCE})
+add_executable(thesis ${SOURCE} ${IMGUI_FILES})
 
 #target_compile_definitions(thesis PUBLIC ${PREPROCESSOR_DEFINITIONS})
 target_include_directories(thesis PUBLIC ${PROJECT_SOURCE_DIR}/dependencies/FlagEx/include
@@ -96,6 +103,8 @@ target_include_directories(thesis PUBLIC ${PROJECT_SOURCE_DIR}/dependencies/Flag
                                 ${PROJECT_SOURCE_DIR}/dependencies/stb
                                 # C:/stb
                                 ${PROJECT_SOURCE_DIR}/dependencies/tinyobjloader
+                                ${PROJECT_SOURCE_DIR}/dependencies/imgui
+                                ${PROJECT_SOURCE_DIR}/dependencies/imgui/backends
                                 #${PROJECT_SOURCE_DIR}/dependencies/Vulkan/1.3.216.0/x86_64/include
                                 ${SDL2_INCLUDE_DIRS}
                                 ${Vulkan_INCLUDE_DIRS})

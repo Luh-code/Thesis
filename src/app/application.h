@@ -65,25 +65,30 @@ namespace Ths
     void delVContext();
   };
 
+
   class SDLApp: public VkApp
   {
   public:
     SDL_Window* window;
 
     Ths::ecs::RenderSystem* renderSystem;
+    Ths::Vk::ImGuiData* imGuiData;
 
+    inline SDLApp() {};
     virtual inline void run()
     {
       LOG_INIT("SDL App \"", name, "\"");
       initWindow(name, 800, 600);
       initVulkan();
       renderSystem->initEntities();
+      initImGui();
       LOG_INIT_OK("SDL App \"", name, "\"");
       mainLoop([]() -> bool {return true;});
       LOG_DEST("SDL App \"", name, "\"");
       cleanup();
       LOG_DEST_OK("SDL App \"", name, "\"");
     }
+    virtual void initImGui();
     virtual void initEcs() override;
     virtual void initWindow(const char* title, uint32_t w, uint32_t h, uint32_t dx = SDL_WINDOWPOS_CENTERED, uint32_t dy = SDL_WINDOWPOS_CENTERED);
     virtual void initVulkan() override;

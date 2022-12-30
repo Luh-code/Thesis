@@ -35,6 +35,77 @@ namespace Ths
   
 // SDLApp
 
+  void SDLApp::initImGui()
+  {
+    LOG_INIT("Dear ImGui");
+    // init ImGui context
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    
+    imGuiData = new Ths::Vk::ImGuiData{
+      .io = ImGui::GetIO(),
+    };
+    
+    // setup ImGui IO
+    auto& imio = imGuiData->io;
+    imio.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+    imio.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+
+    // set ImGui theme/style
+    ImGui::StyleColorsDark(); // Dark
+    // ImGui::StyleColorsLight(); // Light
+    // ImGui::StyleColorsClassic(); // Classic
+
+    // setup ImGui Platform/Renderer backends
+    ImGui_ImplSDL2_InitForVulkan(window);
+    ImGui_ImplVulkan_InitInfo initInfo = {};
+    initInfo.Instance = vContext->instance;
+    initInfo.PhysicalDevice = vContext->physicalDevice;
+    initInfo.Device = vContext->device;
+
+    Ths::Vk::QueueFamilyIndices indices = Ths::Vk::findQueueFamilies(vContext->physicalDevice, vContext->surface);
+    assert(indices.isComplete());
+
+    initInfo.QueueFamily = indices.graphicsFamily.value();
+    initInfo.Queue = vContext->graphicsQueue;
+    initInfo.PipelineCache = imGuiData->pipelineCache;
+
+    VkDescriptorPoolSize poolSizes[] = {
+      { VK_DESCRIPTOR_TYPE_SAMPLER, 1000 },
+      { VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1000 },
+      { VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1000 },
+      { VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, 1000 },
+      { VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER, 1000 },
+      { VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER, 1000 },
+      { VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1000 },
+      { VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1000 },
+      { VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, 1000 },
+      { VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC, 1000 },
+      { VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1000 }
+    };
+    VkDescriptorPoolCreateInfo poolInfo {VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO};
+    poolInfo.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
+    poolInfo.maxSets = static_cast<uint32_t>(sizeof(poolSizes)/sizeof(poolSizes[0])) * 1000;
+    poolInfo.poolSizeCount = static_cast<uint32_t>(sizeof(poolSizes)/sizeof(poolSizes[0]));
+    poolInfo.pPoolSizes = poolSizes;
+    VKF(vkCreateDescriptorPool(vContext->device, &poolInfo, nullptr, &imGuiData->descriptorPool))
+    {
+      LOG_ERROR("An error occured whilst creating Descriptor Pool: ", res);
+      return;
+    }
+
+    initInfo.DescriptorPool = imGuiData->descriptorPool; // ! <--
+    initInfo.Subpass = 0;
+    initInfo.MinImageCount = MAX_FRAMES_IN_FLIGHT; // ! <--
+    initInfo.ImageCount = MAX_FRAMES_IN_FLIGHT;
+    initInfo.MSAASamples = vContext->msaaSamples;
+    initInfo.Allocator = nullptr;
+    initInfo.CheckVkResultFn = Ths::Vk::imGuiCheckVkRes;
+    ImGui_ImplVulkan_Init(&initInfo, vContext->renderPasses[0]);
+
+    LOG_INIT_OK("Dear ImGui");
+  }
+
   void SDLApp::initEcs()
   {
     entities = std::vector<Ths::ecs::Entity>(Ths::ecs::MAX_ENTITIES);
@@ -159,7 +230,7 @@ namespace Ths
     }
     vkResetFences(vContext->device, 1, &vContext->inFlightFences[vContext->currentFrame]);
     
-    updateUniformBuffer();
+    // updateUniformBuffer();
 
     // renderSystem->recordBuffers(imageIndex);
 
@@ -236,6 +307,14 @@ namespace Ths
   {
     // Delete Vk stuff
     Ths::Vk::cleanupSwapChain(vContext);
+
+    if (imGuiData)
+    {
+      ImGui_ImplVulkan_Shutdown();
+      ImGui_ImplSDL2_Shutdown();
+      ImGui::DestroyContext();
+      vkDestroyDescriptorPool(vContext->device, imGuiData->descriptorPool, nullptr);
+    }
 
     renderSystem->destroyAllVkObjects();
 

@@ -1,8 +1,8 @@
 #ifndef __SDL_BASE_H__
 #define __SDL_BASE_H__
 
-#include "SDL2/SDL.h"
-#include "SDL2/SDL_vulkan.h"
+#include "SDL.h"
+#include "SDL_vulkan.h"
 #include "logger.h"
 #include <string>
 #include <vector>

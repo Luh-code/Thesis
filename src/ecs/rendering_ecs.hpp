@@ -13,6 +13,16 @@ namespace Ths::ecs
     Ths::Vk::VContext* pContext;
     Coordinator* crd;
 
+    struct Camera
+    {
+      glm::vec3 translation = {2.8f, 2.8f, 2.0f};
+      glm::vec3 focalPoint = {0.0f, 0.0f, 0.5f};
+      glm::vec3 upDirection = {0.0f, 0.0f, 1.0f};
+      float fov = 60.0f;
+      float nearClippingPlane = 0.1f;
+      float farClippingPlane = 100.0f;
+    } camera;
+
     inline RenderSystem(Ths::Vk::VContext* pContext, Coordinator* crd)
      : pContext(pContext), crd(crd)
     { }
@@ -92,7 +102,7 @@ namespace Ths::ecs
         
         glm::mat4 model = glm::mat4(1.0f);
         model *= glm::vec4(transform.scale, 1.0f);
-        model = glm::translate(model, transform.translation*(1.0f/transform.scale));
+        model = glm::translate(model, transform.translation/transform.scale);
         model = glm::rotate(model, time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
         model = glm::rotate(model, transform.rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
         model = glm::rotate(model, transform.rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
@@ -101,15 +111,15 @@ namespace Ths::ecs
         glm::vec3 cameraTranslation = {2.8f, 2.8f, 2.0f};
         glm::vec3 lookAtTranslation = {0.0f, 0.0f, 0.5f};
         glm::vec3 upDirection {0.0f, 0.0f, 1.0f};
-        glm::mat4 view = glm::lookAt(cameraTranslation, lookAtTranslation, upDirection);
+        glm::mat4 view = glm::lookAt(camera.translation, camera.focalPoint, camera.upDirection);
 
         float fov = 60;
         float nearClippingPlane = 0.1f;
         float farClippingPlane = 100.0f;
         glm::mat4 projection = glm::perspective(
-          glm::radians(fov),
+          glm::radians(camera.fov),
           pContext->swapchainExtent.width / static_cast<float>(pContext->swapchainExtent.height),
-          nearClippingPlane, farClippingPlane
+          camera.nearClippingPlane, camera.farClippingPlane
         );
         projection[1][1] *= -1;
 

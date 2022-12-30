@@ -19,6 +19,10 @@ int main()
   entities[1] = crd.createEntity();
   entities[2] = crd.createEntity();
 
+  auto& camera = app->renderSystem->camera;
+
+  camera.fov = 60.0f;
+
   crd.addComponent(entities[0], Ths::Vk::Mesh{
     .basepath = "D:/Projects/Thesis/assets/models/",
     .path = "viking.obj",

@@ -2,6 +2,9 @@
 #define __VULKAN_BASE_H__
 
 #include "../pch.h"
+#include "imgui.h"
+#include "imgui_impl_sdl.h"
+#include "imgui_impl_vulkan.h"
 
 #define VK_FAIL(val) if(VkResult res = (val); res != VK_SUCCESS)
 #define VKF(val) VK_FAIL(val)
@@ -270,9 +273,21 @@ namespace Ths::Vk
     }
   } OContext;
 
+  typedef struct ImGuiData
+  {
+    ImGuiIO& io;
+    VkPipelineCache pipelineCache;
+    VkDescriptorPool descriptorPool;
+  } ImGuiData;
+
   // TODO: Change all VContext*/VulkanContext* to VContext&
 
   // Functions
+  inline void imGuiCheckVkRes(VkResult err){
+    if (err == VK_SUCCESS) return;
+    LOG_ERROR("[imgui] Error: VkResult = ", static_cast<uint32_t>(err));
+  }
+
   void createColorResources(VContext* pContext);
   VkSampleCountFlagBits getMaxUsableSampleCount(VContext* pContext);
 
