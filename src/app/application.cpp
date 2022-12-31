@@ -298,6 +298,11 @@ namespace Ths
   void SDLApp::resizeCallback(int w, int h)
   {
     vContext->framebufferResized = true;
+    // ImGui_ImplVulkan_CreateOrResizeWindow(
+    //   vContext->instance,
+    //   vContext->physicalDevice,
+    //   vContext->device,
+    // );
   }
 
   void SDLApp::mainLoop(bool (*func)())
