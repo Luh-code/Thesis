@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 #include <functional>
+#include "../vk/vulkan_base.h"
 
 namespace Ths::SDL
 {

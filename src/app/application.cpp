@@ -103,6 +103,12 @@ namespace Ths
     initInfo.CheckVkResultFn = Ths::Vk::imGuiCheckVkRes;
     ImGui_ImplVulkan_Init(&initInfo, vContext->renderPasses[0]);
 
+    imio.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\segoeui.ttf", 18.0f);
+
+    VkCommandBuffer cmd = Ths::Vk::beginSingleTimeGraphicsCommands(vContext);
+    ImGui_ImplVulkan_CreateFontsTexture(cmd);
+    Ths::Vk::endSingleTimeGraphicsCommands(vContext, cmd);
+
     LOG_INIT_OK("Dear ImGui");
   }
 
@@ -237,6 +243,7 @@ namespace Ths
     vkResetCommandBuffer(vContext->commandBuffers[vContext->currentFrame], 0);
     Ths::Vk::beginCommandBuffer(vContext, vContext->commandBuffers[vContext->currentFrame], imageIndex);
     renderSystem->recordBuffer(imageIndex, vContext->commandBuffers[vContext->currentFrame]);
+    ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), vContext->commandBuffers[vContext->currentFrame]);
     Ths::Vk::endCommandBuffer(vContext, vContext->commandBuffers[vContext->currentFrame], imageIndex);
 
     VkSubmitInfo submitInfo {VK_STRUCTURE_TYPE_SUBMIT_INFO};
@@ -297,6 +304,13 @@ namespace Ths
   {
     while(Ths::SDL::maintainSDLWindow(window, [this](int w, int h) { this->resizeCallback(w, h); }) && func())
     {
+      ImGui_ImplVulkan_NewFrame();
+      ImGui_ImplSDL2_NewFrame();
+      ImGui::NewFrame();
+      bool showDemoWindow = true;
+      ImGui::ShowDemoWindow(&showDemoWindow);
+      ImGui::EndFrame();
+      ImGui::Render();
       this->drawFrame();
     }
 

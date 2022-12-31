@@ -78,7 +78,8 @@ namespace Ths
     virtual inline void run()
     {
       LOG_INIT("SDL App \"", name, "\"");
-      initWindow(name, 800, 600);
+      // initWindow(name, 800, 600);
+      initWindow(name, 1600, 900);
       initVulkan();
       renderSystem->initEntities();
       initImGui();
