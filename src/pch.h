@@ -18,6 +18,7 @@
 #include <any>
 #include <bitset>
 #include <queue>
+#include <fstream>
 // #include <unordered_map>
 
 #define GLM_FORCE_RADIANS
@@ -25,12 +26,16 @@
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/rotate_vector.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #ifndef STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_STATIC
 #include <stb_image.h>
 #endif // STB_IMAGE_IMPLEMENTATION
+
+#include <nlohmann/json.hpp>
 
 // #ifndef TINYOBJLOADER_IMPLEMENTATION
 // #define TINYOBJLOADER_IMPLEMENTATION

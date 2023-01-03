@@ -6,6 +6,7 @@
 #include "../memory_mger.h"
 #include "../ecs/ecs_base.hpp"
 #include "../ecs/rendering_ecs.hpp"
+#include "debug_window.hpp"
 
 namespace Ths
 {
@@ -73,6 +74,7 @@ namespace Ths
 
     Ths::ecs::RenderSystem* renderSystem;
     Ths::Vk::ImGuiData* imGuiData;
+    Ths::DebugGui debugGui {};
 
     inline SDLApp() {};
     virtual inline void run()

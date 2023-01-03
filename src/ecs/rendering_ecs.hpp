@@ -4,6 +4,8 @@
 #include "../pch.h"
 #include "../vk/vulkan_base.h"
 #include "ecs_base.hpp"
+#include "../app/debug_window.hpp"
+#include "../engine/camera.hpp"
 
 namespace Ths::ecs
 {
@@ -12,20 +14,23 @@ namespace Ths::ecs
   public:
     Ths::Vk::VContext* pContext;
     Coordinator* crd;
+    Ths::DebugGui* debugGui;
 
-    struct Camera
+    Ths::engine::Camera camera;
+
+    inline RenderSystem(Ths::Vk::VContext* pContext, Coordinator* crd, Ths::DebugGui* debugGui)
+     : pContext(pContext), crd(crd), debugGui(debugGui)
     {
-      glm::vec3 translation = {2.8f, 2.8f, 2.0f};
-      glm::vec3 focalPoint = {0.0f, 0.0f, 0.5f};
-      glm::vec3 upDirection = {0.0f, 0.0f, 1.0f};
-      float fov = 60.0f;
-      float nearClippingPlane = 0.1f;
-      float farClippingPlane = 100.0f;
-    } camera;
-
-    inline RenderSystem(Ths::Vk::VContext* pContext, Coordinator* crd)
-     : pContext(pContext), crd(crd)
-    { }
+      using dType = Ths::DebugGui::ManagedVariableDataType;
+      debugGui->addManagedVariable("Camera", {
+        {&camera.translation, "Translation", dType::VEC3},
+        {&camera.focalPoint, "Focal point", dType::VEC3},
+        {&camera.upDirection, "Up direction", dType::VEC3},
+        {&camera.fov, "Field of view", dType::FLOAT},
+        {&camera.nearClippingPlane, "Near clipping plane", dType::FLOAT},
+        {&camera.farClippingPlane, "Far clipping plane", dType::FLOAT},
+      });
+    }
 
     inline void entityRegistered(Entity entity) override
     {
@@ -101,16 +106,15 @@ namespace Ths::ecs
         float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
         
         glm::mat4 model = glm::mat4(1.0f);
-        model *= glm::vec4(transform.scale, 1.0f);
+
+        model = glm::scale(model, transform.scale);
         model = glm::translate(model, transform.translation/transform.scale);
         model = glm::rotate(model, time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+        debugGui->addMonitoredVariable("Rotation Magnitude", glm::degrees(time * glm::radians(90.0f)));
         model = glm::rotate(model, transform.rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
         model = glm::rotate(model, transform.rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
         model = glm::rotate(model, transform.rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
         
-        glm::vec3 cameraTranslation = {2.8f, 2.8f, 2.0f};
-        glm::vec3 lookAtTranslation = {0.0f, 0.0f, 0.5f};
-        glm::vec3 upDirection {0.0f, 0.0f, 1.0f};
         glm::mat4 view = glm::lookAt(camera.translation, camera.focalPoint, camera.upDirection);
 
         float fov = 60;

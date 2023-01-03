@@ -37,7 +37,7 @@ int main()
     },
   });
   crd.addComponent(entities[0], Ths::Vk::Transform{
-    .translation = glm::vec3{1.0f, -1.0f, 0.0f},
+    .translation = glm::vec3{0.0f, -1.0f, 0.0f},
     .rotation = glm::vec3{0.0f, 0.0f, glm::radians(270.0f)},
     .scale = glm::vec3{1.0f, 1.0f, 1.0f},
   });
@@ -57,7 +57,7 @@ int main()
     },
   });
   crd.addComponent(entities[1], Ths::Vk::Transform{
-    .translation = glm::vec3{-1.0f, 1.0f, 0.0f},
+    .translation = glm::vec3{0.0f, 1.0f, 0.0f},
     .rotation = glm::vec3{glm::radians(90.0f), 0.0f, 0.0f},
     .scale = glm::vec3{0.2f, 0.2f, 0.2f},
   });

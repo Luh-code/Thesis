@@ -2,6 +2,8 @@
 #define __ECS_BASE_H__
 
 #include "../pch.h"
+#include <cmath>
+using json = nlohmann::json;
 
 // ecs built from Austin Morlan's Tutorial (https://austinmorlan.com/posts/entity_component_system/) & modded
 
@@ -11,15 +13,18 @@ namespace Ths::ecs
   const Entity MAX_ENTITIES = 10000;
 
   using ComponentType = uint32_t;
-  const ComponentType MAX_COMPONENTS = 10000;
+  const ComponentType MAX_COMPONENTS = 1000;
 
   using Signature = std::bitset<MAX_COMPONENTS>;
+
 
   class IComponentArray
   {
   public:
     //virtual ~IComponentArray() = default;
     virtual void entityDestroyed(Entity entity) = 0;
+
+    virtual json getJson() = 0;
   };
 
   template<typename T>
@@ -85,7 +90,43 @@ namespace Ths::ecs
         removeData(entity);
       }
     }
-  private:
+
+    inline json getJson() override
+    {
+      json j;
+      json compJson;
+      for (auto& comp : mComponentArray)
+      {
+        size_t size = static_cast<size_t>(std::ceil(sizeof(comp)/static_cast<float>(sizeof(unsigned int))));
+        unsigned int* ints = reinterpret_cast<unsigned int*>(&comp);
+        std::stringstream stream;
+        stream << "0x" << std::setfill('0') << std::setw(sizeof(unsigned int)*2);
+        for (int i = 0; i < size; i++)
+        {
+          stream << std::hex << ints[i];
+        }
+        compJson.push_back(stream.str());
+      }
+      j["mComponentArray"] = compJson;
+      json etiJson;
+      for (auto& eti : mEntityToIndexMap)
+      {
+        json temp;
+        temp[std::to_string(eti.first)] = eti.second;
+        etiJson.push_back(temp);
+      }
+      j["mEntityToIndexMap"] = etiJson;
+      json iteJson;
+      for (auto& ite : mIndexToEntityMap)
+      {
+        etiJson[ite.second] = ite.first;
+      }
+      j["mIndexToEntityMap"] = iteJson;
+      j["mSize"] = mSize;
+      return j;
+    }
+
+  public:
     std::array<T, MAX_ENTITIES> mComponentArray{};
 
     std::unordered_map<Entity, size_t> mEntityToIndexMap{};
@@ -157,6 +198,25 @@ namespace Ths::ecs
       }
     }
 
+    inline json getJson()
+    {
+      json j;
+      json comptJson;
+      for (auto& comp : mComponentTypes)
+      {
+        comptJson[comp.first] = comp.second;
+      }
+      j["mComponentTypes"] = comptJson;
+      json compaJson;
+      for (auto& comp : mComponentArrays)
+      {
+        compaJson[comp.first] = comp.second->getJson();
+      }
+      j["mComponentArrays"] = compaJson;
+      j["mNextComponentType"] = mNextComponentType;
+      return j;
+    }
+
     inline ~ComponentManager()
     {
       for (auto const& pair : mComponentArrays)
@@ -164,7 +224,7 @@ namespace Ths::ecs
         delete pair.second;
       }
     }
-  private:
+  public:
     std::unordered_map<const char*, ComponentType> mComponentTypes{};
 
     std::unordered_map<const char*, IComponentArray*> mComponentArrays{};
@@ -210,6 +270,7 @@ namespace Ths::ecs
       Entity id = mAvailableEntities.front();
       mAvailableEntities.pop();
       ++mLivingEntityCount;
+      mExistingEntities.insert(id);
       return id;
     }
 
@@ -222,6 +283,7 @@ namespace Ths::ecs
       }
 
       mSignatures[entity].reset();
+      mExistingEntities.erase(entity);
 
       // May want to add check if entity is alive
       mAvailableEntities.push(entity);
@@ -249,8 +311,30 @@ namespace Ths::ecs
       return mSignatures[entity];
     }
 
-  private:
+    inline json getJson()
+    {
+      json j;
+      std::queue<Entity> q (mAvailableEntities);
+      json availableJson;
+      for (uint32_t i = 0; i < MAX_ENTITIES-mLivingEntityCount; i++)
+      {
+        availableJson.push_back(q.front());
+        q.pop();
+      }
+      j["mAvailableEntites"] = availableJson;
+      json sigsJson;
+      for (auto& sig : mSignatures)
+      {
+        sigsJson.push_back(sig.to_string());
+      }
+      j["mSignatures"] = sigsJson;
+      j["mLivingEntityCount"] = mLivingEntityCount;
+      return j;
+    }
+
+  public:
     std::queue<Entity> mAvailableEntities {}; // Unused entity ID's
+    std::set<Entity> mExistingEntities {}; // Uesd entity ID's
     std::array<Signature, MAX_ENTITIES> mSignatures {}; // Signatures corresponding to Entities
     uint32_t mLivingEntityCount {};
   };
@@ -268,6 +352,11 @@ namespace Ths::ecs
     virtual void entityErased(Entity entity)
     {
 
+    }
+
+    virtual json getJson()
+    {
+      return json {};
     }
   };
 
@@ -334,6 +423,24 @@ namespace Ths::ecs
       }
     }
 
+    inline json getJson()
+    {
+      json j;
+      json sigJson;
+      for (auto& sig : mSignatures)
+      {
+        sigJson[sig.first] = sig.second.to_string();
+      }
+      j["mSignatures"] = sigJson;
+      json sysJson;
+      for (auto& sys : mSystems)
+      {
+        sysJson[sys.first] = sys.second->getJson();
+      }
+      j["mSystems"] = sysJson;
+      return j;
+    }
+
     inline ~SystemManager()
     {
       for (auto const& pair : mSystems)
@@ -341,7 +448,7 @@ namespace Ths::ecs
         delete pair.second;
       }
     }
-  private:
+  public:
     std::unordered_map<const char*, Signature> mSignatures{};
     std::unordered_map<const char*, System*> mSystems{};
   };
@@ -422,13 +529,22 @@ namespace Ths::ecs
       pSystemManager->setSignature<T>(signature);
     }
 
+    inline nlohmann::json getJson()
+    {
+      nlohmann::json j;
+      j["pComponentManager"] = pComponentManager->getJson();
+      j["pEntityManager"] = pEntityManager->getJson();
+      j["pSystemManager"] = pSystemManager->getJson();
+      return j;
+    }
+
     inline ~Coordinator()
     {
       delete pComponentManager;
       delete pEntityManager;
       delete pSystemManager;
     }
-  private:
+  public:
     ComponentManager* pComponentManager;
     EntityManager* pEntityManager;
     SystemManager* pSystemManager;

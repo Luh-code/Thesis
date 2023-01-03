@@ -109,6 +109,8 @@ namespace Ths
     ImGui_ImplVulkan_CreateFontsTexture(cmd);
     Ths::Vk::endSingleTimeGraphicsCommands(vContext, cmd);
 
+    debugGui.crd = &crd;
+
     LOG_INIT_OK("Dear ImGui");
   }
 
@@ -122,7 +124,7 @@ namespace Ths
     crd.registerComponent<Ths::Vk::Material>();
     crd.registerComponent<Ths::Vk::Transform>();
     
-    renderSystem = crd.registerSystem<Ths::ecs::RenderSystem>(vContext, &crd);
+    renderSystem = crd.registerSystem<Ths::ecs::RenderSystem>(vContext, &crd, &debugGui);
 
     Ths::ecs::Signature renderSystemSignature;
     renderSystemSignature.set(crd.getComponentType<Ths::Vk::OContext>());
@@ -312,8 +314,10 @@ namespace Ths
       ImGui_ImplVulkan_NewFrame();
       ImGui_ImplSDL2_NewFrame();
       ImGui::NewFrame();
-      bool showDemoWindow = true;
-      ImGui::ShowDemoWindow(&showDemoWindow);
+      bool showDemoWindow = false;
+      bool showDebugWindow = true;
+      // ImGui::ShowDemoWindow(&showDemoWindow);
+      debugGui.showDebugGui(&showDebugWindow);
       ImGui::EndFrame();
       ImGui::Render();
       this->drawFrame();

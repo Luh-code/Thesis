@@ -77,6 +77,7 @@ add_compile_definitions(${PREPROCESSOR_DEFINITIONS})
 set(SOURCE ${PROJECT_SOURCE_DIR}/src/main.cpp
             ${PROJECT_SOURCE_DIR}/src/sdl/sdl_base.cpp
             ${PROJECT_SOURCE_DIR}/src/app/application.cpp
+            ${PROJECT_SOURCE_DIR}/src/app/debug_window.cpp
             ${PROJECT_SOURCE_DIR}/src/vk/vulkan_instance.cpp
             ${PROJECT_SOURCE_DIR}/src/vk/vulkan_device.cpp
             ${PROJECT_SOURCE_DIR}/src/vk/vulkan_pipeline.cpp
@@ -84,7 +85,8 @@ set(SOURCE ${PROJECT_SOURCE_DIR}/src/main.cpp
             ${PROJECT_SOURCE_DIR}/src/vk/vulkan_descriptors.cpp
             ${PROJECT_SOURCE_DIR}/src/vk/vulkan_images.cpp
             ${PROJECT_SOURCE_DIR}/src/vk/vulkan_depth.cpp
-            ${PROJECT_SOURCE_DIR}/src/vk/vulkan_model.cpp)
+            ${PROJECT_SOURCE_DIR}/src/vk/vulkan_model.cpp
+            )
 set(IMGUI_FILES ${PROJECT_SOURCE_DIR}/dependencies/imgui/imgui.cpp
             ${PROJECT_SOURCE_DIR}/dependencies/imgui/imgui_demo.cpp
             ${PROJECT_SOURCE_DIR}/dependencies/imgui/imgui_draw.cpp
@@ -105,6 +107,8 @@ target_include_directories(thesis PUBLIC ${PROJECT_SOURCE_DIR}/dependencies/Flag
                                 ${PROJECT_SOURCE_DIR}/dependencies/tinyobjloader
                                 ${PROJECT_SOURCE_DIR}/dependencies/imgui
                                 ${PROJECT_SOURCE_DIR}/dependencies/imgui/backends
+                                ${PROJECT_SOURCE_DIR}/dependencies/nlohmannJson/include
+                                # ${PROJECT_SOURCE_DIR}/dependencies/nlohmannJson/single_include
                                 #${PROJECT_SOURCE_DIR}/dependencies/Vulkan/1.3.216.0/x86_64/include
                                 ${SDL2_INCLUDE_DIRS}
                                 ${Vulkan_INCLUDE_DIRS})
