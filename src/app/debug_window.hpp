@@ -41,6 +41,21 @@ namespace Ths
     inline void addMonitoredVariable(const char* name, glm::vec4 val) {
       monitoredVariables.vec4s[name] = val;
     }
+    inline void addMonitoredVariable(const char* name, int* val) {
+      monitoredVariables.volInts[name] = val;
+    }
+    inline void addMonitoredVariable(const char* name, float* val) {
+      monitoredVariables.volFloats[name] = val;
+    }
+    inline void addMonitoredVariable(const char* name, glm::vec2* val) {
+      monitoredVariables.volVec2s[name] = val;
+    }
+    inline void addMonitoredVariable(const char* name, glm::vec3* val) {
+      monitoredVariables.volVec3s[name] = val;
+    }
+    inline void addMonitoredVariable(const char* name, glm::vec4* val) {
+      monitoredVariables.volVec4s[name] = val;
+    }
 
     inline void removeMonitoredInt(const char* name) {
       if (monitoredVariables.ints.find(name) == monitoredVariables.ints.end()) return;
@@ -61,6 +76,26 @@ namespace Ths
     inline void removeMonitoredVec4(const char* name) {
       if (monitoredVariables.vec4s.find(name) == monitoredVariables.vec4s.end()) return;
       monitoredVariables.vec4s.erase(name);
+    }
+    inline void removeMonitoredVolInt(const char* name) {
+      if (monitoredVariables.volInts.find(name) == monitoredVariables.volInts.end()) return;
+      monitoredVariables.volInts.erase(name);
+    }
+    inline void removeMonitoredVolFloat(const char* name) {
+      if (monitoredVariables.volFloats.find(name) == monitoredVariables.volFloats.end()) return;
+      monitoredVariables.volFloats.erase(name);
+    }
+    inline void removeMonitoredVolVec2(const char* name) {
+      if (monitoredVariables.volVec2s.find(name) == monitoredVariables.volVec2s.end()) return;
+      monitoredVariables.volVec2s.erase(name);
+    }
+    inline void removeMonitoredVolVec3(const char* name) {
+      if (monitoredVariables.volVec3s.find(name) == monitoredVariables.volVec3s.end()) return;
+      monitoredVariables.volVec3s.erase(name);
+    }
+    inline void removeMonitoredVolVec4(const char* name) {
+      if (monitoredVariables.volVec4s.find(name) == monitoredVariables.volVec4s.end()) return;
+      monitoredVariables.volVec4s.erase(name);
     }
 
     void addManagedVariable(const char* name, std::vector<std::tuple<void*, std::string, ManagedVariableDataType>> data);

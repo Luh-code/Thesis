@@ -44,3 +44,5 @@
 
 #include <sheriff-base.h>
 #include <flagex_base.h>
+
+#include "engine/data/resource_base.hpp"

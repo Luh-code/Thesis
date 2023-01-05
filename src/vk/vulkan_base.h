@@ -5,6 +5,7 @@
 #include "imgui.h"
 #include "imgui_impl_sdl.h"
 #include "imgui_impl_vulkan.h"
+#include "../engine/data/resources_vulkan.hpp"
 
 #define VK_FAIL(val) if(VkResult res = (val); res != VK_SUCCESS)
 #define VKF(val) VK_FAIL(val)
@@ -214,8 +215,7 @@ namespace Ths::Vk
   typedef struct Material
   {
     const char* path;
-    VkImage textureImage;
-    VkDeviceMemory textureImageMemory;
+    TextureResource* texture;
 
     Shader* vertexShader;
     Shader* fragmentShader;
@@ -226,8 +226,10 @@ namespace Ths::Vk
 
     inline void destroy(VContext* pContext)
     {
-      vkDestroyImage(pContext->device, textureImage, nullptr);
-      vkFreeMemory(pContext->device, textureImageMemory, nullptr);
+      vkDestroySampler(pContext->device, texture->sampler, nullptr);
+      vkDestroyImageView(pContext->device, texture->view, nullptr);
+      vkDestroyImage(pContext->device, texture->image, nullptr);
+      vkFreeMemory(pContext->device, texture->imageMemory, nullptr);
 
       delete vertexShader;
       delete fragmentShader;
@@ -299,17 +301,19 @@ namespace Ths::Vk
     VkFormatFeatureFlags features);
   bool createDepthResources(VContext* pContext);
 
-  bool createTextureSampler(VContext* pContext, OContext& object);
+  bool createTextureSampler(VContext* pContext, TextureResource& texture);
   VkImageView createImageView(VContext* pContext, VkImage image, VkFormat format,
     VkImageAspectFlags aspectFlags = VK_IMAGE_ASPECT_COLOR_BIT, uint32_t mipLevels = 1);
-  bool createTextureImageView(VContext* pContext, OContext& object);
+  bool createTextureImageView(VContext* pContext, TextureResource& texture);
   void copyBufferToImage(VContext* pContext, VkBuffer buffer, VkImage image, uint32_t w, uint32_t h);
   void transitionImageLayout(VContext* pContext, VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels);
   bool createImage(VContext* pContext, uint32_t w, uint32_t h, uint32_t mipLevels, VkSampleCountFlagBits numSamples,
     VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage,
     VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory);
   bool generateMipmaps(VContext* pContext, VkImage image, VkFormat format, int32_t w, int32_t h, uint32_t mipLevels);
-  bool createTextureImage(VContext* pContext, OContext& object, const char* filename);
+  bool createTextureImage(VContext* pContext, ImageResource*& pImage, const char* filename);
+  bool createTextureImage(VContext* pContext, TextureResource*& pTexture, const char* filename);
+  bool createTextureImage(VContext* pContext, ImageResource& image, char const* filename);
 
   bool createDescriptorSets(VContext* pContext, OContext& object);
   bool createDescriptorPool(VContext* pContext, OContext& object);

@@ -54,10 +54,10 @@ namespace Ths::ecs
 
         Ths::Vk::createDescriptorSetLayout(pContext, object);
         Ths::Vk::createGraphicsPipeline(pContext, object);
-        Ths::Vk::createTextureImage(pContext, object, material.path);
+        Ths::Vk::createTextureImage(pContext, material.texture, material.path);
         
-        Ths::Vk::createTextureImageView(pContext, object);
-        Ths::Vk::createTextureSampler(pContext, object);
+        Ths::Vk::createTextureImageView(pContext, *material.texture);
+        Ths::Vk::createTextureSampler(pContext, *material.texture);
 
         Ths::Vk::loadModel(pContext, object, mesh.path, mesh.basepath);
         Ths::Vk::createVertexBuffer(pContext, object);
@@ -116,10 +116,7 @@ namespace Ths::ecs
         model = glm::rotate(model, transform.rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
         
         glm::mat4 view = glm::lookAt(camera.translation, camera.focalPoint, camera.upDirection);
-
-        float fov = 60;
-        float nearClippingPlane = 0.1f;
-        float farClippingPlane = 100.0f;
+        
         glm::mat4 projection = glm::perspective(
           glm::radians(camera.fov),
           pContext->swapchainExtent.width / static_cast<float>(pContext->swapchainExtent.height),

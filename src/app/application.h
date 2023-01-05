@@ -79,6 +79,10 @@ namespace Ths
     inline SDLApp() {};
     virtual inline void run()
     {
+      run([]() -> bool {return true;});
+    }
+    virtual inline void run(bool(*func)())
+    {
       LOG_INIT("SDL App \"", name, "\"");
       // initWindow(name, 800, 600);
       initWindow(name, 1600, 900);
@@ -86,7 +90,7 @@ namespace Ths
       renderSystem->initEntities();
       initImGui();
       LOG_INIT_OK("SDL App \"", name, "\"");
-      mainLoop([]() -> bool {return true;});
+      mainLoop(func);
       LOG_DEST("SDL App \"", name, "\"");
       cleanup();
       LOG_DEST_OK("SDL App \"", name, "\"");
