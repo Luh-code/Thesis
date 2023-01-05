@@ -14,7 +14,7 @@ namespace Ths::Vk
     LOG_INIT_OK("Color Resources");
   }
 
-  bool createTextureSampler(VContext* pContext, TextureResource& texture)
+  bool createTextureSampler(VContext* pContext, TextureResource& pTexture)
   {
     VkSamplerCreateInfo samplerInfo {VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO};
     // VK_FILTER_LINEAR is with filtering
@@ -35,7 +35,7 @@ namespace Ths::Vk
     vkGetPhysicalDeviceProperties(pContext->physicalDevice, &properties);
     samplerInfo.maxAnisotropy = properties.limits.maxSamplerAnisotropy; // Enable maximal supported anistropy (can be lowered)
     samplerInfo.borderColor = VK_BORDER_COLOR_INT_OPAQUE_BLACK; // Border color if adress mode is clamp to border
-    samplerInfo.unnormalizedCoordinates = VK_FALSE; // Convert texture space to UV space?
+    samplerInfo.unnormalizedCoordinates = VK_FALSE; // Convert pTexture space to UV space?
     samplerInfo.compareEnable = VK_FALSE;
     samplerInfo.compareOp = VK_COMPARE_OP_ALWAYS;
     // Mipmapping
@@ -44,7 +44,7 @@ namespace Ths::Vk
     samplerInfo.minLod = 0.0f;
     samplerInfo.maxLod = static_cast<float>(pContext->mipLevels);
 
-    VKF(vkCreateSampler(pContext->device, &samplerInfo, nullptr, &texture.sampler))
+    VKF(vkCreateSampler(pContext->device, &samplerInfo, nullptr, &pTexture.sampler))
     {
       LOG_ERROR("An error occured whilst creating a VkSampler: ", res);
       return false;
@@ -77,10 +77,10 @@ namespace Ths::Vk
     return imageView;
   }
 
-  bool createTextureImageView(VContext* pContext, TextureResource& texture)
+  bool createTextureImageView(VContext* pContext, TextureResource& pTexture)
   {
-    texture.view = createImageView(pContext, texture.image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, pContext->mipLevels);
-    return texture.view != VK_NULL_HANDLE;
+    pTexture.view = createImageView(pContext, pTexture.image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, pContext->mipLevels);
+    return pTexture.view != VK_NULL_HANDLE;
   }
 
   void copyBufferToImage(VContext* pContext, VkBuffer buffer, VkImage image, uint32_t w, uint32_t h)

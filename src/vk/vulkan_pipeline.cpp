@@ -66,7 +66,7 @@ namespace Ths::Vk
 
   bool createIndexBuffer(VContext* pContext, OContext& object)
   {
-    VkDeviceSize bufferSize = sizeof(object.mesh->indices[0]) * object.mesh->indices.size();
+    VkDeviceSize bufferSize = sizeof(object.mesh->pMesh->indices[0]) * object.mesh->pMesh->indices.size();
 
     VkBuffer stagingBuffer;
     VkDeviceMemory stagingBufferMemory;
@@ -77,7 +77,7 @@ namespace Ths::Vk
     // ? maybe consider explicit flushing
     void* data;
     vkMapMemory(pContext->device, stagingBufferMemory, 0, bufferSize, 0, &data);
-    memcpy(data, object.mesh->indices.data(), static_cast<size_t>(bufferSize));
+    memcpy(data, object.mesh->pMesh->indices.data(), static_cast<size_t>(bufferSize));
     vkUnmapMemory(pContext->device, stagingBufferMemory);
 
     createBuffer(pContext, bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT,
@@ -95,7 +95,7 @@ namespace Ths::Vk
 
   bool createVertexBuffer(VContext* pContext, OContext& object)
   {
-    VkDeviceSize bufferSize = sizeof(Vertex) * object.mesh->verticies.size();
+    VkDeviceSize bufferSize = sizeof(Vertex) * object.mesh->pMesh->vertices.size();
 
     VkBuffer stagingBuffer;
     VkDeviceMemory stagingBufferMemory;
@@ -106,7 +106,7 @@ namespace Ths::Vk
     // ? maybe consider explicit flushing
     void* data;
     vkMapMemory(pContext->device, stagingBufferMemory, 0, bufferSize, 0, &data);
-    memcpy(data, object.mesh->verticies.data(), static_cast<size_t>(bufferSize));
+    memcpy(data, object.mesh->pMesh->vertices.data(), static_cast<size_t>(bufferSize));
     vkUnmapMemory(pContext->device, stagingBufferMemory);
 
     createBuffer(pContext, bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,

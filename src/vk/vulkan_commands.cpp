@@ -168,7 +168,7 @@ namespace Ths::Vk
     vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);
     vkCmdBindIndexBuffer(commandBuffer, object.indexBuffer, 0, VK_INDEX_TYPE_UINT32);
     vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, object.pipelineLayout, 0, 1, &object.descriptorSets[pContext->currentFrame], 0, nullptr);
-    vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(object.mesh->indices.size()), 1, 0, 0, 0);
+    vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(object.mesh->pMesh->indices.size()), 1, 0, 0, 0);
     vkCmdDraw(commandBuffer, static_cast<uint32_t>(pContext->verticies.size()), 1, 0, 0);
     vkCmdEndRenderPass(commandBuffer);
 

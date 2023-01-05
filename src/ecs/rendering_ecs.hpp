@@ -54,12 +54,12 @@ namespace Ths::ecs
 
         Ths::Vk::createDescriptorSetLayout(pContext, object);
         Ths::Vk::createGraphicsPipeline(pContext, object);
-        Ths::Vk::createTextureImage(pContext, material.texture, material.path);
+        Ths::Vk::createTextureImage(pContext, material.pTexture, material.path);
         
-        Ths::Vk::createTextureImageView(pContext, *material.texture);
-        Ths::Vk::createTextureSampler(pContext, *material.texture);
+        Ths::Vk::createTextureImageView(pContext, *material.pTexture);
+        Ths::Vk::createTextureSampler(pContext, *material.pTexture);
 
-        Ths::Vk::loadModel(pContext, object, mesh.path, mesh.basepath);
+        Ths::Vk::loadModel(pContext, mesh.pMesh, mesh.path, mesh.basepath);
         Ths::Vk::createVertexBuffer(pContext, object);
         Ths::Vk::createIndexBuffer(pContext, object);
 
@@ -137,7 +137,7 @@ namespace Ths::ecs
           sizeof(Ths::Vk::MeshPushConstants), &modelViewProjection
         );
 
-        vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(object.mesh->indices.size()), 1, 0, 0, 0);
+        vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(object.mesh->pMesh->indices.size()), 1, 0, 0, 0);
       }
     }
 

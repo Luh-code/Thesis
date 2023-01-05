@@ -6,7 +6,12 @@
 
 namespace Ths::Vk
 {
-  bool loadModel(VContext* pContext, OContext& object, const char* modelpath, const char* basedir)
+  bool loadModel([[maybe_unused]] VContext* pContext, MeshResource*& pMesh, const char* modelpath, const char* basedir)
+  {
+    pMesh = new MeshResource();
+    return loadModel(pContext, *pMesh, modelpath, basedir);
+  }
+  bool loadModel([[maybe_unused]] VContext* pContext, MeshResource& mesh, const char* modelpath, const char* basedir)
   {
     tinyobj::attrib_t attrib;
     std::vector<tinyobj::shape_t> shapes;
@@ -28,7 +33,6 @@ namespace Ths::Vk
     {
       LOG_WARN("A exception occured whilst loading object: \n\t", warn);
     }
-
     std::unordered_map<Vertex, uint32_t, std::hash<Vertex>, std::equal_to<Vertex>> uniqueVertices;
     uint32_t i = 0;
     for (const auto& shape : shapes)
@@ -55,16 +59,16 @@ namespace Ths::Vk
 
         if (uniqueVertices.count(vertex) == 0)
         {
-          uniqueVertices[vertex] = static_cast<uint32_t>(object.mesh->verticies.size());
-          object.mesh->verticies.push_back(vertex);
+          uniqueVertices[vertex] = static_cast<uint32_t>(mesh.vertices.size());
+          mesh.vertices.push_back(vertex);
         }
 
-        object.mesh->indices.push_back(uniqueVertices[vertex]);
+        mesh.indices.push_back(uniqueVertices[vertex]);
         i++;
         // if (i%3 == 0) LOG_DEBUG(pContext->indices[i-1], ", ", pContext->indices[i-2], ", ", pContext->indices[i-3]);
       }
     }
-    LOG_DEBUG("Loaded ", object.mesh->verticies.size(), " vertices - ", object.mesh->indices.size()/3, " tris (", object.mesh->indices.size(), " idc)!");
+    LOG_DEBUG("Loaded ", mesh.vertices.size(), " vertices - ", mesh.indices.size()/3, " tris (", mesh.indices.size(), " idc)!");
     return true;
   }
 }
