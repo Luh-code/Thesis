@@ -3,7 +3,7 @@
 
 #include "../pch.h"
 #include "../vk/vulkan_base.h"
-#include "ecs_base.hpp"
+// #include "ecs_base.hpp"
 #include "../app/debug_window.hpp"
 #include "../engine/camera.hpp"
 
@@ -53,7 +53,11 @@ namespace Ths::ecs
         auto& material = crd->getComponent<Ths::Vk::Material>(e);
 
         Ths::Vk::createDescriptorSetLayout(pContext, object);
-        Ths::Vk::createGraphicsPipeline(pContext, object);
+        Ths::Vk::createGraphicsPipeline(pContext, object,
+          object.pPipeline,
+          *material.pVertexShader,
+          *material.pFragmentShader
+        );
         Ths::Vk::createTextureImage(pContext, material.pTexture, material.path);
         
         Ths::Vk::createTextureImageView(pContext, *material.pTexture);
@@ -79,7 +83,7 @@ namespace Ths::ecs
         auto& material = crd->getComponent<Ths::Vk::Material>(e);
         auto& transform = crd->getComponent<Ths::Vk::Transform>(e);
 
-        vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, object.graphicsPipeline);
+        vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, object.pPipeline->pipeline);
         VkViewport viewport{};
         viewport.x = 0.0f;
         viewport.y = 0.0f;
@@ -96,7 +100,7 @@ namespace Ths::ecs
         VkDeviceSize offsets[] = {0};
         vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);
         vkCmdBindIndexBuffer(commandBuffer, object.indexBuffer, 0, VK_INDEX_TYPE_UINT32);
-        vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, object.pipelineLayout, 0, 1, &object.descriptorSets[pContext->currentFrame], 0, nullptr);
+        vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, object.pPipeline->layout, 0, 1, &object.descriptorSets[pContext->currentFrame], 0, nullptr);
         
         // push constants
 
@@ -131,7 +135,7 @@ namespace Ths::ecs
 
         vkCmdPushConstants(
           commandBuffer,
-          object.pipelineLayout,
+          object.pPipeline->layout,
           VK_SHADER_STAGE_VERTEX_BIT,
           0,
           sizeof(Ths::Vk::MeshPushConstants), &modelViewProjection

@@ -18,16 +18,6 @@
 namespace Ths::Vk
 {
   // Vulkan Creation
-  // Data
-
-  // bonk
-  // static const std::string MODEL_PATH = "assets/models/2bonk.obj";
-  // static const std::string TEXTURE_PATH = "assets/textures/2butterfly.png";
-
-  // static const std::string BASE_PATH = "D:/Projects/Thesis/";
-  static const std::string BASE_PATH = "";
-  static const std::string MODEL_PATH = BASE_PATH + "assets/models/Viking.obj";
-  static const std::string TEXTURE_PATH = BASE_PATH + "assets/textures/Viking.png";
 
   // TODO: Change all VContext*/VulkanContext* to VContext&
 
@@ -89,9 +79,10 @@ namespace Ths::Vk
   bool createFramebuffers(VContext* pContext);
   bool createRenderPass(VContext* pContext, uint32_t idx);
   VkShaderModule createShaderModule(VulkanContext* pContext, const std::vector<char> code);
-  VkShaderModule createShaderModule(VulkanContext* pContext, const Shader& shader);
+  VkShaderModule createShaderModule(VulkanContext* pContext, const ShaderResource& shader);
   std::vector<char> readFile(const std::string& filename);
-  bool createGraphicsPipeline(VulkanContext* pContext, OContext& object);
+  bool createGraphicsPipeline(VulkanContext* pContext, OContext& object, PipelineResource*& pPipeline, ShaderResource& vShader, ShaderResource& fShader);
+  bool createGraphicsPipeline(VulkanContext* pContext, OContext& object, PipelineResource& pipeline, ShaderResource& vShader, ShaderResource& fShader);
 
   void cleanupSwapChain(VulkanContext* pContext);
   bool recreateSwapChain(VulkanContext* pContext, uint32_t win_width, uint32_t win_height, uint32_t imgs,

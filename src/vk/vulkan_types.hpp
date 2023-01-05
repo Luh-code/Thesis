@@ -177,11 +177,11 @@ namespace Ths::Vk
     std::vector<uint32_t> indices;
   } MeshResource;
 
-  typedef struct Shader
+  typedef struct ShaderResource : public Ths::Resource
   {
     std::vector<char> code;
 
-    inline Shader(char* code, size_t size)
+    inline ShaderResource(char* code, size_t size)
     {
       this->code = std::vector(
         code,
@@ -189,11 +189,17 @@ namespace Ths::Vk
       );
     }
 
-    inline Shader(std::vector<char> code)
+    inline ShaderResource(std::vector<char> code)
     {
       this->code = code;
     }
-  } Shader;
+  } ShaderResource;
+
+  typedef struct PipelineResource : public Ths::Resource
+  {
+    VkPipelineLayout layout;
+    VkPipeline pipeline;
+  } PipelineResource;
 
   typedef struct Mesh
   {
@@ -209,10 +215,10 @@ namespace Ths::Vk
     const char* path;
     TextureResource* pTexture;
 
-    Shader* vertexShader;
-    Shader* fragmentShader;
+    ShaderResource* pVertexShader;
+    ShaderResource* pFragmentShader;
 
-    // inline Material(Shader vertexShader, Shader fragmentShader)
+    // inline Material(ShaderResource vertexShader, ShaderResource fragmentShader)
     //  : vertexShader(vertexShader), fragmentShader(fragmentShader)
     // {}
 
@@ -223,8 +229,8 @@ namespace Ths::Vk
       vkDestroyImage(pContext->device, pTexture->image, nullptr);
       vkFreeMemory(pContext->device, pTexture->imageMemory, nullptr);
 
-      delete vertexShader;
-      delete fragmentShader;
+      delete pVertexShader;
+      delete pFragmentShader;
     }
   } Material;
 
@@ -237,12 +243,8 @@ namespace Ths::Vk
     VkDescriptorSetLayout descriptorSetLayout;
     VkDescriptorPool descriptorPool;
     std::vector<VkDescriptorSet> descriptorSets;
-    
-    VkImageView textureImageView;
-    VkSampler textureSampler;
 
-    VkPipelineLayout pipelineLayout;
-    VkPipeline graphicsPipeline;
+    PipelineResource* pPipeline;
 
     VkBuffer vertexBuffer;
     VkDeviceMemory vertexBufferMemory;
@@ -253,12 +255,9 @@ namespace Ths::Vk
     {
       vkDestroyDescriptorSetLayout(pContext->device, descriptorSetLayout, nullptr);
       vkDestroyDescriptorPool(pContext->device, descriptorPool, nullptr);
-      
-      vkDestroyImageView(pContext->device, textureImageView, nullptr);
-      vkDestroySampler(pContext->device, textureSampler, nullptr);
 
-      vkDestroyPipelineLayout(pContext->device, pipelineLayout, nullptr);
-      vkDestroyPipeline(pContext->device, graphicsPipeline, nullptr);
+      vkDestroyPipelineLayout(pContext->device, pPipeline->layout, nullptr);
+      vkDestroyPipeline(pContext->device, pPipeline->pipeline, nullptr);
 
       vkDestroyBuffer(pContext->device, vertexBuffer, nullptr);
       vkFreeMemory(pContext->device, vertexBufferMemory, nullptr);

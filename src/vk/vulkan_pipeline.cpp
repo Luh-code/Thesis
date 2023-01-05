@@ -235,7 +235,7 @@ namespace Ths::Vk
     return true;
   }
 
-  VkShaderModule createShaderModule(VulkanContext* pContext, const Shader& shader)
+  VkShaderModule createShaderModule(VulkanContext* pContext, const ShaderResource& shader)
   {
     return createShaderModule(pContext, shader.code);
   }
@@ -275,18 +275,23 @@ namespace Ths::Vk
     return buffer;
   }
 
-  bool createGraphicsPipeline(VulkanContext* pContext, OContext& object)
+  bool createGraphicsPipeline(VulkanContext* pContext, OContext& object, PipelineResource*& pPipeline, ShaderResource& vShader, ShaderResource& fShader)
+  {
+    pPipeline = new PipelineResource();
+    return createGraphicsPipeline(pContext, object, *pPipeline, vShader, fShader);
+  }
+  bool createGraphicsPipeline(VulkanContext* pContext, OContext& object, PipelineResource& pipeline, ShaderResource& vShader, ShaderResource& fShader)
   {
     LOG_INIT("Graphics Pipeline");
-    if (object.material->vertexShader->code.size() == 0 || object.material->fragmentShader->code.size() == 0)
+    if (object.material->pVertexShader->code.size() == 0 || object.material->pFragmentShader->code.size() == 0)
     {
       LOG_ERROR("An error occured whilst loading shaders!");
       LOG_INIT_AB("Graphics Pipeline");
       return false;
     }
 
-    VkShaderModule vertModule = createShaderModule(pContext, *object.material->vertexShader);
-    VkShaderModule fragModule = createShaderModule(pContext, *object.material->fragmentShader);
+    VkShaderModule vertModule = createShaderModule(pContext, *object.material->pVertexShader);
+    VkShaderModule fragModule = createShaderModule(pContext, *object.material->pFragmentShader);
 
     VkPipelineShaderStageCreateInfo vertShaderStageInfo {VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO};
     vertShaderStageInfo.stage = VK_SHADER_STAGE_VERTEX_BIT;
@@ -415,7 +420,7 @@ namespace Ths::Vk
     pipelineLayoutInfo.pushConstantRangeCount = 1;
     pipelineLayoutInfo.pPushConstantRanges = &pushConstant;
 
-    VKF(vkCreatePipelineLayout(pContext->device, &pipelineLayoutInfo, nullptr, &object.pipelineLayout))
+    VKF(vkCreatePipelineLayout(pContext->device, &pipelineLayoutInfo, nullptr, &pipeline.layout))
     {
       LOG_ERROR("An Error occured whilst creating a VkPipelineLayout: ", res);
       LOG_INIT_AB("Graphics Pipeline");
@@ -433,13 +438,13 @@ namespace Ths::Vk
     pipelineInfo.pDepthStencilState = &depthStencil;
     pipelineInfo.pColorBlendState = &colorBlending;
     pipelineInfo.pDynamicState = &dynamicState;
-    pipelineInfo.layout = object.pipelineLayout;
+    pipelineInfo.layout = pipeline.layout;
     pipelineInfo.renderPass = pContext->renderPasses[0];
     pipelineInfo.subpass = 0;
     pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
     pipelineInfo.basePipelineIndex = -1;
 
-    VKF(vkCreateGraphicsPipelines(pContext->device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &object.graphicsPipeline))
+    VKF(vkCreateGraphicsPipelines(pContext->device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &pipeline.pipeline))
     {
       LOG_ERROR("An error occured whilst creating a VkPipeline: ", res);
       LOG_INIT_AB("Graphics Pipeline");

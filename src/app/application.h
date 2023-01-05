@@ -5,7 +5,7 @@
 #include "../vk/vulkan_base.h"
 #include "../memory_mger.h"
 #include "../ecs/ecs_base.hpp"
-#include "../ecs/rendering_ecs.hpp"
+#include "../ecs/ecs_rendering.hpp"
 #include "debug_window.hpp"
 
 namespace Ths

@@ -1,8 +1,7 @@
 #define SDL_MAIN_HANDLED
 #include "app/application.h"
 #include "memory_mger.h"
-#include "ecs/ecs_base.hpp"
-#include "ecs/rendering_ecs.hpp"
+// #include "ecs/ecs_base.hpp"
 #include "pch.h"
 
 int main()
@@ -29,10 +28,10 @@ int main()
   });
   crd.addComponent(entities[0], Ths::Vk::Material{
     .path = "D:/Projects/Thesis/assets/textures/viking.png",
-    .vertexShader = new Ths::Vk::Shader{
+    .pVertexShader = new Ths::Vk::ShaderResource{
       Ths::Vk::readFile("D:/Projects/Thesis/src/vk/shaders/vert.spv")
     },
-    .fragmentShader = new Ths::Vk::Shader{
+    .pFragmentShader = new Ths::Vk::ShaderResource{
       Ths::Vk::readFile("D:/Projects/Thesis/src/vk/shaders/frag.spv")
     },
   });
@@ -49,10 +48,10 @@ int main()
   });
   crd.addComponent(entities[1], Ths::Vk::Material{
     .path = "D:/Projects/Thesis/assets/textures/walker_color.jpg",
-    .vertexShader = new Ths::Vk::Shader{
+    .pVertexShader = new Ths::Vk::ShaderResource{
       Ths::Vk::readFile("D:/Projects/Thesis/src/vk/shaders/vert.spv")
     },
-    .fragmentShader = new Ths::Vk::Shader{
+    .pFragmentShader = new Ths::Vk::ShaderResource{
       Ths::Vk::readFile("D:/Projects/Thesis/src/vk/shaders/frag.spv")
     },
   });
@@ -69,10 +68,10 @@ int main()
   });
   crd.addComponent(entities[2], Ths::Vk::Material{
     .path = "D:/Projects/Thesis/assets/textures/Obama.png",
-    .vertexShader = new Ths::Vk::Shader{
+    .pVertexShader = new Ths::Vk::ShaderResource{
       Ths::Vk::readFile("D:/Projects/Thesis/src/vk/shaders/vert.spv")
     },
-    .fragmentShader = new Ths::Vk::Shader{
+    .pFragmentShader = new Ths::Vk::ShaderResource{
       Ths::Vk::readFile("D:/Projects/Thesis/src/vk/shaders/frag.spv")
     },
   });
