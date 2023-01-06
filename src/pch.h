@@ -37,10 +37,7 @@
 
 #include <nlohmann/json.hpp>
 
-// #ifndef TINYOBJLOADER_IMPLEMENTATION
-// #define TINYOBJLOADER_IMPLEMENTATION
-// #include <tiny_obj_loader.h>
-// #endif // TINYOBJLOADER_IMPLEMENTATION
+#include "absl/container/flat_hash_map.h"
 
 #include <sheriff-base.h>
 #include <flagex_base.h>

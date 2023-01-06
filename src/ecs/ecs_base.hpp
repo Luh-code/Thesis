@@ -129,9 +129,9 @@ namespace Ths::ecs
   public:
     std::array<T, MAX_ENTITIES> mComponentArray{};
 
-    std::unordered_map<Entity, size_t> mEntityToIndexMap{};
+    absl::flat_hash_map<Entity, size_t> mEntityToIndexMap{};
 
-    std::unordered_map<size_t, Entity> mIndexToEntityMap{};
+    absl::flat_hash_map<size_t, Entity> mIndexToEntityMap{};
 
     size_t mSize;
   };
@@ -225,9 +225,9 @@ namespace Ths::ecs
       }
     }
   public:
-    std::unordered_map<const char*, ComponentType> mComponentTypes{};
+    absl::flat_hash_map<const char*, ComponentType> mComponentTypes{};
 
-    std::unordered_map<const char*, IComponentArray*> mComponentArrays{};
+    absl::flat_hash_map<const char*, IComponentArray*> mComponentArrays{};
 
     ComponentType mNextComponentType{};
 
@@ -449,8 +449,140 @@ namespace Ths::ecs
       }
     }
   public:
-    std::unordered_map<const char*, Signature> mSignatures{};
-    std::unordered_map<const char*, System*> mSystems{};
+    absl::flat_hash_map<const char*, Signature> mSignatures{};
+    absl::flat_hash_map<const char*, System*> mSystems{};
+  };
+
+  class IResourceArray
+  {
+
+  };
+
+  template <typename T>
+  class ResourceArray : IResourceArray
+  {
+  public:
+    inline T*& getResource(const char* key)
+    {
+      absl::string_view view = key;
+      return data[view];
+    }
+    inline T*& getResource(std::string key)
+    {
+      return getResource(key.c_str());
+    }
+
+    inline void setResource(const char* key, T* value)
+    {
+      absl::string_view view = key;
+      data[view] = value;
+    }
+    inline void setResource(std::string key, T* value)
+    {
+      setResource(key.c_str(), value);
+    }
+
+    inline void deleteResource(const char* key)
+    {
+      absl::string_view view = key;
+      delete data[view];
+      data.remove(view);
+    }
+    inline void deleteResource(std::string key)
+    {
+      deleteResource(key.c_str());
+    }
+
+    inline T*& operator[](const char* key)
+    {
+      absl::string_view view = key;
+      return data[view];
+    }
+    inline T*& operator[](std::string key)
+    {
+      return this[key.c_str()];
+    }
+  private:
+    absl::flat_hash_map<std::string, T*> data;
+  };
+
+  class ResourceManager
+  {
+  public:
+    template<typename T>
+    inline void registerResource()
+    {
+      const char* name = typeid(T).name();
+      if (resourceArrays.find(name) != resourceArrays.end())
+      {
+        LOG_ERROR("Tried to register resource multiple times - registering nothing");
+        return;
+      }
+      resourceArrays.insert({name, reinterpret_cast<IResourceArray*>(new ResourceArray<T>())});
+      // resourceArrays[name] = reinterpret_cast<IResourceArray*>(new ResourceArray<T>());
+    }
+
+    template<typename T>
+    inline T*& getResource(const char* key)
+    {
+      const char* name = typeid(T).name();
+      return getResourceArray<T>()->getResource(key);
+    }
+    template<typename T>
+    inline T*& getResource(std::string key)
+    {
+      return getResource<T>(key.c_str());
+    }
+
+    template<typename T>
+    inline void setResource(const char* key, T* value)
+    {
+      const char* name = typeid(T).name();
+      getResourceArray<T>()->setResource(key, value);
+    }
+    template<typename T>
+    inline void setResource(std::string key, T* value)
+    {
+      setResource<T>(key.c_str(), value);
+    }
+
+    template<typename T>
+    inline void deleteResource(const char* key)
+    {
+      getResourceArray<T>()->deleteResource(key);
+    }
+    template<typename T>
+    inline void deleteResource(std::string key)
+    {
+      deleteResource<T>(key.c_str());
+    }
+
+    inline ~ResourceManager()
+    {
+      for (auto& a : resourceArrays)
+      {
+        delete a.second;
+      }
+    }
+  private:
+    absl::flat_hash_map<const char*, IResourceArray*> resourceArrays;
+
+    template<typename T>
+    ResourceArray<T>* getResourceArray()
+    {
+      const char* typeName = typeid(T).name();
+
+      if(resourceArrays.find(typeName) == resourceArrays.end())
+      {
+        LOG_ERROR("Tried to use unregistered component!");
+        assert(false);
+      }
+
+      // return static_cast<ComponentArray<T>*>(mComponentArrays[typeName]);
+      // ComponentArray<T>* temp = mComponentArrays[typeName];
+      // return temp;
+      return reinterpret_cast<ResourceArray<T>*>(resourceArrays[typeName]);
+    }
   };
 
   class Coordinator
@@ -461,6 +593,7 @@ namespace Ths::ecs
       pComponentManager = new ComponentManager();
       pEntityManager = new EntityManager();
       pSystemManager = new SystemManager();
+      pResourceManager = new ResourceManager();
     }
 
     inline Entity createEntity()
@@ -529,6 +662,45 @@ namespace Ths::ecs
       pSystemManager->setSignature<T>(signature);
     }
 
+    template<typename T>
+    inline void registerResource()
+    {
+      pResourceManager->registerResource<T>();
+    }
+
+    template<typename T>
+    inline T*& getResource(const char* key)
+    {
+      return pResourceManager->getResource<T>(key);
+    }
+    template<typename T>
+    inline T*& getResource(std::string key)
+    {
+      return getResource<T>(key.c_str());
+    }
+
+    template<typename T>
+    inline void setResource(const char* key, T* value)
+    {
+      pResourceManager->setResource<T>(key, value);
+    }
+    template<typename T>
+    inline void setResource(std::string key, T* value)
+    {
+      setResource<T>(key.c_str(), value);
+    }
+
+    template<typename T>
+    inline void deleteResource(const char* key)
+    {
+      pResourceManager->deleteResource<T>(key);
+    }
+    template<typename T>
+    inline void deleteResource(std::string key)
+    {
+      deleteResource<T>(key.c_str());
+    }
+
     inline nlohmann::json getJson()
     {
       nlohmann::json j;
@@ -543,11 +715,13 @@ namespace Ths::ecs
       delete pComponentManager;
       delete pEntityManager;
       delete pSystemManager;
+      delete pResourceManager;
     }
   public:
     ComponentManager* pComponentManager;
     EntityManager* pEntityManager;
     SystemManager* pSystemManager;
+    ResourceManager* pResourceManager;
   };
 }
 

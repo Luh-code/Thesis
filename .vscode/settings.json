@@ -91,6 +91,7 @@
         "ranges": "cpp",
         "span": "cpp",
         "filesystem": "cpp",
-        "valarray": "cpp"
+        "valarray": "cpp",
+        "*.inc": "cpp"
     }
 }

@@ -194,6 +194,8 @@ namespace Ths::Vk
     {
       this->code = code;
     }
+
+    inline ShaderResource() { };
   } ShaderResource;
 
   typedef struct PipelineResource : public Ths::Resource

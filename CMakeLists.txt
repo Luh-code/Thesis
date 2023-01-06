@@ -55,6 +55,9 @@ if (WIN32)
     endif (COMPILE_SDL_LOCALLY)
 endif (WIN32)
 
+set(ABSL_PROPAGATE_CXX_STD ON)
+add_subdirectory(${PROJECT_SOURCE_DIR}/dependencies/abseil)
+
 # Optional variable check
 set(PRINT_ALL_VARS OFF)
 
@@ -114,7 +117,10 @@ target_include_directories(thesis PUBLIC ${PROJECT_SOURCE_DIR}/dependencies/Flag
                                 ${Vulkan_INCLUDE_DIRS})
 target_link_libraries(thesis PUBLIC #${PROJECT_SOURCE_DIR}/dependencies/Vulkan/1.3.216.0/x86_64/lib/libvulkan.so
                                 ${SDL2_LIBRARIES}
-                                ${Vulkan_LIBRARIES})
+                                ${Vulkan_LIBRARIES}
+                                # absl::flat_hash_map
+                                absl::flat_hash_set
+                                absl::container_common)
 target_precompile_headers(thesis PUBLIC ${PROJECT_SOURCE_DIR}/src/pch.h)
 # Setup Testing
 #add_subdirectory(tests)
