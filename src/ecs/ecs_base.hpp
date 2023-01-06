@@ -485,8 +485,8 @@ namespace Ths::ecs
     inline void deleteResource(const char* key)
     {
       absl::string_view view = key;
-      delete data[view];
-      data.remove(view);
+      // delete data[view];
+      data.erase(view);
     }
     inline void deleteResource(std::string key)
     {

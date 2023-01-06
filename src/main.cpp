@@ -27,20 +27,14 @@ int main()
   app->init();
 
   crd.registerResource<Ths::Vk::ShaderResource>();
-  crd.setResource("basicVShader", new Ths::Vk::ShaderResource{Ths::Vk::readFile("D:/Projects/Thesis/src/vk/shaders/vert.spv")});
+  crd.registerResource<Ths::Vk::TextureResource>();
 
-  // Ths::Vk::ShaderResource* basicVShader = new Ths::Vk::ShaderResource(Ths::Vk::readFile("D:/Projects/Thesis/src/vk/shaders/vert.spv"));
-  Ths::Vk::ShaderResource* basicFShader = new Ths::Vk::ShaderResource(Ths::Vk::readFile("D:/Projects/Thesis/src/vk/shaders/frag.spv"));
+  crd.setResource("basicVShader", new Ths::Vk::ShaderResource(Ths::Vk::readFile("D:/Projects/Thesis/src/vk/shaders/vert.spv")));
+  crd.setResource("basicFShader", new Ths::Vk::ShaderResource(Ths::Vk::readFile("D:/Projects/Thesis/src/vk/shaders/frag.spv")));
 
-  Ths::Vk::TextureResource* vikingTexture = Ths::Vk::createTextureResource(pContext,
-    "D:/Projects/Thesis/assets/textures/viking.png"
-  );
-  Ths::Vk::TextureResource* mechTexture = Ths::Vk::createTextureResource(pContext,
-    "D:/Projects/Thesis/assets/textures/walker_color.jpg"
-  );
-  Ths::Vk::TextureResource* obamaTexture = Ths::Vk::createTextureResource(pContext,
-    "D:/Projects/Thesis/assets/textures/Obama.png"
-  );
+  crd.setResource("vikingTexture", Ths::Vk::createTextureResource(pContext, "D:/Projects/Thesis/assets/textures/viking.png"));
+  crd.setResource("mechTexture", Ths::Vk::createTextureResource(pContext, "D:/Projects/Thesis/assets/textures/walker_color.jpg"));
+  crd.setResource("obamaTexture", Ths::Vk::createTextureResource(pContext, "D:/Projects/Thesis/assets/textures/Obama.png"));
 
   crd.addComponent(entities[0], Ths::Vk::Mesh{
     .basepath = "D:/Projects/Thesis/assets/models/",
@@ -48,9 +42,9 @@ int main()
   });
   crd.addComponent(entities[0], Ths::Vk::Material{
     .path = "D:/Projects/Thesis/assets/textures/viking.png",
-    .pTexture = vikingTexture,
+    .pTexture = crd.getResource<Ths::Vk::TextureResource>("vikingTexture"),
     .pVertexShader = crd.getResource<Ths::Vk::ShaderResource>("basicVShader"),
-    .pFragmentShader = basicFShader,
+    .pFragmentShader = crd.getResource<Ths::Vk::ShaderResource>("basicFShader"),
   });
   crd.addComponent(entities[0], Ths::Vk::Transform{
     .translation = glm::vec3{0.0f, -1.0f, 0.0f},
@@ -65,9 +59,9 @@ int main()
   });
   crd.addComponent(entities[3], Ths::Vk::Material{
     .path = "D:/Projects/Thesis/assets/textures/viking.png",
-    .pTexture = vikingTexture,
+    .pTexture = crd.getResource<Ths::Vk::TextureResource>("vikingTexture"),
     .pVertexShader = crd.getResource<Ths::Vk::ShaderResource>("basicVShader"),
-    .pFragmentShader = basicFShader,
+    .pFragmentShader = crd.getResource<Ths::Vk::ShaderResource>("basicFShader"),
   });
   crd.addComponent(entities[3], Ths::Vk::Transform{
     .translation = glm::vec3{0.0f, -1.0f, 1.0f},
@@ -82,9 +76,9 @@ int main()
   });
   crd.addComponent(entities[1], Ths::Vk::Material{
     .path = "D:/Projects/Thesis/assets/textures/walker_color.jpg",
-    .pTexture = mechTexture,
+    .pTexture = crd.getResource<Ths::Vk::TextureResource>("mechTexture"),
     .pVertexShader = crd.getResource<Ths::Vk::ShaderResource>("basicVShader"),
-    .pFragmentShader = basicFShader,
+    .pFragmentShader = crd.getResource<Ths::Vk::ShaderResource>("basicFShader"),
   });
   crd.addComponent(entities[1], Ths::Vk::Transform{
     .translation = glm::vec3{0.0f, 1.0f, 0.0f},
@@ -99,9 +93,9 @@ int main()
   });
   crd.addComponent(entities[2], Ths::Vk::Material{
     .path = "D:/Projects/Thesis/assets/textures/Obama.png",
-    .pTexture = obamaTexture,
+    .pTexture = crd.getResource<Ths::Vk::TextureResource>("obamaTexture"),
     .pVertexShader = crd.getResource<Ths::Vk::ShaderResource>("basicVShader"),
-    .pFragmentShader = basicFShader,
+    .pFragmentShader = crd.getResource<Ths::Vk::ShaderResource>("basicFShader"),
   });
   crd.addComponent(entities[2], Ths::Vk::Transform{
     .translation = glm::vec3{0.0f, 0.0f, 0.0f},
@@ -112,9 +106,12 @@ int main()
 
   app->run();
 
-  Ths::Vk::destroyTextureResource(pContext, vikingTexture);
-  Ths::Vk::destroyTextureResource(pContext, mechTexture);
-  Ths::Vk::destroyTextureResource(pContext, obamaTexture);
+  Ths::Vk::destroyTextureResource(pContext, crd.getResource<Ths::Vk::TextureResource>("vikingTexture"));
+  Ths::Vk::destroyTextureResource(pContext, crd.getResource<Ths::Vk::TextureResource>("mechTexture"));
+  Ths::Vk::destroyTextureResource(pContext, crd.getResource<Ths::Vk::TextureResource>("obamaTexture"));
+  crd.deleteResource<Ths::Vk::TextureResource>("vikingTexture");
+  crd.deleteResource<Ths::Vk::TextureResource>("mechTexture");
+  crd.deleteResource<Ths::Vk::TextureResource>("obamaTexture");
 
   app->cleanup();
 
