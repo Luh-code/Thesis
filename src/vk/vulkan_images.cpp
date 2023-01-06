@@ -42,7 +42,7 @@ namespace Ths::Vk
     samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
     samplerInfo.mipLodBias = 0.0f;
     samplerInfo.minLod = 0.0f;
-    samplerInfo.maxLod = static_cast<float>(pContext->mipLevels);
+    samplerInfo.maxLod = static_cast<float>(pTexture.mipLevels);
 
     VKF(vkCreateSampler(pContext->device, &samplerInfo, nullptr, &pTexture.sampler))
     {
@@ -79,7 +79,7 @@ namespace Ths::Vk
 
   bool createTextureImageView(VContext* pContext, TextureResource& pTexture)
   {
-    pTexture.view = createImageView(pContext, pTexture.image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, pContext->mipLevels);
+    pTexture.view = createImageView(pContext, pTexture.image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, pTexture.mipLevels);
     return pTexture.view != VK_NULL_HANDLE;
   }
 
@@ -245,6 +245,7 @@ namespace Ths::Vk
     barrier.subresourceRange.baseArrayLayer = 0;
     barrier.subresourceRange.layerCount = 1;
     barrier.subresourceRange.levelCount = 1;
+    // barrier.subresourceRange.levelCount = mipLevels;
 
     int32_t mipW = w;
     int32_t mipH = h;
@@ -314,17 +315,17 @@ namespace Ths::Vk
     return true;
   }
 
-  bool createTextureImage(VContext* pContext, ImageResource*& pImage, char const* filename)
+  bool createTextureImage(VContext* pContext, ImageResource*& pImage, const char* filename)
   {
     pImage = new ImageResource {};
     return createTextureImage(pContext, *pImage, filename);
   }
-  bool createTextureImage(VContext* pContext, TextureResource*& pTexture, char const* filename)
+  bool createTextureImage(VContext* pContext, TextureResource*& pTexture, const char* filename)
   {
     pTexture = new TextureResource {};
     return createTextureImage(pContext, *reinterpret_cast<ImageResource*>(pTexture), filename);
   }
-  bool createTextureImage(VContext* pContext, ImageResource& image, char const* filename)
+  bool createTextureImage(VContext* pContext, ImageResource& image, const char* filename)
   {
     int w, h, channels;
     // stbi_uc* pixels = stbi_load(TEXTURE_PATH.c_str(), &w, &h, &channels, STBI_rgb_alpha);
@@ -337,12 +338,12 @@ namespace Ths::Vk
       return false;
     }
 
-    pContext->mipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(w, h)))) + 1;
+    image.mipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(w, h)))) + 1;
 
     VkBuffer stagingBuffer;
     VkDeviceMemory stagingBufferMemory;
     
-    if (!createImage(pContext, w, h, pContext->mipLevels, VK_SAMPLE_COUNT_1_BIT, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_SRC_BIT |
+    if (!createImage(pContext, w, h, image.mipLevels, VK_SAMPLE_COUNT_1_BIT, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_SRC_BIT |
       VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, image.image, image.imageMemory))
       return false;
 
@@ -359,14 +360,14 @@ namespace Ths::Vk
 
     stbi_image_free(pixels);
 
-    transitionImageLayout(pContext, image.image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, pContext->mipLevels);
+    transitionImageLayout(pContext, image.image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, image.mipLevels);
     copyBufferToImage(
       pContext,
       stagingBuffer, image.image,
       static_cast<uint32_t>(w), static_cast<uint32_t>(h)
     );
     
-    generateMipmaps(pContext, image.image, VK_FORMAT_B8G8R8A8_SRGB, w, h, pContext->mipLevels);
+    generateMipmaps(pContext, image.image, VK_FORMAT_B8G8R8A8_SRGB, w, h, image.mipLevels);
 
     // transitionImageLayout(pContext, pContext->textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
     //   VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, pContext->mipLevels);

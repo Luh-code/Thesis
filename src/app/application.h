@@ -77,23 +77,26 @@ namespace Ths
     Ths::DebugGui debugGui {};
 
     inline SDLApp() {};
+    virtual inline void init()
+    {
+      LOG_INIT("SDL App \"", name, "\"");
+      // initWindow(name, 800, 600);
+      initWindow(name, 1600, 900);
+      initVulkan();
+      LOG_INIT_OK("SDL App \"", name, "\"");
+    }
     virtual inline void run()
     {
       run([]() -> bool {return true;});
     }
     virtual inline void run(bool(*func)())
     {
-      LOG_INIT("SDL App \"", name, "\"");
-      // initWindow(name, 800, 600);
-      initWindow(name, 1600, 900);
-      initVulkan();
       renderSystem->initEntities();
       initImGui();
-      LOG_INIT_OK("SDL App \"", name, "\"");
       mainLoop(func);
       LOG_DEST("SDL App \"", name, "\"");
-      cleanup();
-      LOG_DEST_OK("SDL App \"", name, "\"");
+      Ths::Vk::cleanupSwapChain(vContext);
+      // cleanup();
     }
     virtual void initImGui();
     virtual void initEcs() override;

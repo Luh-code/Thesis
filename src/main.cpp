@@ -8,6 +8,8 @@ int main()
 {
   LOG_INFO_IV("|-----------< Thesis >-----------|");
   Ths::SDLApp* app = new Ths::SDLApp();
+  app->name = "Test App";
+  app->version = VK_MAKE_API_VERSION(1,0,0,0);
 
   app->initEcs();
 
@@ -17,10 +19,26 @@ int main()
   entities[0] = crd.createEntity();
   entities[1] = crd.createEntity();
   entities[2] = crd.createEntity();
+  entities[3] = crd.createEntity();
 
   auto& camera = app->renderSystem->camera;
 
   camera.fov = 60.0f;
+
+  app->init();
+
+  Ths::Vk::ShaderResource* basicVShader = new Ths::Vk::ShaderResource(Ths::Vk::readFile("D:/Projects/Thesis/src/vk/shaders/vert.spv"));
+  Ths::Vk::ShaderResource* basicFShader = new Ths::Vk::ShaderResource(Ths::Vk::readFile("D:/Projects/Thesis/src/vk/shaders/frag.spv"));
+
+  Ths::Vk::TextureResource* vikingTexture = Ths::Vk::createTextureResource(pContext,
+    "D:/Projects/Thesis/assets/textures/viking.png"
+  );
+  Ths::Vk::TextureResource* mechTexture = Ths::Vk::createTextureResource(pContext,
+    "D:/Projects/Thesis/assets/textures/walker_color.jpg"
+  );
+  Ths::Vk::TextureResource* obamaTexture = Ths::Vk::createTextureResource(pContext,
+    "D:/Projects/Thesis/assets/textures/Obama.png"
+  );
 
   crd.addComponent(entities[0], Ths::Vk::Mesh{
     .basepath = "D:/Projects/Thesis/assets/models/",
@@ -28,12 +46,9 @@ int main()
   });
   crd.addComponent(entities[0], Ths::Vk::Material{
     .path = "D:/Projects/Thesis/assets/textures/viking.png",
-    .pVertexShader = new Ths::Vk::ShaderResource{
-      Ths::Vk::readFile("D:/Projects/Thesis/src/vk/shaders/vert.spv")
-    },
-    .pFragmentShader = new Ths::Vk::ShaderResource{
-      Ths::Vk::readFile("D:/Projects/Thesis/src/vk/shaders/frag.spv")
-    },
+    .pTexture = vikingTexture,
+    .pVertexShader = basicVShader,
+    .pFragmentShader = basicFShader,
   });
   crd.addComponent(entities[0], Ths::Vk::Transform{
     .translation = glm::vec3{0.0f, -1.0f, 0.0f},
@@ -41,6 +56,23 @@ int main()
     .scale = glm::vec3{1.0f, 1.0f, 1.0f},
   });
   crd.addComponent(entities[0], Ths::Vk::OContext{});
+
+  crd.addComponent(entities[3], Ths::Vk::Mesh{
+    .basepath = "D:/Projects/Thesis/assets/models/",
+    .path = "viking.obj",
+  });
+  crd.addComponent(entities[3], Ths::Vk::Material{
+    .path = "D:/Projects/Thesis/assets/textures/viking.png",
+    .pTexture = vikingTexture,
+    .pVertexShader = basicVShader,
+    .pFragmentShader = basicFShader,
+  });
+  crd.addComponent(entities[3], Ths::Vk::Transform{
+    .translation = glm::vec3{0.0f, -1.0f, 1.0f},
+    .rotation = glm::vec3{0.0f, 0.0f, glm::radians(270.0f)},
+    .scale = glm::vec3{1.0f, 1.0f, 1.0f},
+  });
+  crd.addComponent(entities[3], Ths::Vk::OContext{});
   
   crd.addComponent(entities[1], Ths::Vk::Mesh{
     .basepath = "D:/Projects/Thesis/assets/models/",
@@ -48,12 +80,9 @@ int main()
   });
   crd.addComponent(entities[1], Ths::Vk::Material{
     .path = "D:/Projects/Thesis/assets/textures/walker_color.jpg",
-    .pVertexShader = new Ths::Vk::ShaderResource{
-      Ths::Vk::readFile("D:/Projects/Thesis/src/vk/shaders/vert.spv")
-    },
-    .pFragmentShader = new Ths::Vk::ShaderResource{
-      Ths::Vk::readFile("D:/Projects/Thesis/src/vk/shaders/frag.spv")
-    },
+    .pTexture = mechTexture,
+    .pVertexShader = basicVShader,
+    .pFragmentShader = basicFShader,
   });
   crd.addComponent(entities[1], Ths::Vk::Transform{
     .translation = glm::vec3{0.0f, 1.0f, 0.0f},
@@ -68,12 +97,9 @@ int main()
   });
   crd.addComponent(entities[2], Ths::Vk::Material{
     .path = "D:/Projects/Thesis/assets/textures/Obama.png",
-    .pVertexShader = new Ths::Vk::ShaderResource{
-      Ths::Vk::readFile("D:/Projects/Thesis/src/vk/shaders/vert.spv")
-    },
-    .pFragmentShader = new Ths::Vk::ShaderResource{
-      Ths::Vk::readFile("D:/Projects/Thesis/src/vk/shaders/frag.spv")
-    },
+    .pTexture = obamaTexture,
+    .pVertexShader = basicVShader,
+    .pFragmentShader = basicFShader,
   });
   crd.addComponent(entities[2], Ths::Vk::Transform{
     .translation = glm::vec3{0.0f, 0.0f, 0.0f},
@@ -82,9 +108,13 @@ int main()
   });
   crd.addComponent(entities[2], Ths::Vk::OContext{});
 
-  app->name = "Test App";
-  app->version = VK_MAKE_API_VERSION(1,0,0,0);
   app->run();
+
+  Ths::Vk::destroyTextureResource(pContext, vikingTexture);
+  Ths::Vk::destroyTextureResource(pContext, mechTexture);
+  Ths::Vk::destroyTextureResource(pContext, obamaTexture);
+
+  app->cleanup();
 
   LOG_INFO_IV("|--------------------------------|");
   return 0;

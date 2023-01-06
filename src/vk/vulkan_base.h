@@ -51,7 +51,7 @@ namespace Ths::Vk
   bool generateMipmaps(VContext* pContext, VkImage image, VkFormat format, int32_t w, int32_t h, uint32_t mipLevels);
   bool createTextureImage(VContext* pContext, ImageResource*& pImage, const char* filename);
   bool createTextureImage(VContext* pContext, TextureResource*& pTexture, const char* filename);
-  bool createTextureImage(VContext* pContext, ImageResource& image, char const* filename);
+  bool createTextureImage(VContext* pContext, ImageResource& image, const char* filename);
 
   bool createDescriptorSets(VContext* pContext, OContext& object);
   bool createDescriptorPool(VContext* pContext, OContext& object);
@@ -118,6 +118,43 @@ namespace Ths::Vk
   bool checkLayerAvailability(std::vector<const char*>* pLayers);
   bool createVulkanInstance(VContext* pContext, uint32_t extensionCount, const char** ppExtensions,
     uint32_t layerCount, const char** ppLayers, const char* pAppName = "Test App", uint32_t appVersion = VK_MAKE_API_VERSION(1,0,0,0), bool debug = true);
+
+  // Resource Creation
+  
+  inline void createImageResource(VContext* pContext, ImageResource*& pImage, const char* path)
+  {
+    createTextureImage(pContext, pImage, path);
+  }
+  inline ImageResource* createImageResource(VContext* pContext, const char* path)
+  {
+    ImageResource* temp = {};
+    createImageResource(pContext, temp, path);
+    return temp;
+  }
+  inline void destroyImageResource(VContext* pContext, ImageResource*& pImage)
+  {
+    vkDestroyImage(pContext->device, pImage->image, nullptr);
+    vkFreeMemory(pContext->device, pImage->imageMemory, nullptr);
+  }
+
+  inline void createTextureResource(VContext* pContext, TextureResource*& pTexture, const char* path)
+  {
+    createImageResource(pContext, reinterpret_cast<ImageResource*&>(pTexture), path);
+    createTextureImageView(pContext, *pTexture);
+    createTextureSampler(pContext, *pTexture);
+  }
+  inline TextureResource* createTextureResource(VContext* pContext, const char* path)
+  {
+    TextureResource* temp = {};
+    createTextureResource(pContext, temp, path);
+    return temp;
+  }
+  inline void destroyTextureResource(VContext* pContext, TextureResource*& pTexture)
+  {
+    vkDestroySampler(pContext->device, pTexture->sampler, nullptr);
+    vkDestroyImageView(pContext->device, pTexture->view, nullptr);
+    destroyImageResource(pContext, reinterpret_cast<ImageResource*&>(pTexture));
+  }
 }
 
 #endif // __VULKAN_BASE_H__

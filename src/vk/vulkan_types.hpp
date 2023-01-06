@@ -163,6 +163,7 @@ namespace Ths::Vk
   {
     VkImage image;
     VkDeviceMemory imageMemory;
+    uint32_t mipLevels;
   } ImageResource;
 
   typedef struct TextureResource : public ImageResource
@@ -224,13 +225,16 @@ namespace Ths::Vk
 
     inline void destroy(VContext* pContext)
     {
-      vkDestroySampler(pContext->device, pTexture->sampler, nullptr);
-      vkDestroyImageView(pContext->device, pTexture->view, nullptr);
-      vkDestroyImage(pContext->device, pTexture->image, nullptr);
-      vkFreeMemory(pContext->device, pTexture->imageMemory, nullptr);
-
-      delete pVertexShader;
-      delete pFragmentShader;
+      // if (pTexture->sampler) vkDestroySampler(pContext->device, pTexture->sampler, nullptr);
+      // pTexture->sampler = VK_NULL_HANDLE;
+      // if (pTexture->view) vkDestroyImageView(pContext->device, pTexture->view, nullptr);
+      // pTexture->view = VK_NULL_HANDLE;
+      // if (pTexture->image) vkDestroyImage(pContext->device, pTexture->image, nullptr);
+      // pTexture->image = VK_NULL_HANDLE;
+      // if (pTexture->imageMemory) vkFreeMemory(pContext->device, pTexture->imageMemory, nullptr);
+      // pTexture->imageMemory = VK_NULL_HANDLE;
+      // delete pVertexShader;
+      // delete pFragmentShader;
     }
   } Material;
 

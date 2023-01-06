@@ -329,7 +329,8 @@ namespace Ths
   void SDLApp::cleanup(bool dein_sdl)
   {
     // Delete Vk stuff
-    Ths::Vk::cleanupSwapChain(vContext);
+    // Ths::Vk::cleanupSwapChain(vContext);
+    LOG_DEST_OK("SDL App \"", name, "\"");
 
     if (imGuiData)
     {

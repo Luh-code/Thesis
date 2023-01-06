@@ -44,33 +44,38 @@ namespace Ths::ecs
       object.transform = &transform;
     }
 
+    inline void initEntity(Entity e)
+    {
+      auto& object = crd->getComponent<Ths::Vk::OContext>(e);
+      auto& mesh = crd->getComponent<Ths::Vk::Mesh>(e);
+      auto& material = crd->getComponent<Ths::Vk::Material>(e);
+
+      Ths::Vk::createDescriptorSetLayout(pContext, object);
+      Ths::Vk::createGraphicsPipeline(pContext, object,
+        object.pPipeline,
+        *material.pVertexShader,
+        *material.pFragmentShader
+      );
+      // Ths::Vk::createTextureImage(pContext, material.pTexture, material.path);
+      
+      // Ths::Vk::createTextureImageView(pContext, *material.pTexture);
+      // Ths::Vk::createTextureSampler(pContext, *material.pTexture);
+
+      Ths::Vk::loadModel(pContext, mesh.pMesh, mesh.path, mesh.basepath);
+      Ths::Vk::createVertexBuffer(pContext, object);
+      Ths::Vk::createIndexBuffer(pContext, object);
+
+      Ths::Vk::createDescriptorPool(pContext, object);
+      Ths::Vk::createDescriptorSets(pContext, object);
+
+      // Ths::Vk::QueueFamilyIndices queueFamilyIndices = Ths::Vk::findQueueFamilies(pContext->physicalDevice, pContext->surface);
+    }
+
     inline void initEntities()
     {
       for(const auto& e : mEntities)
       {
-        auto& object = crd->getComponent<Ths::Vk::OContext>(e);
-        auto& mesh = crd->getComponent<Ths::Vk::Mesh>(e);
-        auto& material = crd->getComponent<Ths::Vk::Material>(e);
-
-        Ths::Vk::createDescriptorSetLayout(pContext, object);
-        Ths::Vk::createGraphicsPipeline(pContext, object,
-          object.pPipeline,
-          *material.pVertexShader,
-          *material.pFragmentShader
-        );
-        Ths::Vk::createTextureImage(pContext, material.pTexture, material.path);
-        
-        Ths::Vk::createTextureImageView(pContext, *material.pTexture);
-        Ths::Vk::createTextureSampler(pContext, *material.pTexture);
-
-        Ths::Vk::loadModel(pContext, mesh.pMesh, mesh.path, mesh.basepath);
-        Ths::Vk::createVertexBuffer(pContext, object);
-        Ths::Vk::createIndexBuffer(pContext, object);
-
-        Ths::Vk::createDescriptorPool(pContext, object);
-        Ths::Vk::createDescriptorSets(pContext, object);
-
-        // Ths::Vk::QueueFamilyIndices queueFamilyIndices = Ths::Vk::findQueueFamilies(pContext->physicalDevice, pContext->surface);
+        initEntity(e);
       }
     }
 
