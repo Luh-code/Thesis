@@ -492,6 +492,19 @@ namespace Ths::ecs
     {
       deleteResource(key.c_str());
     }
+    
+    inline void deleteAll()
+    {
+      // for (auto& d : data)
+      // {
+      //   // T*& temp;
+      //   if(d.second) delete d.second;
+      //   // absl::string_view view = d.first;
+      //   // data.erase(view);
+      //   // delete temp;
+      // }
+      data.clear();
+    }
 
     inline T*& operator[](const char* key)
     {
@@ -510,7 +523,7 @@ namespace Ths::ecs
   {
   public:
     template<typename T>
-    inline void registerResource()
+    inline void registerResourceType()
     {
       const char* name = typeid(T).name();
       if (resourceArrays.find(name) != resourceArrays.end())
@@ -555,6 +568,29 @@ namespace Ths::ecs
     inline void deleteResource(std::string key)
     {
       deleteResource<T>(key.c_str());
+    }
+
+    template<typename... Args>
+    struct RecursiveDelete;
+
+    template<typename First, typename... Args>
+    struct RecursiveDelete<First, Args...>
+    {
+      static inline void deleteAll(ResourceManager& r)
+      {
+        r.getResourceArray<First>()->deleteAll();
+        RecursiveDelete<Args...>::deleteAll(r);
+      }
+    };
+    template<>
+    struct RecursiveDelete<>
+    {
+      static inline void deleteAll(ResourceManager& r) { }
+    };
+    template<typename... Args>
+    void deleteAll()
+    {
+      RecursiveDelete<Args...>::deleteAll(*this);
     }
 
     inline ~ResourceManager()
@@ -663,9 +699,9 @@ namespace Ths::ecs
     }
 
     template<typename T>
-    inline void registerResource()
+    inline void registerResourceType()
     {
-      pResourceManager->registerResource<T>();
+      pResourceManager->registerResourceType<T>();
     }
 
     template<typename T>
@@ -699,6 +735,11 @@ namespace Ths::ecs
     inline void deleteResource(std::string key)
     {
       deleteResource<T>(key.c_str());
+    }
+    template<typename... Args>
+    inline void deleteAllResources()
+    {
+      pResourceManager->deleteAll<Args...>();
     }
 
     inline nlohmann::json getJson()

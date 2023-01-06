@@ -141,9 +141,11 @@ namespace Ths::Vk
     /*
       If need be align to 16 - possible with alignas(16)
     */
-    glm::mat4 model;
-    glm::mat4 view;
-    glm::mat4 proj;
+    glm::vec4 ambientLight = {0.93f, 0.88f, 0.71f, 0.1f};
+    glm::vec4 lightPos = {-2.56f, 1.95f, 1.32f, 0.0f};
+    // glm::mat4 model;
+    // glm::mat4 view;
+    // glm::mat4 proj;
   } UniformBufferObject;
 
   typedef struct Transform
@@ -156,7 +158,10 @@ namespace Ths::Vk
   typedef struct MeshPushConstants
   {
     glm::vec4 data;
-    glm::mat4 render_matrix;
+    // glm::mat4 render_matrix;
+    glm::mat4 model;
+    glm::mat4 view;
+    glm::mat4 projection;
   } MeshPushConstants;
 
   typedef struct ImageResource : public Ths::Resource

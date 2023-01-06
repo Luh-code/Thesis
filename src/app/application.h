@@ -75,6 +75,7 @@ namespace Ths
     Ths::ecs::RenderSystem* renderSystem;
     Ths::Vk::ImGuiData* imGuiData;
     Ths::DebugGui debugGui {};
+    Ths::Vk::UniformBufferObject ubo {};
 
     inline SDLApp() {};
     virtual inline void init()

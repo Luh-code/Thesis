@@ -118,8 +118,8 @@ namespace Ths::ecs
 
         model = glm::scale(model, transform.scale);
         model = glm::translate(model, transform.translation/transform.scale);
-        model = glm::rotate(model, time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-        debugGui->addMonitoredVariable("Rotation Magnitude", glm::degrees(time * glm::radians(90.0f)));
+        // model = glm::rotate(model, time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+        // debugGui->addMonitoredVariable("Rotation Magnitude", glm::degrees(time * glm::radians(90.0f)));
         model = glm::rotate(model, transform.rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
         model = glm::rotate(model, transform.rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
         model = glm::rotate(model, transform.rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
@@ -133,10 +133,13 @@ namespace Ths::ecs
         );
         projection[1][1] *= -1;
 
-        glm::mat4 mesh_matrix = projection*view*model;
+        // glm::mat4 mesh_matrix = projection*view*model;
 
         Ths::Vk::MeshPushConstants modelViewProjection;
-        modelViewProjection.render_matrix = mesh_matrix;
+        // modelViewProjection.render_matrix = mesh_matrix;
+        modelViewProjection.model = model;
+        modelViewProjection.view = view;
+        modelViewProjection.projection = projection;
 
         vkCmdPushConstants(
           commandBuffer,

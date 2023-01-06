@@ -21,7 +21,9 @@ namespace Ths
       FLOAT = 1,
       VEC2 = 2,
       VEC3 = 3,
-      VEC4 = 4
+      VEC4 = 4,
+      COL3 = 5,
+      COL4 = 6
     };
 
     Crd* crd;

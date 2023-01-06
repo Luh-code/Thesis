@@ -111,6 +111,13 @@ namespace Ths
 
     debugGui.crd = &crd;
 
+    using dType = Ths::DebugGui::ManagedVariableDataType;
+    debugGui.addManagedVariable("Lighting UBO", {
+      {&ubo.ambientLight, "Light color", dType::COL3},
+      {&glm::value_ptr(ubo.ambientLight)[3], "Light strength", dType::FLOAT},
+      {&ubo.lightPos, "Light pos", dType::VEC3},
+    });
+
     LOG_INIT_OK("Dear ImGui");
   }
 
@@ -197,21 +204,10 @@ namespace Ths
   {
     // TODO: Use push constants instead of uniform buffers
 
-    static auto startTime = std::chrono::high_resolution_clock::now();
+    // static auto startTime = std::chrono::high_resolution_clock::now();
 
-    auto currentTime = std::chrono::high_resolution_clock::now();
-    float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
-
-    Ths::Vk::UniformBufferObject ubo {};
-    ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-    glm::vec3 cameraPosition = glm::vec3(4.0f, 4.0f, 3.0f);
-    glm::vec3 lookingPosition = glm::vec3(0.0f, 0.0f, 1.0f);
-    glm::vec3 upDirection = glm::vec3(0.0f, 0.0f, 1.0f);
-    ubo.view = glm::lookAt(cameraPosition, lookingPosition, upDirection);
-    float fov = 60.0f;
-    ubo.proj = glm::perspective(glm::radians(fov), vContext->swapchainExtent.width / static_cast<float>(vContext->swapchainExtent.height),
-      0.1f, 1000.0f);
-    ubo.proj[1][1] *= -1;
+    // auto currentTime = std::chrono::high_resolution_clock::now();
+    // float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
     memcpy(vContext->uniformBuffersMapped[vContext->currentFrame], &ubo, sizeof(ubo));
   }
@@ -238,7 +234,7 @@ namespace Ths
     }
     vkResetFences(vContext->device, 1, &vContext->inFlightFences[vContext->currentFrame]);
     
-    // updateUniformBuffer();
+    updateUniformBuffer();
 
     // renderSystem->recordBuffers(imageIndex);
 

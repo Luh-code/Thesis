@@ -303,6 +303,12 @@ namespace Ths
           case ManagedVariableDataType::VEC4:
             ImGui::DragFloat4(name, glm::value_ptr(*reinterpret_cast<glm::vec4*>(item)), 0.01f);
             break;
+          case ManagedVariableDataType::COL3:
+            ImGui::ColorEdit3(name, glm::value_ptr(*reinterpret_cast<glm::vec3*>(item)));
+            break;
+          case ManagedVariableDataType::COL4:
+            ImGui::ColorEdit4(name, glm::value_ptr(*reinterpret_cast<glm::vec4*>(item)));
+            break;
           }
         }
         ImGui::TreePop();

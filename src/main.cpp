@@ -18,100 +18,86 @@ int main()
   entities[0] = crd.createEntity();
   entities[1] = crd.createEntity();
   entities[2] = crd.createEntity();
-  entities[3] = crd.createEntity();
 
   auto& camera = app->renderSystem->camera;
 
-  camera.fov = 60.0f;
+  camera.fov = 90.0f;
+  camera.translation.x = -3.9f;
 
   app->init();
 
-  crd.registerResource<Ths::Vk::ShaderResource>();
-  crd.registerResource<Ths::Vk::TextureResource>();
+  crd.registerResourceType<Ths::Vk::ShaderResource>();
+  crd.registerResourceType<Ths::Vk::TextureResource>();
+  crd.registerResourceType<Ths::Vk::MeshResource>();
 
   crd.setResource("basicVShader", new Ths::Vk::ShaderResource(Ths::Vk::readFile("D:/Projects/Thesis/src/vk/shaders/vert.spv")));
   crd.setResource("basicFShader", new Ths::Vk::ShaderResource(Ths::Vk::readFile("D:/Projects/Thesis/src/vk/shaders/frag.spv")));
 
-  crd.setResource("vikingTexture", Ths::Vk::createTextureResource(pContext, "D:/Projects/Thesis/assets/textures/viking.png"));
-  crd.setResource("mechTexture", Ths::Vk::createTextureResource(pContext, "D:/Projects/Thesis/assets/textures/walker_color.jpg"));
-  crd.setResource("obamaTexture", Ths::Vk::createTextureResource(pContext, "D:/Projects/Thesis/assets/textures/Obama.png"));
+  crd.setResource("lightTexture", Ths::Vk::createTextureResource(pContext, "D:/Projects/Thesis/assets/textures/Light/texture_06.png"));
+  crd.setResource("darkTexture", Ths::Vk::createTextureResource(pContext, "D:/Projects/Thesis/assets/textures/Dark/texture_01.png"));
+  crd.setResource("redTexture", Ths::Vk::createTextureResource(pContext, "D:/Projects/Thesis/assets/textures/Red/texture_08.png"));
 
   crd.addComponent(entities[0], Ths::Vk::Mesh{
     .basepath = "D:/Projects/Thesis/assets/models/",
-    .path = "viking.obj",
+    .path = "TestThingy.obj",
+    // .pMesh =
   });
   crd.addComponent(entities[0], Ths::Vk::Material{
-    .path = "D:/Projects/Thesis/assets/textures/viking.png",
-    .pTexture = crd.getResource<Ths::Vk::TextureResource>("vikingTexture"),
+    // .path = "D:/Projects/Thesis/assets/textures/viking.png",
+    .pTexture = crd.getResource<Ths::Vk::TextureResource>("lightTexture"),
     .pVertexShader = crd.getResource<Ths::Vk::ShaderResource>("basicVShader"),
     .pFragmentShader = crd.getResource<Ths::Vk::ShaderResource>("basicFShader"),
   });
   crd.addComponent(entities[0], Ths::Vk::Transform{
-    .translation = glm::vec3{0.0f, -1.0f, 0.0f},
-    .rotation = glm::vec3{0.0f, 0.0f, glm::radians(270.0f)},
+    .translation = glm::vec3{0.0f, 0.0f, -0.25f},
+    .rotation = glm::vec3{0.0f, 0.0f, 0.0f},
     .scale = glm::vec3{1.0f, 1.0f, 1.0f},
   });
   crd.addComponent(entities[0], Ths::Vk::OContext{});
-
-  crd.addComponent(entities[3], Ths::Vk::Mesh{
-    .basepath = "D:/Projects/Thesis/assets/models/",
-    .path = "viking.obj",
-  });
-  crd.addComponent(entities[3], Ths::Vk::Material{
-    .path = "D:/Projects/Thesis/assets/textures/viking.png",
-    .pTexture = crd.getResource<Ths::Vk::TextureResource>("vikingTexture"),
-    .pVertexShader = crd.getResource<Ths::Vk::ShaderResource>("basicVShader"),
-    .pFragmentShader = crd.getResource<Ths::Vk::ShaderResource>("basicFShader"),
-  });
-  crd.addComponent(entities[3], Ths::Vk::Transform{
-    .translation = glm::vec3{0.0f, -1.0f, 1.0f},
-    .rotation = glm::vec3{0.0f, 0.0f, glm::radians(270.0f)},
-    .scale = glm::vec3{1.0f, 1.0f, 1.0f},
-  });
-  crd.addComponent(entities[3], Ths::Vk::OContext{});
   
   crd.addComponent(entities[1], Ths::Vk::Mesh{
     .basepath = "D:/Projects/Thesis/assets/models/",
-    .path = "Neck_Mech_Walker_by_3DHaupt-(Wavefront OBJ).obj",
+    .path = "Cube.obj",
   });
   crd.addComponent(entities[1], Ths::Vk::Material{
-    .path = "D:/Projects/Thesis/assets/textures/walker_color.jpg",
-    .pTexture = crd.getResource<Ths::Vk::TextureResource>("mechTexture"),
+    // .path = "D:/Projects/Thesis/assets/textures/walker_color.jpg",
+    .pTexture = crd.getResource<Ths::Vk::TextureResource>("darkTexture"),
     .pVertexShader = crd.getResource<Ths::Vk::ShaderResource>("basicVShader"),
     .pFragmentShader = crd.getResource<Ths::Vk::ShaderResource>("basicFShader"),
   });
   crd.addComponent(entities[1], Ths::Vk::Transform{
-    .translation = glm::vec3{0.0f, 1.0f, 0.0f},
-    .rotation = glm::vec3{glm::radians(90.0f), 0.0f, 0.0f},
-    .scale = glm::vec3{0.2f, 0.2f, 0.2f},
+    .translation = glm::vec3{-0.67f, 0.47f, 0.4f},
+    .rotation = glm::vec3{0.0f, 0.0f, glm::radians(35.0f)},
+    .scale = glm::vec3{0.4f, 0.4f, 0.4f},
   });
   crd.addComponent(entities[1], Ths::Vk::OContext{});
 
   crd.addComponent(entities[2], Ths::Vk::Mesh{
     .basepath = "D:/Projects/Thesis/assets/models/",
-    .path = "Obama.obj",
+    .path = "Cube.obj",
   });
   crd.addComponent(entities[2], Ths::Vk::Material{
-    .path = "D:/Projects/Thesis/assets/textures/Obama.png",
-    .pTexture = crd.getResource<Ths::Vk::TextureResource>("obamaTexture"),
+    // .path = "D:/Projects/Thesis/assets/textures/Obama.png",
+    .pTexture = crd.getResource<Ths::Vk::TextureResource>("redTexture"),
     .pVertexShader = crd.getResource<Ths::Vk::ShaderResource>("basicVShader"),
     .pFragmentShader = crd.getResource<Ths::Vk::ShaderResource>("basicFShader"),
   });
   crd.addComponent(entities[2], Ths::Vk::Transform{
-    .translation = glm::vec3{0.0f, 0.0f, 0.0f},
-    .rotation = glm::vec3{0.0f, 0.0f, 0.0f},
-    .scale = glm::vec3{50.0f, 50.0f, 50.0f},
+    .translation = glm::vec3{1.03f, -1.25f, 0.6f},
+    .rotation = glm::vec3{0.0f, 0.0f, 0.148},
+    .scale = glm::vec3{.6f, .6f, .6f},
   });
   crd.addComponent(entities[2], Ths::Vk::OContext{});
 
   app->run();
 
-  Ths::Vk::destroyTextureResource(pContext, crd.getResource<Ths::Vk::TextureResource>("vikingTexture"));
-  Ths::Vk::destroyTextureResource(pContext, crd.getResource<Ths::Vk::TextureResource>("mechTexture"));
-  Ths::Vk::destroyTextureResource(pContext, crd.getResource<Ths::Vk::TextureResource>("obamaTexture"));
-  crd.deleteResource<Ths::Vk::TextureResource>("vikingTexture");
-  crd.deleteResource<Ths::Vk::TextureResource>("mechTexture");
-  crd.deleteResource<Ths::Vk::TextureResource>("obamaTexture");
+  Ths::Vk::destroyTextureResource(pContext, crd.getResource<Ths::Vk::TextureResource>("lightTexture"));
+  Ths::Vk::destroyTextureResource(pContext, crd.getResource<Ths::Vk::TextureResource>("darkTexture"));
+  Ths::Vk::destroyTextureResource(pContext, crd.getResource<Ths::Vk::TextureResource>("redTexture"));
+  crd.deleteAllResources<
+    Ths::Vk::TextureResource,
+    Ths::Vk::ShaderResource
+  >();
 
   app->cleanup();
 

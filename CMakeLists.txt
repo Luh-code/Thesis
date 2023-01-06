@@ -56,6 +56,9 @@ if (WIN32)
 endif (WIN32)
 
 set(ABSL_PROPAGATE_CXX_STD ON)
+set(DBUILD_TESTING OFF)
+set(ABSL_BUILD_TESTING OFF)
+set(DABSL_BUILD_TESTING OFF)
 add_subdirectory(${PROJECT_SOURCE_DIR}/dependencies/abseil)
 
 # Optional variable check
@@ -114,7 +117,8 @@ target_include_directories(thesis PUBLIC ${PROJECT_SOURCE_DIR}/dependencies/Flag
                                 # ${PROJECT_SOURCE_DIR}/dependencies/nlohmannJson/single_include
                                 #${PROJECT_SOURCE_DIR}/dependencies/Vulkan/1.3.216.0/x86_64/include
                                 ${SDL2_INCLUDE_DIRS}
-                                ${Vulkan_INCLUDE_DIRS})
+                                ${Vulkan_INCLUDE_DIRS}
+                                ABSL_COMMON_INCLUDE_DIRS)
 target_link_libraries(thesis PUBLIC #${PROJECT_SOURCE_DIR}/dependencies/Vulkan/1.3.216.0/x86_64/lib/libvulkan.so
                                 ${SDL2_LIBRARIES}
                                 ${Vulkan_LIBRARIES}
