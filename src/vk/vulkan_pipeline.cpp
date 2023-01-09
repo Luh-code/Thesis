@@ -354,7 +354,6 @@ namespace Ths::Vk
     rasterizer.depthBiasClamp = 0.0f;
     rasterizer.depthBiasSlopeFactor = 0.0f;
 
-    // No multisampling for now
     VkPipelineMultisampleStateCreateInfo multisampling {VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO};
     multisampling.sampleShadingEnable = VK_FALSE; // Enable for AA in textures
     multisampling.rasterizationSamples = pContext->msaaSamples;

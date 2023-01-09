@@ -92,6 +92,14 @@
         "span": "cpp",
         "filesystem": "cpp",
         "valarray": "cpp",
-        "*.inc": "cpp"
+        "*.inc": "cpp",
+        "cfenv": "cpp",
+        "condition_variable": "cpp",
+        "csignal": "cpp",
+        "future": "cpp",
+        "regex": "cpp",
+        "scoped_allocator": "cpp",
+        "typeindex": "cpp",
+        "variant": "cpp"
     }
 }

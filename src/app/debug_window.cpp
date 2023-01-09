@@ -98,20 +98,20 @@ namespace Ths
       e,
       &displayTransform
     );
-    displayComponent<Ths::Vk::Material>(
-      crd,
-      crd->pComponentManager->mComponentArrays.contains(typeid(Ths::Vk::Material).name()),
-      "Material",
-      e,
-      &displayMaterial
-    );
-    displayComponent<Ths::Vk::Mesh>(
-      crd,
-      crd->pComponentManager->mComponentArrays.contains(typeid(Ths::Vk::Mesh).name()),
-      "Mesh",
-      e,
-      &displayMesh
-    );
+    // displayComponent<Ths::Vk::Material>(
+    //   crd,
+    //   crd->pComponentManager->mComponentArrays.contains(typeid(Ths::Vk::Material).name()),
+    //   "Material",
+    //   e,
+    //   &displayMaterial
+    // );
+    // displayComponent<Ths::Vk::Mesh>(
+    //   crd,
+    //   crd->pComponentManager->mComponentArrays.contains(typeid(Ths::Vk::Mesh).name()),
+    //   "Mesh",
+    //   e,
+    //   &displayMesh
+    // );
   }
 
   template <typename T>
@@ -149,20 +149,20 @@ namespace Ths
                 e,
                 &displayTransform
               );
-              displayComponent<Ths::Vk::Material>(
-                crd,
-                crd->pComponentManager->mComponentArrays.contains(typeid(Ths::Vk::Material).name()),
-                "Material",
-                e,
-                &displayMaterial
-              );
-              displayComponent<Ths::Vk::Mesh>(
-                crd,
-                crd->pComponentManager->mComponentArrays.contains(typeid(Ths::Vk::Mesh).name()),
-                "Mesh",
-                e,
-                &displayMesh
-              );
+              // displayComponent<Ths::Vk::Material>(
+              //   crd,
+              //   crd->pComponentManager->mComponentArrays.contains(typeid(Ths::Vk::Material).name()),
+              //   "Material",
+              //   e,
+              //   &displayMaterial
+              // );
+              // displayComponent<Ths::Vk::Mesh>(
+              //   crd,
+              //   crd->pComponentManager->mComponentArrays.contains(typeid(Ths::Vk::Mesh).name()),
+              //   "Mesh",
+              //   e,
+              //   &displayMesh
+              // );
               displayComponent<Ths::Vk::OContext>(
                 crd,
                 crd->pComponentManager->mComponentArrays.contains(typeid(Ths::Vk::OContext).name()),

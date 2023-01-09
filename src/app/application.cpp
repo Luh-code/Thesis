@@ -115,6 +115,8 @@ namespace Ths
     debugGui.addManagedVariable("Lighting UBO", {
       {&ubo.ambientLight, "Light color", dType::COL3},
       {&glm::value_ptr(ubo.ambientLight)[3], "Light strength", dType::FLOAT},
+      {&glm::value_ptr(ubo.specular)[0], "Spec size", dType::FLOAT},
+      {&glm::value_ptr(ubo.specular)[1], "Specular strength", dType::FLOAT},
       {&ubo.lightPos, "Light pos", dType::VEC3},
     });
 
@@ -202,12 +204,12 @@ namespace Ths
   
   void SDLApp::updateUniformBuffer()
   {
-    // TODO: Use push constants instead of uniform buffers
-
     // static auto startTime = std::chrono::high_resolution_clock::now();
 
     // auto currentTime = std::chrono::high_resolution_clock::now();
     // float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
+
+    ubo.cameraPos = glm::vec4(renderSystem->camera.translation, 1.0f);
 
     memcpy(vContext->uniformBuffersMapped[vContext->currentFrame], &ubo, sizeof(ubo));
   }

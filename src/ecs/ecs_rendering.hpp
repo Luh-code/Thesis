@@ -50,7 +50,18 @@ namespace Ths::ecs
       auto& mesh = crd->getComponent<Ths::Vk::Mesh>(e);
       auto& material = crd->getComponent<Ths::Vk::Material>(e);
 
-      Ths::Vk::createDescriptorSetLayout(pContext, object);
+      std::vector<Ths::Vk::DescriptorSetInfo> descriptorSetInfos;
+      descriptorSetInfos = {
+        {
+          .poolSize = { VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, static_cast<uint32_t>(1) },
+          .pMaterial = &material,
+          .stage = VK_SHADER_STAGE_FRAGMENT_BIT,
+          .bufferSize = 0,
+          .pBuffer = nullptr,
+        },
+        // { VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, static_cast<uint32_t>(1*MAX_FRAMES_IN_FLIGHT) },
+      };
+      Ths::Vk::createDescriptorSetLayout(pContext, object, descriptorSetInfos);
       Ths::Vk::createGraphicsPipeline(pContext, object,
         object.pPipeline,
         *material.pVertexShader,
@@ -65,8 +76,8 @@ namespace Ths::ecs
       Ths::Vk::createVertexBuffer(pContext, object);
       Ths::Vk::createIndexBuffer(pContext, object);
 
-      Ths::Vk::createDescriptorPool(pContext, object);
-      Ths::Vk::createDescriptorSets(pContext, object);
+      Ths::Vk::createDescriptorPool(pContext, object, descriptorSetInfos);
+      Ths::Vk::createDescriptorSets(pContext, object, descriptorSetInfos);
 
       // Ths::Vk::QueueFamilyIndices queueFamilyIndices = Ths::Vk::findQueueFamilies(pContext->physicalDevice, pContext->surface);
     }

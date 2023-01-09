@@ -53,10 +53,13 @@ namespace Ths::Vk
   bool createTextureImage(VContext* pContext, TextureResource*& pTexture, const char* filename);
   bool createTextureImage(VContext* pContext, ImageResource& image, const char* filename);
 
-  bool createDescriptorSets(VContext* pContext, OContext& object);
-  bool createDescriptorPool(VContext* pContext, OContext& object);
+  bool createDescriptorSets(VContext* pContext, GPUContext& context,
+    std::vector<DescriptorSetInfo> descriptorSetInfos);
+  bool createDescriptorPool(VContext* pContext, GPUContext& context,
+    std::vector<DescriptorSetInfo> descriptorSetInfos);
   bool createUniformBuffers(VContext* pContext);
-  bool createDescriptorSetLayout(VContext* pContext, OContext& object);
+  bool createDescriptorSetLayout(VContext* pContext, GPUContext& context,
+   std::vector<DescriptorSetInfo> descriptorSetInfos);
 
   VkCommandBuffer beginSingleTimeGraphicsCommands(VContext* pContext);
   void endSingleTimeGraphicsCommands(VContext* pContext, VkCommandBuffer& commandBuffer);

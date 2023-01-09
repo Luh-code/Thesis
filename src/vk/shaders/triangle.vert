@@ -17,6 +17,7 @@ layout(location = 2) in vec2 inTexCoord;
 layout(location = 0) out vec3 fragColor;
 layout(location = 1) out vec2 fragTexCoord;
 layout(location = 2) out vec3 fragPos;
+layout(location = 3) out mat4 fragModel;
 // layout(locatuib = 2) out vec3 fragNormal;
 
 void main()
@@ -27,5 +28,6 @@ void main()
     fragColor = inColor;
     fragTexCoord = inTexCoord;
     fragPos = vec3(mvp.model * vec4(inPosition, 1.0));
+    fragModel = mvp.model;
     // fragNormal = inNormal;
 }

@@ -143,6 +143,8 @@ namespace Ths::Vk
     */
     glm::vec4 ambientLight = {0.93f, 0.88f, 0.71f, 0.1f};
     glm::vec4 lightPos = {-2.56f, 1.95f, 1.32f, 0.0f};
+    glm::vec4 specular = {32.0f, 0.5f, 0.5f, 0.5f};
+    glm::vec4 cameraPos;
     // glm::mat4 model;
     // glm::mat4 view;
     // glm::mat4 proj;
@@ -209,6 +211,39 @@ namespace Ths::Vk
     VkPipeline pipeline;
   } PipelineResource;
 
+
+  typedef struct MaterialResource : public Ths::Resource
+  {
+    glm::vec3 ambient;
+    glm::vec3 diffuse;
+    glm::vec3 specular;
+    float shininess; // "inverse roughness"
+  } MaterialResource;
+
+  typedef struct WorldEnviorment : public Ths::Resource
+  {
+    glm::vec3 ambientColor;
+    float ambientStrength;
+  } WorldEnviorment;
+  
+  typedef struct GPUContext
+  {
+    VkDescriptorSetLayout descriptorSetLayout;
+    VkDescriptorPool descriptorPool;
+    std::vector<VkDescriptorSet> descriptorSets;
+  } GPUContext;
+
+
+  typedef struct SceneContext : public GPUContext
+  {
+    typedef struct GPUSceneData
+    {
+      WorldEnviorment enviorment;
+    } SceneData;
+    
+    GPUSceneData gpuData;
+  } SceneContext;
+
   typedef struct Mesh
   {
     const char* basepath;
@@ -245,15 +280,20 @@ namespace Ths::Vk
     }
   } Material;
 
-  typedef struct ObjectContext
+  typedef struct DescriptorSetInfo
+  {
+    VkDescriptorPoolSize poolSize;
+    Material* pMaterial;
+    VkShaderStageFlags stage;
+    uint32_t bufferSize;
+    VkBuffer* pBuffer;
+  } DescriptorSetInfo;
+
+  typedef struct ObjectContext : public GPUContext
   {
     Material* material; // ? Change to ref
     Mesh* mesh; // ? Change to ref
     Transform* transform; // ? Change to ref
-
-    VkDescriptorSetLayout descriptorSetLayout;
-    VkDescriptorPool descriptorPool;
-    std::vector<VkDescriptorSet> descriptorSets;
 
     PipelineResource* pPipeline;
 
