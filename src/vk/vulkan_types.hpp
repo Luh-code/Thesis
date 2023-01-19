@@ -145,7 +145,7 @@ typedef struct Vertex
     void applyTransform(Transform t) = delete;
   } Mesh;
 
-   typedef struct UniformBuffer
+  typedef struct UniformBuffer
   {
     std::array<VkBuffer, MAX_FRAMES_IN_FLIGHT> buffer;
     std::array<VkDeviceMemory, MAX_FRAMES_IN_FLIGHT> memory;
@@ -280,6 +280,7 @@ typedef struct Vertex
 
   typedef struct DescriptorSetInfo
   {
+  public:
     VkDescriptorPoolSize poolSize;
     Material* pMaterial;
     VkBuffer* pBuffer;

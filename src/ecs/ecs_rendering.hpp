@@ -50,29 +50,28 @@ namespace Ths::ecs
       auto& mesh = crd->getComponent<Ths::Vk::Mesh>(e);
       auto& material = crd->getComponent<Ths::Vk::Material>(e);
 
-      std::array<Ths::Vk::DescriptorSetInfo, 3> descriptorSetInfos = {
-        {
-          .poolSize = { VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, static_cast<uint32_t>(1) },
-          .pMaterial = &material,
-          .pBuffer = nullptr,
-          .stage = VK_SHADER_STAGE_FRAGMENT_BIT,
-          .bufferSize = 0
-        },
-        {
-          .poolSize = { VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, static_cast<uint32_t>(1) },
-          .pMaterial = nullptr,
-          .pBuffer = object.gpuMaterial,
-          .stage = VK_SHADER_STAGE_FRAGMENT_BIT,
-          .bufferSize = sizeof(Ths::Vk::MaterialResource)
-        },
-        {
-          .poolSize = { VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, static_cast<uint32_t>(1) },
-          .pMaterial = nullptr,
-          .pBuffer = pContext->sceneContext.gpuData.enviorment,
-          .stage = VK_SHADER_STAGE_FRAGMENT_BIT,
-          .bufferSize = sizeof(Ths::Vk::WorldEnviorment)
-        }
-      };
+      std::vector<Ths::Vk::DescriptorSetInfo> descriptorSetInfos {3};
+      descriptorSetInfos[0] = Ths::Vk::DescriptorSetInfo {};
+      descriptorSetInfos[0].poolSize = { VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, static_cast<uint32_t>(1) };
+      descriptorSetInfos[0].pMaterial = &material;
+      descriptorSetInfos[0].pBuffer = nullptr;
+      descriptorSetInfos[0].stage = VK_SHADER_STAGE_FRAGMENT_BIT;
+      descriptorSetInfos[0].bufferSize = 0;
+
+      descriptorSetInfos[1] = Ths::Vk::DescriptorSetInfo {};
+      descriptorSetInfos[1].poolSize = { VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, static_cast<uint32_t>(1) };
+      descriptorSetInfos[1].pMaterial = nullptr;
+      descriptorSetInfos[1].pBuffer = object.gpuMaterial;
+      descriptorSetInfos[1].stage = VK_SHADER_STAGE_FRAGMENT_BIT;
+      descriptorSetInfos[1].bufferSize = sizeof(Ths::Vk::MaterialResource);
+
+      descriptorSetInfos[2] = Ths::Vk::DescriptorSetInfo {};
+      descriptorSetInfos[2].poolSize = { VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, static_cast<uint32_t>(1) };
+      descriptorSetInfos[2].pMaterial = nullptr;
+      descriptorSetInfos[2].pBuffer = pContext->sceneContext.gpuData.enviorment;
+      descriptorSetInfos[2].stage = VK_SHADER_STAGE_FRAGMENT_BIT;
+      descriptorSetInfos[2].bufferSize = sizeof(Ths::Vk::WorldEnviorment);
+
       Ths::Vk::createDescriptorSetLayout(pContext, object, descriptorSetInfos);
       Ths::Vk::createGraphicsPipeline(pContext, object,
         object.pPipeline,
