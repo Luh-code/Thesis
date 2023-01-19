@@ -30,15 +30,15 @@ int main()
   crd.registerResourceType<Ths::Vk::TextureResource>();
   crd.registerResourceType<Ths::Vk::MeshResource>();
 
-  crd.setResource("basicVShader", new Ths::Vk::ShaderResource(Ths::Vk::readFile("D:/Projects/Thesis/src/vk/shaders/vert.spv")));
-  crd.setResource("basicFShader", new Ths::Vk::ShaderResource(Ths::Vk::readFile("D:/Projects/Thesis/src/vk/shaders/frag.spv")));
+  crd.setResource("basicVShader", new Ths::Vk::ShaderResource(Ths::Vk::readFile("D:/dev/Thesis/src/vk/shaders/vert.spv")));
+  crd.setResource("basicFShader", new Ths::Vk::ShaderResource(Ths::Vk::readFile("D:/dev/Thesis/src/vk/shaders/frag.spv")));
 
-  crd.setResource("lightTexture", Ths::Vk::createTextureResource(pContext, "D:/Projects/Thesis/assets/textures/Light/texture_06.png"));
-  crd.setResource("darkTexture", Ths::Vk::createTextureResource(pContext, "D:/Projects/Thesis/assets/textures/Dark/texture_01.png"));
-  crd.setResource("redTexture", Ths::Vk::createTextureResource(pContext, "D:/Projects/Thesis/assets/textures/Red/texture_08.png"));
+  crd.setResource("lightTexture", Ths::Vk::createTextureResource(pContext, "D:/dev/Thesis/assets/textures/Light/texture_06.png"));
+  crd.setResource("darkTexture", Ths::Vk::createTextureResource(pContext, "D:/dev/Thesis/assets/textures/Dark/texture_01.png"));
+  crd.setResource("redTexture", Ths::Vk::createTextureResource(pContext, "D:/dev/Thesis/assets/textures/Red/texture_08.png"));
 
   crd.addComponent(entities[0], Ths::Vk::Mesh{
-    .basepath = "D:/Projects/Thesis/assets/models/",
+    .basepath = "D:/dev/Thesis/assets/models/",
     .path = "TestThingy.obj",
     // .pMesh =
   });
@@ -56,7 +56,7 @@ int main()
   crd.addComponent(entities[0], Ths::Vk::OContext{});
   
   crd.addComponent(entities[1], Ths::Vk::Mesh{
-    .basepath = "D:/Projects/Thesis/assets/models/",
+    .basepath = "D:/dev/Thesis/assets/models/",
     .path = "Cube.obj",
   });
   crd.addComponent(entities[1], Ths::Vk::Material{
@@ -73,7 +73,7 @@ int main()
   crd.addComponent(entities[1], Ths::Vk::OContext{});
 
   crd.addComponent(entities[2], Ths::Vk::Mesh{
-    .basepath = "D:/Projects/Thesis/assets/models/",
+    .basepath = "D:/dev/Thesis/assets/models/",
     .path = "Cube.obj",
   });
   crd.addComponent(entities[2], Ths::Vk::Material{

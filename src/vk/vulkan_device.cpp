@@ -278,6 +278,28 @@ namespace Ths::Vk
     vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, queueFamilies.data());
 
     uint32_t i = 0;
+    // for(const auto& queueFamily : queueFamilies)
+    // {
+    //   VkBool32 presentSupport = false;
+    //   vkGetPhysicalDeviceSurfaceSupportKHR(device, i, surface, &presentSupport);
+    //   if (!indices.graphicsFamily.has_value() && (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT) == VK_QUEUE_GRAPHICS_BIT)
+    //   {
+    //     indices.graphicsFamily = i;
+    //   }
+    //   else if (!indices.transferFamily.has_value() && (queueFamily.queueFlags & (VK_QUEUE_TRANSFER_BIT)) == (VK_QUEUE_TRANSFER_BIT))
+    //   // else if (!indices.transferFamily.has_value() && (queueFamily.queueFlags & (VK_QUEUE_TRANSFER_BIT | VK_QUEUE_GRAPHICS_BIT)) == (VK_QUEUE_TRANSFER_BIT | VK_QUEUE_GRAPHICS_BIT))
+    // //  if ((indices.graphicsFamily.has_value() && indices.graphicsFamily.value() != i) || queueFamilyCount > 2 &&
+    // //     !indices.transferFamily.has_value() && (queueFamily.queueFlags & VK_QUEUE_TRANSFER_BIT) == VK_QUEUE_TRANSFER_BIT)
+    //   {
+    //     indices.transferFamily = i;
+    //   }
+    //   else if (!indices.presentFamily.has_value() && presentSupport == VK_TRUE)
+    //   {
+    //     indices.presentFamily = i;
+    //   }
+    //   if (indices.isComplete()) break;
+    //   i++;
+    // }
     for(const auto& queueFamily : queueFamilies)
     {
       VkBool32 presentSupport = false;
@@ -286,14 +308,12 @@ namespace Ths::Vk
       {
         indices.graphicsFamily = i;
       }
-      else if (!indices.transferFamily.has_value() && (queueFamily.queueFlags & (VK_QUEUE_TRANSFER_BIT)) == (VK_QUEUE_TRANSFER_BIT))
-      // else if (!indices.transferFamily.has_value() && (queueFamily.queueFlags & (VK_QUEUE_TRANSFER_BIT | VK_QUEUE_GRAPHICS_BIT)) == (VK_QUEUE_TRANSFER_BIT | VK_QUEUE_GRAPHICS_BIT))
-    //  if ((indices.graphicsFamily.has_value() && indices.graphicsFamily.value() != i) || queueFamilyCount > 2 &&
-    //     !indices.transferFamily.has_value() && (queueFamily.queueFlags & VK_QUEUE_TRANSFER_BIT) == VK_QUEUE_TRANSFER_BIT)
+      if ((indices.graphicsFamily.has_value() && indices.graphicsFamily.value() != i) || queueFamilyCount > 2 &&
+        !indices.transferFamily.has_value() && (queueFamily.queueFlags & VK_QUEUE_TRANSFER_BIT) == VK_QUEUE_TRANSFER_BIT)
       {
         indices.transferFamily = i;
       }
-      else if (!indices.presentFamily.has_value() && presentSupport == VK_TRUE)
+      if (!indices.presentFamily.has_value() && presentSupport == VK_TRUE)
       {
         indices.presentFamily = i;
       }

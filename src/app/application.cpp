@@ -183,7 +183,10 @@ namespace Ths
     Ths::Vk::createColorResources(vContext);
     Ths::Vk::createDepthResources(vContext);
     Ths::Vk::createFramebuffers(vContext);
-    Ths::Vk::createUniformBuffers(vContext);
+    vContext->sceneUniform = {
+      .bufferSize = sizeof(vContext->sceneContext.gpuData),
+    };
+    Ths::Vk::createUniformBuffers(vContext, vContext->sceneUniform);
     Ths::Vk::createSyncObjects(vContext);
   }
   

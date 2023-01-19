@@ -123,21 +123,30 @@ namespace Ths::Vk
     return true;
   }
 
-  bool createUniformBuffers(VContext* pContext)
+  bool createUniformBuffers(VContext* pContext, UniformBuffer& uniform)
   {
-    VkDeviceSize bufferSize = sizeof(UniformBufferObject);
+    // VkDeviceSize bufferSize = sizeof(UniformBufferObject);
 
-    pContext->uniformBuffers.resize(MAX_FRAMES_IN_FLIGHT);
-    pContext->uniformBuffersMemory.resize(MAX_FRAMES_IN_FLIGHT);
-    pContext->uniformBuffersMapped.resize(MAX_FRAMES_IN_FLIGHT);
+    // pContext->uniformBuffers.resize(MAX_FRAMES_IN_FLIGHT);
+    // pContext->uniformBuffersMemory.resize(MAX_FRAMES_IN_FLIGHT);
+    // pContext->uniformBuffersMapped.resize(MAX_FRAMES_IN_FLIGHT);
 
-    for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
+    // for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
+    // {
+    //   createBuffer(pContext, bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+    //     VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+    //     pContext->uniformBuffers[i], pContext->uniformBuffersMemory[i]);
+
+    //   vkMapMemory(pContext->device, pContext->uniformBuffersMemory[i], 0, bufferSize, 0, &pContext->uniformBuffersMapped[i]);
+    // }
+    for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; ++i)
     {
-      createBuffer(pContext, bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+      createBuffer(pContext, uniform.bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
         VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-        pContext->uniformBuffers[i], pContext->uniformBuffersMemory[i]);
+        uniform.buffer[i], uniform.memory[i]
+      );
 
-      vkMapMemory(pContext->device, pContext->uniformBuffersMemory[i], 0, bufferSize, 0, &pContext->uniformBuffersMapped[i]);
+      vkMapMemory(pContext->device, uniform.memory[i], 0, uniform.bufferSize, 0, &uniform.mapped[i]);
     }
     return true;
   }

@@ -11,10 +11,6 @@
 
 #define ARRAY_SIZE(v) (sizeof(v)/sizeof(v[0]))
 
-#ifndef MAX_FRAMES_IN_FLIGHT
-#define MAX_FRAMES_IN_FLIGHT 2
-#endif
-
 namespace Ths::Vk
 {
   // Vulkan Creation
@@ -57,7 +53,7 @@ namespace Ths::Vk
     std::vector<DescriptorSetInfo> descriptorSetInfos);
   bool createDescriptorPool(VContext* pContext, GPUContext& context,
     std::vector<DescriptorSetInfo> descriptorSetInfos);
-  bool createUniformBuffers(VContext* pContext);
+  bool createUniformBuffers(VContext* pContext, UniformBuffer& uniform);
   bool createDescriptorSetLayout(VContext* pContext, GPUContext& context,
    std::vector<DescriptorSetInfo> descriptorSetInfos);
 
