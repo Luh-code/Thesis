@@ -12,7 +12,7 @@
 
 namespace Ths::Vk
 {
-typedef struct Vertex
+  typedef struct Vertex
   {
     glm::vec3 pos;
     glm::vec3 color;
