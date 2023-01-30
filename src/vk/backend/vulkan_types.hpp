@@ -41,6 +41,8 @@ namespace Ths::Vk
 
   typedef struct SystemContext
   {
+    VkInstance instance;
+
     VkDebugUtilsMessengerEXT debugMessenger;
     VkPhysicalDevice physicalDevice;
     VkDevice device;
@@ -55,7 +57,6 @@ namespace Ths::Vk
   {
     SystemContext& systemContext;
 
-    VkInstance instance;
     VkSurfaceKHR surface;
     VkSwapchainKHR swapchain;
     VkFormat swapchainImageFormat;
@@ -88,7 +89,24 @@ namespace Ths::Vk
     Ths::ecs::RenderSystem renderSystem = {.sceneContext = *this};
   } SceneContext;
 
+  //----- DescriptorSets -----
+
+  typedef struct DescriptorSetCreateInfo
+  {
+    VkDescriptorType type;
+    VkShaderStageFlagBits stage;
+
+    VkSampler* pSampler;
+    VkBuffer* pBuffer;
+    uint32_t bufferSize;
+  } DescriptorSetCreateInfo;
+
   //----- Resources -----
+
+  typedef struct GPUResource
+  {
+    virtual constexpr DescriptorSetCreateInfo getDescriptorSetCreateInfo() = 0;
+  } GPUResource;
 
   typedef struct Mesh : public Resource
   {
@@ -110,18 +128,34 @@ namespace Ths::Vk
     uint32_t mipLevels;
   } Image;
 
-  typedef struct Texture : public Image
+  typedef struct Texture : public Image, public GPUResource
   {
     VkSampler sampler;
     VkImageView view;
+
+    virtual constexpr DescriptorSetCreateInfo getDescriptorSetCreateInfo() override
+    {
+      return {
+        .type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+        .stage = VK_SHADER_STAGE_FRAGMENT_BIT,
+        .pSampler = &this->sampler,
+        .pBuffer = nullptr,
+        .bufferSize = 0,
+      };
+    }
   } Texture;
 
   typedef struct Material : public Resource
   {
+    absl::flat_hash_map<uint32_t, GPUResource*> bindingToResourceMap =
+    {
+      {0, pAlbedoTexture},
+    };
+
     Shader& vertexShader;
     Shader& fragmentShader;
 
-    Texture& albedoTexture;
+    Texture* pAlbedoTexture;
   } Material;
 
   typedef struct Pipeline : public Resource
