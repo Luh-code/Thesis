@@ -84,14 +84,15 @@ set(SOURCE ${PROJECT_SOURCE_DIR}/src/main.cpp
             ${PROJECT_SOURCE_DIR}/src/sdl/sdl_base.cpp
             ${PROJECT_SOURCE_DIR}/src/app/application.cpp
             ${PROJECT_SOURCE_DIR}/src/app/debug_window.cpp
-            ${PROJECT_SOURCE_DIR}/src/vk/vulkan_instance.cpp
-            ${PROJECT_SOURCE_DIR}/src/vk/vulkan_device.cpp
-            ${PROJECT_SOURCE_DIR}/src/vk/vulkan_pipeline.cpp
-            ${PROJECT_SOURCE_DIR}/src/vk/vulkan_commands.cpp
-            ${PROJECT_SOURCE_DIR}/src/vk/vulkan_descriptors.cpp
-            ${PROJECT_SOURCE_DIR}/src/vk/vulkan_images.cpp
-            ${PROJECT_SOURCE_DIR}/src/vk/vulkan_depth.cpp
-            ${PROJECT_SOURCE_DIR}/src/vk/vulkan_model.cpp
+            # ${PROJECT_SOURCE_DIR}/src/vk/vulkan_instance.cpp
+            # ${PROJECT_SOURCE_DIR}/src/vk/vulkan_device.cpp
+            # ${PROJECT_SOURCE_DIR}/src/vk/vulkan_pipeline.cpp
+            # ${PROJECT_SOURCE_DIR}/src/vk/vulkan_commands.cpp
+            # ${PROJECT_SOURCE_DIR}/src/vk/vulkan_descriptors.cpp
+            # ${PROJECT_SOURCE_DIR}/src/vk/vulkan_images.cpp
+            # ${PROJECT_SOURCE_DIR}/src/vk/vulkan_depth.cpp
+            # ${PROJECT_SOURCE_DIR}/src/vk/vulkan_model.cpp
+            ${PROJECT_SOURCE_DIR}/src/vk/backend/vulkan_device.cpp
             )
 set(IMGUI_FILES ${PROJECT_SOURCE_DIR}/dependencies/imgui/imgui.cpp
             ${PROJECT_SOURCE_DIR}/dependencies/imgui/imgui_demo.cpp

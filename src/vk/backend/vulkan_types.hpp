@@ -4,6 +4,8 @@
 #include "../../thesis.h"
 #include "../../pch.h"
 #include "../../engine/data/resource_base.hpp"
+#include "../../ecs/ecs_base.hpp"
+#include "../../ecs/ecs_rendering.hpp"
 
 #ifndef MAX_FRAMES_IN_FLIGHT
 #define MAX_FRAMES_IN_FLIGHT 2
@@ -41,8 +43,6 @@ namespace Ths::Vk
 
   typedef struct SystemContext
   {
-    VkInstance instance;
-
     VkDebugUtilsMessengerEXT debugMessenger;
     VkPhysicalDevice physicalDevice;
     VkDevice device;
@@ -55,22 +55,20 @@ namespace Ths::Vk
 
   typedef struct ApplicationContext
   {
-    SystemContext& systemContext;
+    VkInstance instance;
 
     VkSurfaceKHR surface;
     VkSwapchainKHR swapchain;
     VkFormat swapchainImageFormat;
     VkExtent2D swapchainExtent;
     std::vector<VkImage> swapchainImages;
-    std::vector<VkImageView> swapchainImageViews
+    std::vector<VkImageView> swapchainImageViews;
   } ApplicationContext;
 
   //----- RenderContext -----
 
   typedef struct RenderContext
   {
-    ApplicationContext& applicationContext;
-
     std::vector<VkRenderPass> renderPasses;
     std::vector<VkSemaphore> imageAvailableSemaphores;
     std::vector<VkSemaphore> renderFinishedSemaphores;
@@ -83,11 +81,33 @@ namespace Ths::Vk
 
   typedef struct SceneContext
   {
-    RenderContext& renderContext;
-
     Ths::ecs::Coordinator crd;
-    Ths::ecs::RenderSystem renderSystem = {.sceneContext = *this};
+    Ths::ecs::RenderSystem renderSystem;
   } SceneContext;
+
+  //----- VulkanOptions -----
+
+  typedef struct VulkanOptions
+  {
+    VkSampleCountFlagBits msaaSamples = VK_SAMPLE_COUNT_64_BIT;
+    VkPhysicalDeviceFeatures requiredFeatures;
+    std::vector<const char*> deviceExtensions;
+  } VulkanOptions;
+
+  //----- VulkanHandle -----
+
+  typedef struct VulkanHandle
+  {
+    SystemContext& systemContext;
+    ApplicationContext& applicationContext;
+    RenderContext& renderContext;
+    SceneContext& sceneContext;
+    VulkanOptions& options;
+
+    inline VulkanHandle(SystemContext& sy, ApplicationContext& ap, RenderContext& re, SceneContext& sc, VulkanOptions op)
+      : systemContext(sy), applicationContext(ap), renderContext(re), sceneContext(sc), options(op)
+    { }
+  } VulkanHandle;
 
   //----- DescriptorSets -----
 

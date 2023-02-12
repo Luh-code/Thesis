@@ -37,57 +37,57 @@ int main()
   crd.setResource("darkTexture", Ths::Vk::createTextureResource(pContext, "D:/dev/Thesis/assets/textures/Dark/texture_01.png"));
   crd.setResource("redTexture", Ths::Vk::createTextureResource(pContext, "D:/dev/Thesis/assets/textures/Red/texture_08.png"));
 
-  crd.addComponent(entities[0], Ths::Vk::Mesh{
-    .basepath = "D:/dev/Thesis/assets/models/",
-    .path = "TestThingy.obj",
-    // .pMesh =
-  });
-  crd.addComponent(entities[0], Ths::Vk::Material{
-    // .path = "D:/Projects/Thesis/assets/textures/viking.png",
-    .pTexture = crd.getResource<Ths::Vk::TextureResource>("lightTexture"),
-    .pVertexShader = crd.getResource<Ths::Vk::ShaderResource>("basicVShader"),
-    .pFragmentShader = crd.getResource<Ths::Vk::ShaderResource>("basicFShader"),
-  });
-  crd.addComponent(entities[0], Ths::Vk::Transform{
-    .translation = glm::vec3{0.0f, 0.0f, -0.25f},
-    .rotation = glm::vec3{0.0f, 0.0f, 0.0f},
-    .scale = glm::vec3{1.0f, 1.0f, 1.0f},
-  });
-  crd.addComponent(entities[0], Ths::Vk::OContext{});
+  // crd.addComponent(entities[0], Ths::Vk::Mesh{
+  //   .basepath = "D:/dev/Thesis/assets/models/",
+  //   .path = "TestThingy.obj",
+  //   // .pMesh =
+  // });
+  // crd.addComponent(entities[0], Ths::Vk::Material{
+  //   // .path = "D:/Projects/Thesis/assets/textures/viking.png",
+  //   .pTexture = crd.getResource<Ths::Vk::TextureResource>("lightTexture"),
+  //   .pVertexShader = crd.getResource<Ths::Vk::ShaderResource>("basicVShader"),
+  //   .pFragmentShader = crd.getResource<Ths::Vk::ShaderResource>("basicFShader"),
+  // });
+  // crd.addComponent(entities[0], Ths::Vk::Transform{
+  //   .translation = glm::vec3{0.0f, 0.0f, -0.25f},
+  //   .rotation = glm::vec3{0.0f, 0.0f, 0.0f},
+  //   .scale = glm::vec3{1.0f, 1.0f, 1.0f},
+  // });
+  // crd.addComponent(entities[0], Ths::Vk::OContext{});
   
-  crd.addComponent(entities[1], Ths::Vk::Mesh{
-    .basepath = "D:/dev/Thesis/assets/models/",
-    .path = "Cube.obj",
-  });
-  crd.addComponent(entities[1], Ths::Vk::Material{
-    // .path = "D:/Projects/Thesis/assets/textures/walker_color.jpg",
-    .pTexture = crd.getResource<Ths::Vk::TextureResource>("darkTexture"),
-    .pVertexShader = crd.getResource<Ths::Vk::ShaderResource>("basicVShader"),
-    .pFragmentShader = crd.getResource<Ths::Vk::ShaderResource>("basicFShader"),
-  });
-  crd.addComponent(entities[1], Ths::Vk::Transform{
-    .translation = glm::vec3{-0.67f, 0.47f, 0.4f},
-    .rotation = glm::vec3{0.0f, 0.0f, glm::radians(35.0f)},
-    .scale = glm::vec3{0.4f, 0.4f, 0.4f},
-  });
-  crd.addComponent(entities[1], Ths::Vk::OContext{});
+  // crd.addComponent(entities[1], Ths::Vk::Mesh{
+  //   .basepath = "D:/dev/Thesis/assets/models/",
+  //   .path = "Cube.obj",
+  // });
+  // crd.addComponent(entities[1], Ths::Vk::Material{
+  //   // .path = "D:/Projects/Thesis/assets/textures/walker_color.jpg",
+  //   .pTexture = crd.getResource<Ths::Vk::TextureResource>("darkTexture"),
+  //   .pVertexShader = crd.getResource<Ths::Vk::ShaderResource>("basicVShader"),
+  //   .pFragmentShader = crd.getResource<Ths::Vk::ShaderResource>("basicFShader"),
+  // });
+  // crd.addComponent(entities[1], Ths::Vk::Transform{
+  //   .translation = glm::vec3{-0.67f, 0.47f, 0.4f},
+  //   .rotation = glm::vec3{0.0f, 0.0f, glm::radians(35.0f)},
+  //   .scale = glm::vec3{0.4f, 0.4f, 0.4f},
+  // });
+  // crd.addComponent(entities[1], Ths::Vk::OContext{});
 
-  crd.addComponent(entities[2], Ths::Vk::Mesh{
-    .basepath = "D:/dev/Thesis/assets/models/",
-    .path = "Cube.obj",
-  });
-  crd.addComponent(entities[2], Ths::Vk::Material{
-    // .path = "D:/Projects/Thesis/assets/textures/Obama.png",
-    .pTexture = crd.getResource<Ths::Vk::TextureResource>("redTexture"),
-    .pVertexShader = crd.getResource<Ths::Vk::ShaderResource>("basicVShader"),
-    .pFragmentShader = crd.getResource<Ths::Vk::ShaderResource>("basicFShader"),
-  });
-  crd.addComponent(entities[2], Ths::Vk::Transform{
-    .translation = glm::vec3{1.03f, -1.25f, 0.6f},
-    .rotation = glm::vec3{0.0f, 0.0f, 0.148},
-    .scale = glm::vec3{.6f, .6f, .6f},
-  });
-  crd.addComponent(entities[2], Ths::Vk::OContext{});
+  // crd.addComponent(entities[2], Ths::Vk::Mesh{
+  //   .basepath = "D:/dev/Thesis/assets/models/",
+  //   .path = "Cube.obj",
+  // });
+  // crd.addComponent(entities[2], Ths::Vk::Material{
+  //   // .path = "D:/Projects/Thesis/assets/textures/Obama.png",
+  //   .pTexture = crd.getResource<Ths::Vk::TextureResource>("redTexture"),
+  //   .pVertexShader = crd.getResource<Ths::Vk::ShaderResource>("basicVShader"),
+  //   .pFragmentShader = crd.getResource<Ths::Vk::ShaderResource>("basicFShader"),
+  // });
+  // crd.addComponent(entities[2], Ths::Vk::Transform{
+  //   .translation = glm::vec3{1.03f, -1.25f, 0.6f},
+  //   .rotation = glm::vec3{0.0f, 0.0f, 0.148},
+  //   .scale = glm::vec3{.6f, .6f, .6f},
+  // });
+  // crd.addComponent(entities[2], Ths::Vk::OContext{});
 
   app->run();
 

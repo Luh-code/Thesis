@@ -220,12 +220,12 @@ namespace Ths::Vk
     UniformBuffer sceneUniform;
   } VContext;
 
-  typedef struct SwapChainSupportDetails
+  typedef struct SwapchainSupportDetails
   {
     VkSurfaceCapabilitiesKHR capabilities;
     std::vector<VkSurfaceFormatKHR> formats;
     std::vector<VkPresentModeKHR> presentModes;
-  } SwapChainSupportDetails;
+  } SwapchainSupportDetails;
 
   typedef struct UniformBufferObject
   {

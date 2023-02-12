@@ -2,7 +2,7 @@
 #define __DEBUG_WINDOW_H__
 
 #include "../pch.h"
-#include "../vk/vulkan_base.h"
+#include "../vk/backend/vulkan_base.hpp"
 #include "../ecs/ecs_base.hpp"
 
 namespace Ths
